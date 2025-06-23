@@ -31,6 +31,7 @@ export default function MainLayout() {
         <View style={styles.container}>
             <Appbar.Header>
                 <Appbar.Content title={routes[index]?.title || "App"} />
+                <Appbar.Action icon={"bell"} onPress={() => {}} />
             </Appbar.Header>
 
             {/* <Stack screenOptions={{ headerShown: false }} /> */}
