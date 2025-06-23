@@ -15,7 +15,6 @@ export default function Index() {
             flex: 1,
         }}>
             <Surface style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                {/* <Text variant="titleLarge">Welcome to EventiQ</Text> */}
                 <WelcomeAnimation onGetStartedPress={handleGetStartedPress} />
             </Surface>
         </View>
