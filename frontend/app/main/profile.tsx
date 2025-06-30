@@ -1,10 +1,35 @@
-import { StyleSheet, View } from "react-native";
-import { Text } from "react-native-paper";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { Avatar, List, Text } from "react-native-paper";
 
 export default function Profile() {
     return (
         <View style={styles.container}>
-            <Text>Profile</Text>
+            <View style={styles.userNameContainer}>
+                <Text variant="displayMedium">Dilan Sriyantha</Text>
+                <Avatar.Image size={92} source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgtecEMJwshnqr2gzcyPxvBMLyQXBosrjxqA&s" }}/>
+            </View>
+            <ScrollView style={styles.menu}>
+                <List.Item
+                    title="Help"
+                    left={props => <List.Icon {...props} icon="lifebuoy" />}
+                    onPress={() => {}}
+                />
+                <List.Item
+                    title="Privacy"
+                    left={props => <List.Icon {...props} icon="eye-remove-outline" />}
+                    onPress={() => {}}
+                />
+                <List.Item
+                    title="Accessibility"
+                    left={props => <List.Icon {...props} icon="human" />}
+                    onPress={() => {}}
+                />
+                <List.Item
+                    title="About"
+                    left={props => <List.Icon {...props} icon="information-outline" />}
+                    onPress={() => {}}
+                />
+            </ScrollView>
         </View>
     );  
 }
@@ -12,7 +37,16 @@ export default function Profile() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
+        padding: 10,
+        gap: 1
+    },
+    userNameContainer: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
         alignItems: "center"
+    },
+    menu: {
+        paddingTop: 20,
     }
 });

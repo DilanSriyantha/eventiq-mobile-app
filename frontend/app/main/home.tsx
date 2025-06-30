@@ -1,5 +1,6 @@
-import EventCategoriesList from "@/components/EventCategoriesList";
+import EventCategoriesList from "@/components/EventCategoryList/EventCategoriesList";
 import PostType1, { PostType1Props } from "@/components/PostType1";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { Searchbar } from "react-native-paper";
@@ -34,6 +35,12 @@ const POSTS_01: PostType1Props[] = [
 export default function Home() {
     const [searchKey, setSearchKey] = useState<string>("");
 
+    const router = useRouter();
+
+    function handleCheckPress() {
+        router.push("/providers/" as any);
+    }
+
     return (
         <View style={styles.container}>
             <Searchbar
@@ -44,7 +51,7 @@ export default function Home() {
             <EventCategoriesList onChange={() => { }} />
             <FlatList
                 data={POSTS_01}
-                renderItem={({item}) => <PostType1 {...item} />}
+                renderItem={({item}) => <PostType1  {...item} onCheckPress={handleCheckPress} />}
                 keyExtractor={(_item, idx) => `${idx}`}
                 showsVerticalScrollIndicator={false}
             />

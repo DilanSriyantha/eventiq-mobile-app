@@ -11,8 +11,7 @@ export interface PostType1Props {
 };
 
 const PostType1 = ({ title, image, rating, tags, onRatePress, onCheckPress }: PostType1Props) => {
-    const LeftContent = (props: any) => <Avatar.Icon {...props} icon="folder" />
-
+    
     return (
         <TouchableOpacity style={styles.container}>
             <Card mode="contained">
