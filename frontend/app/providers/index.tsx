@@ -1,11 +1,10 @@
 import FeaturedOption from "@/components/FeaturedOption";
-import GeneralOption from "@/components/GeneralOption";
 import GeneralOptionsPanel, { GeneralOptionsPanelHandle } from "@/components/GeneralOptionsPanel";
 import { ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
 import { useCallback, useRef } from "react";
-import { Dimensions, FlatList, NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, View } from "react-native";
-import { Chip, Icon, IconButton, overlay, Surface, Text, useTheme } from "react-native-paper";
+import { Dimensions, FlatList, NativeScrollEvent, NativeSyntheticEvent, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { Chip, Icon, Text, useTheme } from "react-native-paper";
 
 const item = {
     title: "River Green Restaurant",
@@ -99,109 +98,66 @@ export default function Overview() {
 
         const isBottomReached = layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
 
-        if(isBottomReached)
-            if(GeneralOptionsPanelRef.current !== null)
+        if (isBottomReached)
+            if (GeneralOptionsPanelRef.current !== null)
                 GeneralOptionsPanelRef.current.loadMore();
     }, []);
 
     return (
-        <View style={{ backgroundColor: theme.colors.background }}>
-            <View style={styles.floatingButtonContainer}>
-                <IconButton
-                    icon="arrow-left"
-                    size={24}
-                    onPress={handleBackPress}
-                    mode="contained"
-                />
-                <View style={styles.rightSideActionButtonsContainer}>
-                    <IconButton
-                        icon="heart-outline"
-                        size={24}
-                        mode="contained"
-                        onPress={() => { }}
-                    />
-                    <IconButton
-                        icon="magnify"
-                        size={24}
-                        mode="contained"
-                        onPress={() => { }}
-                    />
+        <ScrollView onScroll={handleScroll} scrollEventThrottle={16} style={{ backgroundColor: theme.colors.background }}>
+            <View style={styles.container}>
+                <View style={styles.topSection}>
+                    <ImageBackground
+                        source={item.image}
+                        style={styles.imageBackground}
+                        contentFit="cover"
+                    >
+                        <View style={styles.overlay} />
+                        <View style={styles.titleContainer}>
+                            <Text variant="displaySmall" style={{ color: "#d5d5d5" }}>{item.title}</Text>
+                            <View style={styles.ratingContainer}>
+                                <Text variant="labelMedium" style={{ color: "#d5d5d5" }}>{item.rating}</Text>
+                                <Icon source="star" size={14} color="#d5d5d5" />
+                            </View>
+                        </View>
+                    </ImageBackground>
                 </View>
-            </View>
-            <ScrollView onScroll={handleScroll} scrollEventThrottle={16} style={{ backgroundColor: theme.colors.background, marginBottom: 50 }}>
-                <View style={styles.container}>
-                    <View style={styles.topSection}>
-                        <ImageBackground
-                            source={item.image}
-                            style={styles.imageBackground}
-                            contentFit="cover"
-                        >
-                            <View style={styles.overlay} />
-                            <View style={styles.titleContainer}>
-                                <Text variant="displaySmall" style={{ color: "#d5d5d5" }}>{item.title}</Text>
-                                <View style={styles.ratingContainer}>
-                                    <Text variant="labelMedium" style={{ color: "#d5d5d5" }}>{item.rating}</Text>
-                                    <Icon source="star" size={14} color="#d5d5d5" />
-                                </View>
-                            </View>
-                        </ImageBackground>
-                    </View>
 
-                    <View style={styles.bottomSection}>
-                        <View style={styles.bottomSectionContainer}>
-                            <View style={styles.section}>
-                                <View style={styles.sectionContentContainer}>
-                                    <Text variant="headlineMedium" style={styles.sectionTitle}>Welcome</Text>
-                                    <Text variant="bodyMedium">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit vitae fugiat quaerat sit in repellat. Eaque perspiciatis beatae accusantium amet.</Text>
-                                    <View style={styles.tagContainer}>
-                                        {item.tags.map((tag, idx) => (
-                                            <Chip mode="outlined" key={idx}>{tag}</Chip>
-                                        ))}
-                                    </View>
+                <View style={styles.bottomSection}>
+                    <View style={styles.bottomSectionContainer}>
+                        <View style={styles.section}>
+                            <View style={styles.sectionContentContainer}>
+                                <Text variant="headlineMedium" style={styles.sectionTitle}>Welcome</Text>
+                                <Text variant="bodyLarge">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit vitae fugiat quaerat sit in repellat. Eaque perspiciatis beatae accusantium amet.</Text>
+                                <View style={styles.tagContainer}>
+                                    {item.tags.map((tag, idx) => (
+                                        <Chip mode="outlined" key={idx}>{tag}</Chip>
+                                    ))}
                                 </View>
                             </View>
-                            <View style={styles.section}>
-                                <View style={styles.sectionContentContainer}>
-                                    <Text variant="headlineMedium" style={styles.sectionTitle}>Contact</Text>
-                                    <View>
-                                        <View style={styles.contactRow}>
-                                            <Icon source={"map-marker"} size={16}/>
-                                            <Text variant="bodyMedium">{item.address}</Text>
-                                        </View>
-                                        <View style={styles.contactRow}>
-                                            <Icon source={"phone"} size={16}/>
-                                            <Text variant="bodyMedium">{item.telephone}</Text>
-                                        </View>
-                                        <View style={styles.contactRow}>
-                                            <Icon source={"email"} size={16}/>
-                                            <Text variant="bodyMedium">{item.email}</Text>
-                                        </View>
-                                    </View>
-                                </View>
+                        </View>
+                        <View style={styles.section}>
+                            <View style={styles.sectionContentContainer}>
+                                <Text variant="headlineMedium" style={styles.sectionTitle}>Featured</Text>
+                                <FlatList
+                                    data={item.featuredOptions}
+                                    renderItem={({ item }) => <FeaturedOption {...item} />}
+                                    keyExtractor={(_item, idx) => `${idx}`}
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                />
                             </View>
-                            <View style={styles.section}>
-                                <View style={styles.sectionContentContainer}>
-                                    <Text variant="headlineMedium" style={styles.sectionTitle}>Featured</Text>
-                                    <FlatList
-                                        data={item.featuredOptions}
-                                        renderItem={({ item }) => <FeaturedOption {...item} />}
-                                        keyExtractor={(_item, idx) => `${idx}`}
-                                        horizontal
-                                        showsHorizontalScrollIndicator={false}
-                                    />
-                                </View>
-                            </View>
-                            <View style={styles.section}>
-                                <View style={styles.sectionContentContainer}>
-                                    <Text variant="headlineMedium" style={styles.sectionTitle}>General Options</Text>
-                                    <GeneralOptionsPanel ref={GeneralOptionsPanelRef} />
-                                </View>
+                        </View>
+                        <View style={styles.section}>
+                            <View style={styles.sectionContentContainer}>
+                                <Text variant="headlineMedium" style={styles.sectionTitle}>General Options</Text>
+                                <GeneralOptionsPanel ref={GeneralOptionsPanelRef} />
                             </View>
                         </View>
                     </View>
                 </View>
-            </ScrollView>
-        </View>
+            </View>
+        </ScrollView>
     );
 }
 
@@ -215,7 +171,7 @@ const styles = StyleSheet.create({
         // backgroundColor: "red",
         flexDirection: "row",
         justifyContent: "space-between",
-        position: "fixed",
+        position: "absolute",
         width: "100%",
         zIndex: 100000
     },

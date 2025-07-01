@@ -11,31 +11,29 @@ export interface PostType1Props {
 };
 
 const PostType1 = ({ title, image, rating, tags, onRatePress, onCheckPress }: PostType1Props) => {
-    
+
     return (
-        <TouchableOpacity style={styles.container}>
-            <Card mode="contained">
-                <Card.Cover resizeMode="cover" source={{ uri: image }} />
-                <View style={styles.cardContentContainer}>
-                    <Text variant="titleLarge" style={styles.title}>{title}</Text>
-                    <View style={styles.ratingContainer}>
-                        <Text variant="bodyLarge">{rating}</Text>
-                        <Icon source={"star"} size={20} />
-                    </View>
+        <Card style={styles.container} mode="contained">
+            <Card.Cover resizeMode="cover" source={{ uri: image }} />
+            <View style={styles.cardContentContainer}>
+                <Text variant="titleLarge" style={styles.title}>{title}</Text>
+                <View style={styles.ratingContainer}>
+                    <Text variant="bodyLarge">{rating}</Text>
+                    <Icon source={"star"} size={20} />
                 </View>
-                <View style={styles.tagsContainer}>
-                    {
-                        tags.map((tag, idx) => (
-                            <Chip mode="outlined" key={idx}>{tag}</Chip>
-                        ))
-                    }
-                </View>
-                <Card.Actions>
-                    <Button icon={"star-outline"} onPress={onRatePress}>Rate</Button>
-                    <Button icon={"arrow-right"} onPress={onCheckPress}>Check</Button>
-                </Card.Actions>
-            </Card>
-        </TouchableOpacity>
+            </View>
+            <View style={styles.tagsContainer}>
+                {
+                    tags.map((tag, idx) => (
+                        <Chip mode="outlined" key={idx}>{tag}</Chip>
+                    ))
+                }
+            </View>
+            <Card.Actions>
+                <Button icon={"star-outline"} onPress={onRatePress}>Rate</Button>
+                <Button icon={"arrow-right"} onPress={onCheckPress}>Check</Button>
+            </Card.Actions>
+        </Card>
     );
 }
 

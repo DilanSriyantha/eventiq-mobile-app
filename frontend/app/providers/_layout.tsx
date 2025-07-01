@@ -1,10 +1,9 @@
 import { Slot } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
-import { IconButton, PaperProvider } from "react-native-paper";
+import { PaperProvider } from "react-native-paper";
 
 export default function ProviderLayout() {
-
     return (
         <PaperProvider>
             <StatusBar
@@ -22,5 +21,5 @@ export default function ProviderLayout() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
+    }
 });

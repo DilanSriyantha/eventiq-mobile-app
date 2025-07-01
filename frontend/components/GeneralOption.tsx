@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import { memo } from "react";
 import { StyleSheet, View } from "react-native";
-import { Text } from "react-native-paper";
+import { Surface, Text } from "react-native-paper";
 
 interface GeneralOptionProps {
     image: string;
@@ -12,13 +12,13 @@ interface GeneralOptionProps {
 function GeneralOption(props: GeneralOptionProps) {
 
     return (
-        <View style={styles.container}>
+        <Surface mode="flat" style={styles.container}>
             <Image source={{ uri: props.image }} style={styles.image} />
             <View style={styles.content}>
-                <Text variant="bodyMedium">{props.label}</Text>
-                <Text variant="bodySmall" numberOfLines={3} ellipsizeMode="tail" style={{ maxWidth: 200, }}>{props.description}</Text>
+                <Text variant="bodyLarge">{props.label}</Text>
+                <Text variant="bodyMedium" numberOfLines={3} ellipsizeMode="tail" style={{ maxWidth: 200, }}>{props.description}</Text>
             </View>
-        </View>
+        </Surface>
     );
 }
 
@@ -27,6 +27,8 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         gap: 5,
+        padding: 10,
+        borderRadius: 10,
     }, 
     image: {
         width: 100,

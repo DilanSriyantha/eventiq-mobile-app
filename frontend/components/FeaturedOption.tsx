@@ -12,13 +12,13 @@ function FeaturedOption(props: FeaturedItemProps) {
 
     return(
         <TouchableOpacity>
-            <View style={styles.container}>
+            <Surface mode="flat" style={styles.container}>
                 <Image
                     source={{ uri: props.image }}
                     style={styles.image}
                 />
-                <Text variant="labelSmall" style={styles.labelText}>{props.label}</Text>
-            </View>
+                <Text variant="labelLarge" style={styles.labelText}>{props.label}</Text>
+            </Surface>
         </TouchableOpacity>
     );
 }
@@ -26,7 +26,9 @@ function FeaturedOption(props: FeaturedItemProps) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingRight: 10,
+        padding: 5,
+        borderRadius: 10,
+        marginRight: 5,
     },
     image: {
         width: 100,

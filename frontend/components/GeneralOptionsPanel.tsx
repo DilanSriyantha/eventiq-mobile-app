@@ -65,7 +65,7 @@ const GENERAL_OPTIONS: GeneralOption[] = [
     },
 ];
 
-const GeneralOptionsPanel = forwardRef<GeneralOptionsPanelHandle, GeneralOptionsPanelProps>((props, ref) => {
+const GeneralOptionsPanel = forwardRef<GeneralOptionsPanelHandle, GeneralOptionsPanelProps>((_props, ref) => {
     const [items, setItems] = useState<GeneralOption[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -104,7 +104,6 @@ const GeneralOptionsPanel = forwardRef<GeneralOptionsPanelHandle, GeneralOptions
             {loading && (
                 <View style={styles.loading}>
                     <ActivityIndicator size={"small"} />
-                    <Text variant="bodyMedium">Loading...</Text>
                 </View>
             )}
         </View>
@@ -114,7 +113,7 @@ const GeneralOptionsPanel = forwardRef<GeneralOptionsPanelHandle, GeneralOptions
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        gap: 5,
+        gap: 10,
     },
     loading: {
         padding: 20,
