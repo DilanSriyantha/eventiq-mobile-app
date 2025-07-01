@@ -3,7 +3,7 @@ import GeneralOptionsPanel, { GeneralOptionsPanelHandle } from "@/components/Gen
 import { ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
 import { useCallback, useRef } from "react";
-import { Dimensions, FlatList, NativeScrollEvent, NativeSyntheticEvent, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { Dimensions, FlatList, NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, View } from "react-native";
 import { Chip, Icon, Text, useTheme } from "react-native-paper";
 
 const item = {
