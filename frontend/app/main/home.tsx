@@ -38,7 +38,7 @@ export default function Home() {
     const router = useRouter();
 
     function handleCheckPress() {
-        router.push("/providers/" as any);
+        router.push("/providers?title=provider_overview" as any);
     }
 
     return (
@@ -63,6 +63,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 10,
-        gap: 10,
+        gap: 15,
     },
 });

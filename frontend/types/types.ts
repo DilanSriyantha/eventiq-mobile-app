@@ -48,5 +48,6 @@ export interface ManagableEvent {
     id: number;
     title: string;
     date: string;
+    description: string;
     components: EventComponent[];
 };

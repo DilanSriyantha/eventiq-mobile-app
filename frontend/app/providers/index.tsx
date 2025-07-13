@@ -1,5 +1,6 @@
 import FeaturedOption from "@/components/FeaturedOption";
 import GeneralOptionsPanel, { GeneralOptionsPanelHandle } from "@/components/GeneralOptionsPanel";
+import ParallaxViewWrapper from "@/components/ParallaxViewWrapper";
 import { ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
 import { useCallback, useRef } from "react";
@@ -89,10 +90,6 @@ export default function Overview() {
     const router = useRouter();
     const theme = useTheme();
 
-    const handleBackPress = useCallback(() => {
-        router.back();
-    }, []);
-
     const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
 
@@ -104,60 +101,45 @@ export default function Overview() {
     }, []);
 
     return (
-        <ScrollView onScroll={handleScroll} scrollEventThrottle={16} style={{ backgroundColor: theme.colors.background }}>
-            <View style={styles.container}>
-                <View style={styles.topSection}>
-                    <ImageBackground
-                        source={item.image}
-                        style={styles.imageBackground}
-                        contentFit="cover"
-                    >
-                        <View style={styles.overlay} />
-                        <View style={styles.titleContainer}>
-                            <Text variant="displaySmall" style={{ color: "#d5d5d5" }}>{item.title}</Text>
-                            <View style={styles.ratingContainer}>
-                                <Text variant="labelMedium" style={{ color: "#d5d5d5" }}>{item.rating}</Text>
-                                <Icon source="star" size={14} color="#d5d5d5" />
-                            </View>
-                        </View>
-                    </ImageBackground>
-                </View>
-
-                <View style={styles.bottomSection}>
-                    <View style={styles.bottomSectionContainer}>
-                        <View style={styles.section}>
-                            <View style={styles.sectionContentContainer}>
-                                <Text variant="headlineMedium" style={styles.sectionTitle}>Welcome</Text>
-                                <Text variant="bodyLarge">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit vitae fugiat quaerat sit in repellat. Eaque perspiciatis beatae accusantium amet.</Text>
-                                <View style={styles.tagContainer}>
-                                    {item.tags.map((tag, idx) => (
-                                        <Chip mode="outlined" key={idx}>{tag}</Chip>
-                                    ))}
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.section}>
-                            <View style={styles.sectionContentContainer}>
-                                <Text variant="headlineMedium" style={styles.sectionTitle}>Featured</Text>
-                                <FlatList
-                                    data={item.featuredOptions}
-                                    renderItem={({ item }) => <FeaturedOption {...item} />}
-                                    keyExtractor={(_item, idx) => `${idx}`}
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}
-                                />
-                            </View>
-                        </View>
-                        <View style={styles.section}>
-                            <View style={styles.sectionContentContainer}>
-                                <Text variant="headlineMedium" style={styles.sectionTitle}>General Options</Text>
-                                <GeneralOptionsPanel ref={GeneralOptionsPanelRef} />
-                            </View>
+        <ParallaxViewWrapper
+            title={item.title}
+            subTitle={`${item.rating}`}
+            image={item.image}
+            onScroll={handleScroll}
+            onBackPress={router.back}
+        >
+            <View style={styles.bottomSectionContainer}>
+                <View style={styles.section}>
+                    <View style={styles.sectionContentContainer}>
+                        <Text variant="headlineMedium" style={styles.sectionTitle}>Welcome</Text>
+                        <Text variant="bodyLarge">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit vitae fugiat quaerat sit in repellat. Eaque perspiciatis beatae accusantium amet.</Text>
+                        <View style={styles.tagContainer}>
+                            {item.tags.map((tag, idx) => (
+                                <Chip mode="outlined" key={idx}>{tag}</Chip>
+                            ))}
                         </View>
                     </View>
                 </View>
+                <View style={styles.section}>
+                    <View style={styles.sectionContentContainer}>
+                        <Text variant="headlineMedium" style={styles.sectionTitle}>Featured</Text>
+                        <FlatList
+                            data={item.featuredOptions}
+                            renderItem={({ item }) => <FeaturedOption {...item} />}
+                            keyExtractor={(_item, idx) => `${idx}`}
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                        />
+                    </View>
+                </View>
+                <View style={styles.section}>
+                    <View style={styles.sectionContentContainer}>
+                        <Text variant="headlineMedium" style={styles.sectionTitle}>General Options</Text>
+                        <GeneralOptionsPanel ref={GeneralOptionsPanelRef} />
+                    </View>
+                </View>
             </View>
-        </ScrollView>
+        </ParallaxViewWrapper>
     );
 }
 
