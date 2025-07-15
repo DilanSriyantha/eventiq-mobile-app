@@ -3,6 +3,7 @@ import FABGroup from "@/components/FABGroup";
 import FeaturedOption from "@/components/FeaturedOption";
 import GeneralOptionsPanel, { GeneralOptionsPanelHandle } from "@/components/GeneralOptionsPanel";
 import ParallaxViewWrapper from "@/components/ParallaxViewWrapper";
+import RatingStrip from "@/components/RatingStrip";
 import { useRouter } from "expo-router";
 import { useCallback, useRef } from "react";
 import { Dimensions, FlatList, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, View } from "react-native";
@@ -130,10 +131,19 @@ export default function Overview() {
                     </View>
                     <View style={styles.section}>
                         <View style={styles.sectionContentContainer}>
+                            <Text variant="headlineMedium" style={styles.sectionTitle}>Rating</Text>
+                            <RatingStrip
+                                value={item.rating}
+                                size={24}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.section}>
+                        <View style={styles.sectionContentContainer}>
                             <Text variant="headlineMedium" style={styles.sectionTitle}>Featured</Text>
                             <FlatList
                                 data={item.featuredOptions}
-                                renderItem={({ item }) => <FeaturedOption {...item} />}
+                                renderItem={({ item }) => <FeaturedOption {...item} onPress={() => console.log(item)} />}
                                 keyExtractor={(_item, idx) => `${idx}`}
                                 horizontal
                                 showsHorizontalScrollIndicator={false}
@@ -211,7 +221,7 @@ const styles = StyleSheet.create({
     },
     bottomSectionContainer: {
         padding: 10,
-        gap: 20,
+        gap: 25,
     },
     section: {
 

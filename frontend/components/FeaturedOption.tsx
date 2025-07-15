@@ -6,12 +6,25 @@ import { Surface, Text } from "react-native-paper";
 interface FeaturedItemProps {
     label: string;
     image: string;
+    onPress?: (item: any) => void;
 };  
 
-function FeaturedOption(props: FeaturedItemProps) {
+function FeaturedOption({...props}: FeaturedItemProps) {
 
-    return(
-        <TouchableOpacity>
+    if(props.onPress){
+        return(
+            <TouchableOpacity onPress={props.onPress}>
+                <Surface mode="flat" style={styles.container}>
+                    <Image
+                        source={{ uri: props.image }}
+                        style={styles.image}
+                    />
+                    <Text variant="labelLarge" style={styles.labelText}>{props.label}</Text>
+                </Surface>
+            </TouchableOpacity>
+        );
+    }else{
+        return (
             <Surface mode="flat" style={styles.container}>
                 <Image
                     source={{ uri: props.image }}
@@ -19,8 +32,8 @@ function FeaturedOption(props: FeaturedItemProps) {
                 />
                 <Text variant="labelLarge" style={styles.labelText}>{props.label}</Text>
             </Surface>
-        </TouchableOpacity>
-    );
+        );
+    }
 }
 
 const styles = StyleSheet.create({

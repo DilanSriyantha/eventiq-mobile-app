@@ -1,5 +1,6 @@
 import AnimatedCustomizedFAB from "@/components/AnimatedCustomizedFAB";
 import CommentsSection from "@/components/CommentsSection";
+import FABGroup from "@/components/FABGroup";
 import ParallaxViewWrapper from "@/components/ParallaxViewWrapper";
 import RatingStrip from "@/components/RatingStrip";
 import { useRouter } from "expo-router";
@@ -54,12 +55,20 @@ export default function ProductOverview() {
                     </View>
                 </View>
             </ParallaxViewWrapper>
-            <AnimatedCustomizedFAB
+            <FABGroup
                 icon={"plus"}
-                label={"Add"}
-                animateFrom={"right"}
-                iconMode={"dynamic"}
-                onPress={handleAddPress}
+                actions={[
+                    {
+                        icon: "star",
+                        label: "Rate",
+                        onPress: () => {}
+                    },
+                    {
+                        icon: "plus",
+                        label: "Add to an event",
+                        onPress: () => {}
+                    }
+                ]}
             />
         </>
     );
@@ -71,7 +80,7 @@ const styles = StyleSheet.create({
     },
     content: {
         padding: 10,
-        gap: 15,
+        gap: 25,
     },
     section: {
 

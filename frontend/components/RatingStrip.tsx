@@ -28,7 +28,7 @@ function RatingStrip({...props}: RatingStripProps){
                 stars.push(
                     props.adjustable 
                     ? 
-                        <TouchableOpacity onPress={() => handleStarPress(i + 1)}>
+                        <TouchableOpacity onPress={() => handleStarPress(i + 1)} key={i}>
                             <Icon
                                 source={"star"}
                                 color={"#ffdf00"}
@@ -40,13 +40,14 @@ function RatingStrip({...props}: RatingStripProps){
                             source={"star"}
                             color={"#ffdf00"}
                             size={props.size}
+                            key={i}
                         />
                 );
             }else if((value - Math.floor(value)) * 10 >= 5){
                 stars.push(
                     props.adjustable 
                     ? 
-                        <TouchableOpacity onPress={() => handleStarPress(i + 1)}>
+                        <TouchableOpacity onPress={() => handleStarPress(i + 1)} key={i}>
                             <Icon
                                 source={"star-half-full"}
                                 color={"#ffdf00"}
@@ -58,13 +59,14 @@ function RatingStrip({...props}: RatingStripProps){
                             source={"star-half-full"}
                             color={"#ffdf00"}
                             size={props.size}
+                            key={i}
                         />
                 );
             }else{
                 stars.push(
                     props.adjustable 
                     ? 
-                        <TouchableOpacity onPress={() => handleStarPress(i + 1)}>
+                        <TouchableOpacity onPress={() => handleStarPress(i + 1)} key={i}>
                             <Icon
                                 source={"star-outline"}
                                 color={"#ffdf00"}
@@ -76,6 +78,7 @@ function RatingStrip({...props}: RatingStripProps){
                             source={"star-outline"}
                             color={"#ffdf00"}
                             size={props.size}
+                            key={i}
                         />
                 );
             }
