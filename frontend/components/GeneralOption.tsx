@@ -1,24 +1,31 @@
 import { Image } from "expo-image";
-import { memo } from "react";
-import { StyleSheet, View } from "react-native";
+import { memo, useCallback } from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Surface, Text } from "react-native-paper";
 
 interface GeneralOptionProps {
     image: string;
     label: string;
     description: string;
+    onClick?: () => void;
 };
 
 function GeneralOption(props: GeneralOptionProps) {
 
+    const handleClick = useCallback(() => {
+        props.onClick?.apply(null, []);
+    }, []);
+
     return (
-        <Surface mode="flat" style={styles.container}>
-            <Image source={{ uri: props.image }} style={styles.image} />
-            <View style={styles.content}>
-                <Text variant="bodyLarge">{props.label}</Text>
-                <Text variant="bodyMedium" numberOfLines={3} ellipsizeMode="tail" style={{ maxWidth: 200, }}>{props.description}</Text>
-            </View>
-        </Surface>
+        <TouchableOpacity onPress={handleClick}>
+            <Surface mode="flat" style={styles.container}>
+                <Image source={{ uri: props.image }} style={styles.image} />
+                <View style={styles.content}>
+                    <Text variant="bodyLarge">{props.label}</Text>
+                    <Text variant="bodyMedium" numberOfLines={3} ellipsizeMode="tail" style={{ maxWidth: 200, }}>{props.description}</Text>
+                </View>
+            </Surface>
+        </TouchableOpacity>
     );
 }
 

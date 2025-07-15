@@ -101,7 +101,7 @@ export default function ParallaxViewWrapper(props: ParallaxViewWrapperProps) {
                     <Appbar.Content title={props.title} />
                 </Appbar.Header>
             </Animated.View>
-            <Animated.ScrollView style={scrollViewAnimatedStyle} onScroll={handleScroll} showsVerticalScrollIndicator={true}>
+            <Animated.ScrollView style={scrollViewAnimatedStyle} onScroll={handleScroll} showsVerticalScrollIndicator={false}>
                 <Animated.View style={imageHeaderAnimatedStyle}>
                     <View style={styles.headerContent}>
                         <View style={styles.imageOverlay}>

@@ -1,11 +1,12 @@
+import AnimatedCustomizedFAB, { AnimatedCustomizedFABHandle } from "@/components/AnimatedCustomizedFAB";
+import FABGroup from "@/components/FABGroup";
 import FeaturedOption from "@/components/FeaturedOption";
 import GeneralOptionsPanel, { GeneralOptionsPanelHandle } from "@/components/GeneralOptionsPanel";
 import ParallaxViewWrapper from "@/components/ParallaxViewWrapper";
-import { ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
 import { useCallback, useRef } from "react";
-import { Dimensions, FlatList, NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, View } from "react-native";
-import { Chip, Icon, Text, useTheme } from "react-native-paper";
+import { Dimensions, FlatList, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, View } from "react-native";
+import { Chip, FAB, Text, useTheme } from "react-native-paper";
 
 const item = {
     title: "River Green Restaurant",
@@ -85,10 +86,10 @@ const item = {
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 export default function Overview() {
+    const FABRef = useRef<AnimatedCustomizedFABHandle>(null);
     const GeneralOptionsPanelRef = useRef<GeneralOptionsPanelHandle>(null);
 
     const router = useRouter();
-    const theme = useTheme();
 
     const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
@@ -97,49 +98,72 @@ export default function Overview() {
 
         if (isBottomReached)
             if (GeneralOptionsPanelRef.current !== null)
-                GeneralOptionsPanelRef.current.loadMore();
+                GeneralOptionsPanelRef.current?.loadMore.apply(null, []);
+
+        FABRef.current?.handleScroll(event);
+    }, []);
+
+    const handleItemClick = useCallback((item: any) => {
+        router.push("/providers/product_overview");
     }, []);
 
     return (
-        <ParallaxViewWrapper
-            title={item.title}
-            subTitle={`${item.rating}`}
-            image={item.image}
-            onScroll={handleScroll}
-            onBackPress={router.back}
-        >
-            <View style={styles.bottomSectionContainer}>
-                <View style={styles.section}>
-                    <View style={styles.sectionContentContainer}>
-                        <Text variant="headlineMedium" style={styles.sectionTitle}>Welcome</Text>
-                        <Text variant="bodyLarge">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit vitae fugiat quaerat sit in repellat. Eaque perspiciatis beatae accusantium amet.</Text>
-                        <View style={styles.tagContainer}>
-                            {item.tags.map((tag, idx) => (
-                                <Chip mode="outlined" key={idx}>{tag}</Chip>
-                            ))}
+        <>
+            <ParallaxViewWrapper
+                title={item.title}
+                subTitle={`${item.rating}`}
+                image={item.image}
+                onScroll={handleScroll}
+                onBackPress={router.back}
+            >
+                <View style={styles.bottomSectionContainer}>
+                    <View style={styles.section}>
+                        <View style={styles.sectionContentContainer}>
+                            <Text variant="headlineMedium" style={styles.sectionTitle}>Welcome</Text>
+                            <Text variant="bodyLarge">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit vitae fugiat quaerat sit in repellat. Eaque perspiciatis beatae accusantium amet.</Text>
+                            <View style={styles.tagContainer}>
+                                {item.tags.map((tag, idx) => (
+                                    <Chip mode="outlined" key={idx}>{tag}</Chip>
+                                ))}
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.section}>
+                        <View style={styles.sectionContentContainer}>
+                            <Text variant="headlineMedium" style={styles.sectionTitle}>Featured</Text>
+                            <FlatList
+                                data={item.featuredOptions}
+                                renderItem={({ item }) => <FeaturedOption {...item} />}
+                                keyExtractor={(_item, idx) => `${idx}`}
+                                horizontal
+                                showsHorizontalScrollIndicator={false}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.section}>
+                        <View style={styles.sectionContentContainer}>
+                            <Text variant="headlineMedium" style={styles.sectionTitle}>General Options</Text>
+                            <GeneralOptionsPanel onItemClick={handleItemClick} ref={GeneralOptionsPanelRef} />
                         </View>
                     </View>
                 </View>
-                <View style={styles.section}>
-                    <View style={styles.sectionContentContainer}>
-                        <Text variant="headlineMedium" style={styles.sectionTitle}>Featured</Text>
-                        <FlatList
-                            data={item.featuredOptions}
-                            renderItem={({ item }) => <FeaturedOption {...item} />}
-                            keyExtractor={(_item, idx) => `${idx}`}
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                        />
-                    </View>
-                </View>
-                <View style={styles.section}>
-                    <View style={styles.sectionContentContainer}>
-                        <Text variant="headlineMedium" style={styles.sectionTitle}>General Options</Text>
-                        <GeneralOptionsPanel ref={GeneralOptionsPanelRef} />
-                    </View>
-                </View>
-            </View>
-        </ParallaxViewWrapper>
+            </ParallaxViewWrapper>
+            <FABGroup
+                icon={"plus"}
+                actions={[
+                    {
+                        icon: "star",
+                        label: "Rate",
+                        onPress: () => console.log("rate pressed")
+                    },
+                    {
+                        icon: "email",
+                        label: "Message",
+                        onPress: () => console.log("message pressed")
+                    }
+                ]}
+            />
+        </>
     );
 }
 

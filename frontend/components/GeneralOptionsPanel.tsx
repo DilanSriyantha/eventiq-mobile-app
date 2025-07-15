@@ -8,7 +8,7 @@ export interface GeneralOptionsPanelHandle {
 };
 
 interface GeneralOptionsPanelProps {
-
+    onItemClick?: (item: GeneralOption) => void;
 };
 
 interface GeneralOption {
@@ -65,7 +65,7 @@ const GENERAL_OPTIONS: GeneralOption[] = [
     },
 ];
 
-const GeneralOptionsPanel = forwardRef<GeneralOptionsPanelHandle, GeneralOptionsPanelProps>((_props, ref) => {
+const GeneralOptionsPanel = forwardRef<GeneralOptionsPanelHandle, GeneralOptionsPanelProps>((props, ref) => {
     const [items, setItems] = useState<GeneralOption[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -95,10 +95,14 @@ const GeneralOptionsPanel = forwardRef<GeneralOptionsPanelHandle, GeneralOptions
         }, 1000);
     }, [loading]);
 
+    const handleItemClick = useCallback((item: GeneralOption) => {
+        props.onItemClick?.apply(null, [item]);
+    }, []);
+
     return (
         <View style={styles.container}>
             {items.map((go, idx) => (
-                <GeneralOption key={idx} {...go} />
+                <GeneralOption key={idx} {...go} onClick={() => handleItemClick(go)} />
             ))}
 
             {loading && (
