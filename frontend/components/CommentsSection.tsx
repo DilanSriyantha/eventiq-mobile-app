@@ -12,14 +12,14 @@ export interface Comment {
     description: string;
 };
 
-function CommentSection({...props}: CommentSectionProps) {
+function CommentSection({ ...props }: CommentSectionProps) {
     const [comments, setComments] = useState<Comment[]>([]);
 
     const renderComment = (comment: Comment) => (
         <View>
-            <Avatar
+            {/* <Avatar
 
-            />
+            /> */}
         </View>
     );
 

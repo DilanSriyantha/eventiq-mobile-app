@@ -3,7 +3,7 @@ import PostType1, { PostType1Props } from "@/components/PostType1";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import { Searchbar } from "react-native-paper";
+import { Button, Searchbar } from "react-native-paper";
 
 const POSTS_01: PostType1Props[] = [
     {
@@ -51,7 +51,7 @@ export default function Home() {
             <EventCategoriesList onChange={() => { }} />
             <FlatList
                 data={POSTS_01}
-                renderItem={({item}) => <PostType1  {...item} onCheckPress={handleCheckPress} />}
+                renderItem={({ item }) => <PostType1  {...item} onCheckPress={handleCheckPress} />}
                 keyExtractor={(_item, idx) => `${idx}`}
                 showsVerticalScrollIndicator={false}
             />

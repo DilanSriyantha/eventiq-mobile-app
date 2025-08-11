@@ -1,37 +1,40 @@
+import { useAuth } from "@/context/AuthProvider";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Avatar, List, Text } from "react-native-paper";
 
 export default function Profile() {
+    const auth = useAuth();
+
     return (
         <View style={styles.container}>
             <View style={styles.userNameContainer}>
                 <Text variant="displayMedium">Dilan Sriyantha</Text>
-                <Avatar.Image size={92} source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgtecEMJwshnqr2gzcyPxvBMLyQXBosrjxqA&s" }}/>
+                <Avatar.Text size={92} label={auth.currentUser ? auth.currentUser.name.substring(0, 1) : ""} />
             </View>
             <ScrollView style={styles.menu}>
                 <List.Item
                     title="Help"
                     left={props => <List.Icon {...props} icon="lifebuoy" />}
-                    onPress={() => {}}
+                    onPress={() => { }}
                 />
                 <List.Item
                     title="Privacy"
                     left={props => <List.Icon {...props} icon="eye-remove-outline" />}
-                    onPress={() => {}}
+                    onPress={() => { }}
                 />
                 <List.Item
                     title="Accessibility"
                     left={props => <List.Icon {...props} icon="human" />}
-                    onPress={() => {}}
+                    onPress={() => { }}
                 />
                 <List.Item
                     title="About"
                     left={props => <List.Icon {...props} icon="information-outline" />}
-                    onPress={() => {}}
+                    onPress={() => { }}
                 />
             </ScrollView>
         </View>
-    );  
+    );
 }
 
 const styles = StyleSheet.create({
