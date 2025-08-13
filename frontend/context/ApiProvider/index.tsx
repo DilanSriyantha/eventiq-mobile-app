@@ -1,8 +1,8 @@
+import useSecureStore from "@/app/hooks/useSecureStore";
 import { createContext, ReactNode, useContext } from "react";
 import { AuthResponse, SuccessResponse } from "./types";
-import Role from "@/app/enums/Role";
-import { API_URL } from "@env";
-import useSecureStore from "@/app/hooks/useSecureStore";
+
+const API_URL = "127.0.0.1:8080/api/v1";
 
 interface ApiProviderProps {
     children: ReactNode;
