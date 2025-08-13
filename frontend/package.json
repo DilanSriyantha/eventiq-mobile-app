@@ -3,6 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
+    "start-project": "start cmd.exe /c \"npx expo start\" && start cmd.exe /c \"cd .. && cd backend && mvnw spring-boot:run\"",
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",

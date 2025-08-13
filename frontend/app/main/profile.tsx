@@ -8,8 +8,8 @@ export default function Profile() {
     return (
         <View style={styles.container}>
             <View style={styles.userNameContainer}>
-                <Text variant="displayMedium">Dilan Sriyantha</Text>
-                <Avatar.Text size={92} label={auth.currentUser ? auth.currentUser.name.substring(0, 1) : ""} />
+                <Text variant="displayMedium">{auth.currentUser ? auth.currentUser.name : "User"}</Text>
+                <Avatar.Text size={92} label={auth.currentUser ? auth.currentUser.name.substring(0, 1) : "U"} />
             </View>
             <ScrollView style={styles.menu}>
                 <List.Item
