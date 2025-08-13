@@ -9,3 +9,14 @@ CREATE TABLE IF NOT EXISTS users (
     CONSTRAINT pk_user_id PRIMARY KEY (id),
     CONSTRAINT uc_user_email UNIQUE (email)
 );
+
+CREATE TABLE IF NOT EXISTS posts (
+    id INTEGER AUTO_INCREMENT NOT NULL,
+    
+);
+
+CREATE TABLE IF NOT EXISTS provider_posts (
+    id INTEGER AUTO_INCREMENT NOT NULL,
+    provider_id INTEGER NOT NULL,
+    post_id INTEGER NOT NULL
+);
