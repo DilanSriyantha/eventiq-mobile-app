@@ -2,7 +2,8 @@ import useSecureStore from "@/app/hooks/useSecureStore";
 import { createContext, ReactNode, useContext } from "react";
 import { AuthResponse, SuccessResponse } from "./types";
 
-const API_URL = "127.0.0.1:8080/api/v1";
+// const API_URL = "http://127.0.0.1:8080/api/v1"; 
+const API_URL = "http://10.0.2.2:8080/api/v1"; // enable when running on emulator
 
 interface ApiProviderProps {
     children: ReactNode;
@@ -104,6 +105,8 @@ const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
     function post<T, R>(endpoint: string, body: T): Promise<R> {
         return new Promise(async (resolve, reject) => {
             const url = API_URL + endpoint;
+
+            console.log(url);
 
             try {
                 const res = await fetch(url, {
