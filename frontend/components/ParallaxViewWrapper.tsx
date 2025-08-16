@@ -95,19 +95,19 @@ export default function ParallaxViewWrapper(props: ParallaxViewWrapperProps) {
 
     return (
         <View style={{ ...styles.container, backgroundColor: theme.colors.background }}>
-            <Animated.View style={[appBarStyle, { position: "absolute", height: 100, top: 0, zIndex: 1, width: "100%" }]}>
+            <Animated.View style={[appBarStyle, { position: "absolute", height: 100, top: 0, zIndex: 10000000, width: "100%" }]}>
                 <Appbar.Header>
                     <Appbar.BackAction onPress={props.onBackPress} />
                     <Appbar.Content title={props.title} />
                 </Appbar.Header>
             </Animated.View>
             <Animated.ScrollView style={scrollViewAnimatedStyle} onScroll={handleScroll} showsVerticalScrollIndicator={false}>
-                <Animated.View style={imageHeaderAnimatedStyle}>
+                <Animated.View style={[imageHeaderAnimatedStyle, { zIndex: 10000000 }]}>
                     <View style={styles.headerContent}>
                         <View style={styles.imageOverlay}>
                             <View style={styles.backdrop} />
-                            <View style={{ position: "fixed", borderRadius: 100, marginTop: 50, zIndex: 1000 }}>
-                                <IconButton icon="arrow-left" onPress={props.onBackPress}/>
+                            <View style={{ position: "fixed", borderRadius: 100, marginTop: 50, zIndex: 10000000 }}>
+                                <IconButton icon="arrow-left" onPress={props.onBackPress} />
                             </View>
                             <View style={styles.headerTextContainer}>
                                 <Text variant="titleLarge">{props.title}</Text>

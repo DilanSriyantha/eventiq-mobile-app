@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     },
     nameContainer: {
         flex: 1,
+        // maxWidth: "70%",
         flexWrap: "nowrap",
         paddingRight: 10,
     },
