@@ -113,18 +113,24 @@ CREATE TABLE IF NOT EXISTS comments (
 CREATE TABLE IF NOT EXISTS event_comments (
     event_id INTEGER NOT NULL,
     comment_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
 
     CONSTRAINT pk_event_comment
-    PRIMARY KEY (event_id, comment_id),
+    PRIMARY KEY (event_id, comment_id, user_id),
 
     CONSTRAINT fk_event_comments_event_id
     FOREIGN KEY (event_id)
     REFERENCES events(id)
     ON DELETE CASCADE,
 
-    CONSTRAINT fk_comment_id
+    CONSTRAINT fk_event_comments_comment_id
     FOREIGN KEY (comment_id)
     REFERENCES comments(id)
+    ON DELETE CASCADE,
+
+    CONSTRAINT fk_event_comments_user_id
+    FOREIGN KEY (user_id)
+    REFERENCES users(id)
     ON DELETE CASCADE
 )^;
 
@@ -399,4 +405,116 @@ BEGIN
     DELETE FROM events WHERE id = p_event_id;
 
     DELETE FROM user_events WHERE event_id = p_event_id;
+END^;
+
+
+-- EventComments Procedures
+
+DROP PROCEDURE IF EXISTS GetEventComments^;
+CREATE PROCEDURE GetEventComments()
+BEGIN
+    SELECT
+        ec.comment_id AS id,
+        ec.event_id AS event_id,
+        ec.user_id AS user_id,
+        u.name AS user_name,
+        c.comment,
+        c.created_at,
+        c.updated_at
+    FROM event_comments ec
+    JOIN events e ON ec.event_id = e.id
+    JOIN comments c ON ec.comment_id = c.id
+    JOIN users u ON ec.user_id = u.id;
+END^;
+
+DROP PROCEDURE IF EXISTS GetEventCommentsPage^;
+CREATE PROCEDURE GetEventCommentsPage(
+    IN p_event_id INT,
+    IN p_limit INT,
+    IN p_offset INT
+)
+BEGIN
+    SELECT
+        ec.comment_id AS id,
+        ec.event_id AS event_id,
+        ec.user_id AS user_id,
+        u.name AS user_name,
+        c.comment,
+        c.created_at,
+        c.updated_at
+    FROM (SELECT * FROM event_comments WHERE event_id = p_event_id) ec
+    JOIN events e ON ec.event_id = e.id
+    JOIN comments c ON ec.comment_id = c.id
+    JOIN users u ON ec.user_id = u.id
+    LIMIT p_limit OFFSET p_offset;
+END^;
+
+DROP PROCEDURE IF EXISTS GetEventCommentsCount^;
+CREATE PROCEDURE GetEventCommentsCount (
+    IN p_event_id INT
+)
+BEGIN
+    SELECT COUNT(*)
+    FROM (SELECT * FROM event_comments WHERE event_id = p_event_id) ec
+    JOIN events e ON ec.event_id = e.id
+    JOIN comments c ON ec.comment_id = c.id
+    JOIN users u ON ec.user_id = u.id;
+END^;
+
+DROP PROCEDURE IF EXISTS GetEventComment^;
+CREATE PROCEDURE GetEventComment (
+    IN p_comment_id INT
+)
+BEGIN
+    SELECT
+        ec.comment_id AS id,
+        ec.event_id AS event_id,
+        ec.user_id AS user_id,
+        u.name AS user_name,
+        c.comment,
+        c.created_at,
+        c.updated_at
+    FROM (SELECT * FROM event_comments WHERE comment_id = p_comment_id) ec
+    JOIN events e ON ec.event_id = e.id
+    JOIN comments c ON ec.comment_id = c.id
+    JOIN users u ON ec.user_id = u.id;
+END^;
+
+DROP PROCEDURE IF EXISTS CreateEventComment^;
+CREATE PROCEDURE CreateEventComment (
+    IN p_user_id INT,
+    IN p_event_id INT,
+    IN p_comment VARCHAR(255)
+)
+BEGIN
+    DECLARE last_comment_id INT;
+
+    INSERT INTO comments (comment) VALUES (p_comment);
+
+    SET last_comment_id = LAST_INSERT_ID();
+
+    INSERT INTO event_comments (user_id, event_id, comment_id) VALUES (p_user_id, p_event_id, last_comment_id);
+END^;
+
+DROP PROCEDURE IF EXISTS UpdateEventComment^;
+CREATE PROCEDURE UpdateEventComment (
+    IN p_comment_id INT,
+    IN p_comment VARCHAR(255)
+)
+BEGIN
+    UPDATE comments
+    SET comment = p_comment
+    WHERE id = p_comment_id;
+END^;
+
+DROP PROCEDURE IF EXISTS DeleteEventComment^;
+CREATE PROCEDURE DeleteEventComment(
+    IN p_comment_id INT
+)
+BEGIN
+    DELETE FROM comments
+    WHERE id = p_comment_id;
+
+    DELETE FROM event_comments
+    WHERE comment_id = p_comment_id;
 END^;

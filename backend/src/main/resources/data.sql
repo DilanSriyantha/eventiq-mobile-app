@@ -63,7 +63,7 @@ INSERT INTO comments (comment) VALUES
 ('Music was fantastic!')^;
 
 -- Link Events to Comments
-INSERT INTO event_comments (event_id, comment_id) VALUES
-(1, 1),  -- Summer Festival -> Great event
-(1, 3),  -- Summer Festival -> Music was fantastic
-(2, 2)^;  -- Corporate Gala -> Food was amazing
+INSERT INTO event_comments (event_id, comment_id, user_id) VALUES
+(1, 1, 1),  -- Summer Festival -> Great event
+(1, 3, 2),  -- Summer Festival -> Music was fantastic
+(2, 2, 3)^;  -- Corporate Gala -> Food was amazing
