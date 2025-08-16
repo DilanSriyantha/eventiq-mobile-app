@@ -1,9 +1,14 @@
 import { useAuth } from "@/context/AuthProvider";
+import { useCallback } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Avatar, List, Text } from "react-native-paper";
 
 export default function Profile() {
     const auth = useAuth();
+
+    const handleLogout = useCallback(() => {
+        auth.logout();
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -35,6 +40,11 @@ export default function Profile() {
                     title="About"
                     left={props => <List.Icon {...props} icon="information-outline" />}
                     onPress={() => { }}
+                />
+                <List.Item
+                    title="Log out"
+                    left={props => <List.Icon {...props} icon="logout" />}
+                    onPress={handleLogout}
                 />
             </ScrollView>
         </View>

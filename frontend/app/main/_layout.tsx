@@ -2,16 +2,14 @@ import { router, usePathname } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Appbar, BottomNavigation } from "react-native-paper";
-import About from "./about";
+import Events from "./events";
 import Home from "./home";
 import Profile from "./profile";
-import Events from "./events";
 
 const routes = [
     { key: 'home', title: 'Home', focusedIcon: 'home', route: '/main/home' },
     { key: 'events', title: 'My Events', focusedIcon: 'calendar-edit', route: '/main/events' },
     { key: 'profile', title: 'Profile', focusedIcon: 'account', route: '/main/profile' },
-    { key: 'about', title: 'About', focusedIcon: 'information', route: '/main/about' },
 ];
 
 export default function MainLayout() {
@@ -21,8 +19,7 @@ export default function MainLayout() {
     const renderScene = BottomNavigation.SceneMap({
         home: Home,
         profile: Profile,
-        events: Events,
-        about: About
+        events: Events
     });
 
     const handleIndexChange = (newIndex: number) => {

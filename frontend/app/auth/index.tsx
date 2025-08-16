@@ -1,17 +1,22 @@
 import { useRouter } from "expo-router";
+import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Divider, Surface, Text } from "react-native-paper";
 
 export default function Login() {
     const routes = useRouter();
 
-    function handleContinueWithGooglePress() {
+    const handleContinueWithGooglePress = useCallback(() => {
         routes.push("/auth/register");
-    }
+    }, []);
 
-    function handleContinueWithEmailPress() {
+    const handleContinueWithEmailPress = useCallback(() => {
         routes.push("/auth/register");
-    }
+    }, []);
+
+    const handleLoginPress = useCallback(() => {
+        routes.push("/auth/login");
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -20,9 +25,34 @@ export default function Login() {
                     <Text variant="headlineMedium">Let's get started</Text>
                 </Surface>
                 <Surface mode="flat" style={styles.optionsContainer}>
-                    <Button style={styles.withGoogleButton} icon={"google"} mode="contained-tonal" onPress={handleContinueWithGooglePress}>Continue with google</Button>
+                    <Button 
+                        style={styles.withGoogleButton} 
+                        icon={"google"} 
+                        mode="contained-tonal" 
+                        onPress={handleContinueWithGooglePress}
+                        >
+                            Continue with google
+                    </Button>
+                    <Button 
+                        style={styles.withGoogleButton} 
+                        icon={"email"} 
+                        mode="contained-tonal" 
+                        onPress={handleContinueWithEmailPress}
+                    >
+                        Continue with Email
+                    </Button>
                     <Divider />
-                    <Button style={styles.withGoogleButton} icon={"email"} mode="contained-tonal" onPress={handleContinueWithEmailPress}>Continue with Email</Button>
+                    <Surface mode="flat" style={styles.subheaderContainer}>
+                        <Text variant="titleMedium">Already have an account?</Text>
+                    </Surface>
+                    <Button 
+                        style={styles.withGoogleButton} 
+                        icon={"login"} 
+                        mode="contained-tonal"
+                        onPress={handleLoginPress}
+                    >
+                        Login
+                    </Button>
                 </Surface>
             </Surface>
         </View>
@@ -48,5 +78,9 @@ const styles = StyleSheet.create({
     },
     withGoogleButton: {
         borderRadius: 5,
+    },
+    subheaderContainer: {
+        gap: 1,
+        padding: 5,
     },
 });

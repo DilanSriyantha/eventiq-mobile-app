@@ -1,80 +1,143 @@
+import Validator from "@/app/utils/Validator";
+import { useSnackbar } from "@/context/SnackbarProvider";
+import { useRouter } from "expo-router";
 import { useCallback, useEffect, useRef } from "react";
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 import { FAB } from "react-native-paper";
 import AnimatedInput, { AnimatedInputHandle } from "./AnimatedInput";
-import Validator from "@/app/utils/Validator";
-import { useSnackbar } from "@/context/SnackbarProvider";
 
 interface AnimatedRegistrationFormProps {
-    onFinished: (formResult: FormResult) => void | Promise<void>;
+    onFinished: (formResult: RegisterFormResult | LoginFormResult) => void | Promise<void>;
     loading: boolean;
+    mode: "login" | "register";
 };
 
-export interface FormResult {
+export interface RegisterFormResult {
     name: string;
     email: string;
     password: string;
 };
+
+export interface LoginFormResult {
+    email: string;
+    password: string;
+}
 
 export default function AnimatedRegistrationForm(props: AnimatedRegistrationFormProps) {
     const nameInputRef = useRef<AnimatedInputHandle>(null);
     const emailInputRef = useRef<AnimatedInputHandle>(null);
     const passwordInputRef = useRef<AnimatedInputHandle>(null);
 
-    const currentInput = useRef<string>("name");
+    const currentInput = useRef<string>(props.mode === "register" ? "name" : "email");
 
     const snackbar = useSnackbar();
+    const router = useRouter();
 
     useEffect(() => {
-        if (nameInputRef.current !== null)
-            nameInputRef.current.in();
+        if(props.mode === "register"){
+            if (nameInputRef.current !== null)
+                nameInputRef.current.in();
+        }else{
+            if(emailInputRef.current !== null)
+                emailInputRef.current.in();
+        }
     }, []);
 
     function handleNext() {
-        if (nameInputRef.current === null || emailInputRef.current === null || passwordInputRef.current === null) return;
+        if(props.mode === "register") {
+            if (nameInputRef.current === null || emailInputRef.current === null || passwordInputRef.current === null) return;
+    
+            if (currentInput.current === "name") {
+                nameInputRef.current?.out();
+                emailInputRef.current?.in();
+                currentInput.current = "email";
+            } else if (currentInput.current === "email") {
+                emailInputRef.current?.out();
+                passwordInputRef.current?.in();
+                currentInput.current = "password";
+            } else {
+                handleFinish();
+            }
+        }else{
+            if(emailInputRef.current === null || passwordInputRef.current === null) return;
 
-        if (currentInput.current === "name") {
-            nameInputRef.current?.out();
-            emailInputRef.current?.in();
-            currentInput.current = "email";
-        } else if (currentInput.current === "email") {
-            emailInputRef.current?.out();
-            passwordInputRef.current?.in();
-            currentInput.current = "password";
-        } else {
-            handleFinish();
+            if(currentInput.current === "email") {
+                emailInputRef.current?.out();
+                passwordInputRef.current?.in();
+                currentInput.current = "password";
+            }else{
+                handleFinish();
+            }
         }
     }
 
     function handlePrevious() {
-        nameInputRef.current?.in();
-        emailInputRef.current?.reset();
-        passwordInputRef.current?.reset();
-        currentInput.current = "name";
+        if(props.mode === "register") {
+            if(currentInput.current === "name"){
+                router.replace("/auth");
+                return;
+            }
+    
+            nameInputRef.current?.in();
+            emailInputRef.current?.reset();
+            passwordInputRef.current?.reset();
+            currentInput.current = "name";
+        }else{
+            if(currentInput.current === "email"){
+                router.replace("/auth");
+                return;
+            }
+
+            emailInputRef.current?.in();
+            passwordInputRef.current?.reset();
+            currentInput.current = "email";
+        }
     }
 
     const handleFinish = useCallback(() => {
-        if (nameInputRef.current === null || emailInputRef.current === null || passwordInputRef.current === null) return;
+        if(props.mode === "register") {
+            if (nameInputRef.current === null || emailInputRef.current === null || passwordInputRef.current === null) return;
+    
+            const result: RegisterFormResult = {
+                name: nameInputRef.current.getInput(),
+                email: emailInputRef.current.getInput(),
+                password: passwordInputRef.current.getInput()
+            };
+    
+            const isValid = Validator.areValid(
+                result.name, Validator.ValueType.text,
+                result.email, Validator.ValueType.email,
+                result.password, Validator.ValueType.text
+            );
+    
+            if (!isValid) {
+                snackbar.showError("Invalid inputs are detected.");
+    
+                return;
+            }
 
-        const result: FormResult = {
-            name: nameInputRef.current.getInput(),
-            email: emailInputRef.current.getInput(),
-            password: passwordInputRef.current.getInput()
-        };
+            props.onFinished.apply(null, [result]);
+        }else{
+            if(emailInputRef.current === null || passwordInputRef.current === null) return;
 
-        const isValid = Validator.areValid(
-            result.name, Validator.ValueType.text,
-            result.email, Validator.ValueType.email,
-            result.password, Validator.ValueType.text
-        );
+            const result: LoginFormResult = {
+                email: emailInputRef.current.getInput(),
+                password: passwordInputRef.current.getInput()
+            };
 
-        if (!isValid) {
-            snackbar.showError("Invalid inputs are detected.");
+            const isValid = Validator.areValid(
+                result.email, Validator.ValueType.email,
+                result.password, Validator.ValueType.text
+            );
 
-            return;
+            if(!isValid) {
+                snackbar.showError("Invalid inputs are detected.");
+
+                return;
+            }
+
+            props.onFinished.apply(null, [result]);
         }
-
-        props.onFinished.apply(null, [result]);
     }, []);
 
     return (
@@ -85,11 +148,11 @@ export default function AnimatedRegistrationForm(props: AnimatedRegistrationForm
                 keyboardVerticalOffset={0}
             >
                 <View style={styles.animatedInputsContainer}>
-                    <AnimatedInput
+                    {props.mode === "register" && (<AnimatedInput
                         title="Enter your name here..."
                         ref={nameInputRef}
                         inputMode={"text"}
-                    />
+                    />)}
                     <AnimatedInput
                         title="Enter your email here..."
                         ref={emailInputRef}

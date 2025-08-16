@@ -1,11 +1,11 @@
-import AnimatedRegistrationForm, { FormResult } from "@/components/AnimatedRegistrationForm";
+import AnimatedRegistrationForm, { LoginFormResult, RegisterFormResult } from "@/components/AnimatedRegistrationForm";
+import { useAuth } from "@/context/AuthProvider";
+import { useSnackbar } from "@/context/SnackbarProvider";
 import { useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Surface } from "react-native-paper";
 import Role from "../enums/Role";
-import { useAuth } from "@/context/AuthProvider";
-import { useSnackbar } from "@/context/SnackbarProvider";
 
 export default function Register() {
     const [loading, setLoading] = useState<boolean>(false);
@@ -14,39 +14,19 @@ export default function Register() {
     const auth = useAuth();
     const snackbar = useSnackbar();
 
-    useEffect(() => {
-        if (auth.currentUser === null) return;
-
-        routes.replace("/main/home");
-    }, [auth.currentUser]);
-
-    const onFinished = useCallback((result: FormResult) => {
-        register(result);
+    const onFinished = useCallback((result: RegisterFormResult | LoginFormResult) => {
+        register(result as RegisterFormResult);
     }, []);
 
-    const register = useCallback(async (result: FormResult) => {
+    const register = useCallback(async (form: RegisterFormResult) => {
         setLoading(true);
 
         try {
-            const res = await auth.register(
-                result.name,
-                result.email,
-                result.password,
-                Role.ADMIN
-            );
-
-            if (res) {
-                setTimeout(() => {
-                    setLoading(false);
-                }, 500);
-            }
+            await auth.register( form.name, form.email, form.password, Role.ADMIN);
         } catch (err) {
-            console.error(err);
+            snackbar.showError(err instanceof Error ? err.message : "An unknown error occurred.");
 
-            setTimeout(() => {
-                setLoading(false);
-                snackbar.showError(err instanceof Error ? err.message : "An unknown error occurred.");
-            }, 500);
+            setLoading(false);
         }
     }, []);
 
@@ -56,6 +36,7 @@ export default function Register() {
                 <AnimatedRegistrationForm
                     onFinished={onFinished}
                     loading={loading}
+                    mode={"register"}
                 />
             </Surface>
         </View>
