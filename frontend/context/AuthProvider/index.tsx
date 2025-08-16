@@ -1,9 +1,9 @@
 import Role from "@/app/enums/Role";
-import useSecureStore from "@/app/hooks/useSecureStore";
 import { useRouter } from "expo-router";
 import { createContext, ReactNode, useContext } from "react";
 import { useApi } from "../ApiProvider";
 import { AuthResponse } from "../ApiProvider/types";
+import { useCurrentUser } from "../UserProvider";
 
 interface AuthProviderProps {
     children: ReactNode;
@@ -11,7 +11,6 @@ interface AuthProviderProps {
 
 type AuthProviderType = {
     currentUser: AuthResponse | null;
-    isLoaded: boolean;
     register: (name: string, email: string, password: string, role: Role) => Promise<AuthResponse>;
     login: (email: string, passowrd: string) => Promise<AuthResponse>;
     logout: () => void;
@@ -24,7 +23,9 @@ const AuthContext = createContext(
 );
 
 function AuthProvider({ children }: AuthProviderProps) {
-    const [currentUser, setCurrentUser, isLoaded] = useSecureStore<AuthResponse | null>("currentUser", null);
+    // const [currentUser, setCurrentUser, isLoaded] = useSecureStore<AuthResponse | null>("currentUser", null);
+
+    const [currentUser, setCurrentUser] = useCurrentUser();
 
     const api = useApi();
     const router = useRouter();
@@ -106,7 +107,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     return (
-        <AuthContext.Provider value={{ currentUser, isLoaded, register, login, logout, isSessionValid, isUserAvailable }}>
+        <AuthContext.Provider value={{ currentUser, register, login, logout, isSessionValid, isUserAvailable }}>
             {children}
         </AuthContext.Provider>
     );

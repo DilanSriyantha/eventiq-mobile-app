@@ -1,25 +1,25 @@
-import { useAuth } from "@/context/AuthProvider";
+import { useCurrentUser } from "@/context/UserProvider";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { Surface, Text, useTheme } from "react-native-paper";
 
 export default function Index() {
+    const [currentUser, _setCurrentUser, isLoaded] = useCurrentUser();
 
-    const auth = useAuth();
     const theme = useTheme();
     const router = useRouter();
 
     useEffect(() => {
-        if(!auth.isLoaded) return;
+        if(!isLoaded) return;
 
-        if(!auth.currentUser) {
+        if(!currentUser) {
             setTimeout(() => router.replace("/auth"), 1000);
             return;
         }
 
         setTimeout(() => router.replace("/main/home"), 1000);
-    }, [auth.isLoaded && auth.currentUser]);
+    }, [isLoaded && currentUser]);
 
     return (
         <View style={{

@@ -1,6 +1,6 @@
-import useSecureStore from "@/app/hooks/useSecureStore";
-import { createContext, ReactNode, useContext } from "react";
-import { AuthResponse, SuccessResponse } from "./types";
+import { createContext, ReactNode, useCallback, useContext } from "react";
+import { useCurrentUser } from "../UserProvider";
+import { SuccessResponse } from "./types";
 
 const API_URL = "http://127.0.0.1:8080/api/v1";
 // const API_URL = "http://10.0.2.2:8080/api/v1"; // enable when running on emulator
@@ -22,7 +22,11 @@ const ApiContext = createContext(
 );
 
 const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
-    const [currentUser, setCurrentUser] = useSecureStore<AuthResponse | null>("currentUser", null);
+    const [currentUser, setCurrentUser] = useCurrentUser();
+
+    useCallback(() => {
+        console.log(currentUser);
+    }, [currentUser]);
 
     function get<T>(endpoint: string): Promise<T> {
         return new Promise(async (resolve, reject) => {
@@ -31,7 +35,6 @@ const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
             try {
                 const res = await fetch(url, {
                     method: "GET",
-                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${currentUser?.accessToken}`
@@ -58,7 +61,6 @@ const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
             try {
                 const res = await fetch(url, {
                     method: "GET",
-                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${currentUser?.accessToken}`
@@ -85,7 +87,6 @@ const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
             try {
                 const res = await fetch(url, {
                     method: "GET",
-                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${currentUser?.accessToken}`
@@ -111,7 +112,6 @@ const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
             try {
                 const res = await fetch(url, {
                     method: "POST",
-                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${currentUser?.accessToken}`
@@ -139,7 +139,6 @@ const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
             try {
                 const res = await fetch(url, {
                     method: "DELETE",
-                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${currentUser?.accessToken}`

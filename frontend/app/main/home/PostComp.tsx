@@ -1,24 +1,16 @@
 import { StyleSheet, View } from "react-native";
 import { Button, Card, Chip, Icon, Text } from "react-native-paper";
+import { PostProps } from "./types";
 
-export interface PostType1Props {
-    title: string;
-    image: string;
-    rating: number;
-    tags: string;
-    onRatePress: () => void;
-    onCheckPress: () => void;
-};
-
-const PostType1 = ({ title, image, rating, tags, onRatePress, onCheckPress }: PostType1Props) => {
+const Post = ({ title, imageUrl, rate, tags, onRatePress, onCheckPress }: PostProps) => {
 
     return (
         <Card style={styles.container} mode="contained">
-            <Card.Cover resizeMode="cover" source={{ uri: image }} />
+            <Card.Cover resizeMode="cover" source={{ uri: imageUrl }} />
             <View style={styles.cardContentContainer}>
                 <Text variant="titleLarge" style={styles.title}>{title}</Text>
                 <View style={styles.ratingContainer}>
-                    <Text variant="bodyLarge">{rating}</Text>
+                    <Text variant="bodyLarge">{rate}</Text>
                     <Icon source={"star"} size={20} />
                 </View>
             </View>
@@ -61,4 +53,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default PostType1;
+export default Post;

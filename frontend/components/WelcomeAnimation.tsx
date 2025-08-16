@@ -1,4 +1,4 @@
-import { WelcomeAnimationProps } from "@/types/types";
+import { WelcomeAnimationProps } from "@/common/types";
 import { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { Button, useTheme } from "react-native-paper";

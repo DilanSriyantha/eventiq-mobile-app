@@ -1,10 +1,10 @@
+import { ManagableEvent } from "@/common/types";
 import EventMenuItem from "@/components/EventMenuItem";
 import ListEmptyComponent from "@/components/ListEmptyIndicator";
-import { ManagableEvent } from "@/types/types";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import { FAB, Text } from "react-native-paper";
+import { FAB } from "react-native-paper";
 
 const BogusData: ManagableEvent[] = [
     {

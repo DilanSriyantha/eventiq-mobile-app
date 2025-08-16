@@ -1,10 +1,10 @@
+import { ManagableEvent } from "@/common/types";
 import ParallaxViewWrapper from "@/components/ParallaxViewWrapper";
-import { ManagableEvent } from "@/types/types";
 import { useLocalSearchParams, useRouter } from "expo-router/build/hooks";
 import moment from "moment";
 import { useCallback, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, Surface, Text} from "react-native-paper";
+import { Button, Surface, Text } from "react-native-paper";
 
 const BogusData: ManagableEvent[] = [
     {
