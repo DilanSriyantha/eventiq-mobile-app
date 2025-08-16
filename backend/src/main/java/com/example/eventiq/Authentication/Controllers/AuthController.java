@@ -27,24 +27,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public @ResponseBody ResponseEntity<AuthResponse> handleRegisterRequest(@RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
-        var authResponse = authService.register(registerRequest);
-
-        var accessTokenCookie = new Cookie("accessToken", authResponse.getAccessToken());
-        accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setSecure(false); // true on production
-        accessTokenCookie.setPath("/");
-        accessTokenCookie.setMaxAge(60 * 10); // 10 minutes
-
-        var refreshTokenCookie = new Cookie("refreshToken", authResponse.getRefreshToken());
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(false); // true on production
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(60 * 60 * 24 * 7); // 7 days
-
-        response.addCookie(accessTokenCookie);
-        response.addCookie(refreshTokenCookie);
-
-        return ResponseEntity.ok(authResponse);
+        return ResponseEntity.ok(authService.register(registerRequest));
     }
 
     @PostMapping("/login")

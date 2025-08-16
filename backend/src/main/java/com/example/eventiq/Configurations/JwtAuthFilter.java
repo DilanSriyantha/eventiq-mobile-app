@@ -27,10 +27,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
-        String jwtToken;
-        String email;
-
         if(request.getRequestURI().equals("/api/v1/session-status/")){
             filterChain.doFilter(request, response);
 
@@ -49,26 +45,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
+        if(request.getRequestURI().equals("/api/v1/auth/login")) {
+            filterChain.doFilter(request, response);
+
+            return;
+        }
+
         if(request.getRequestURI().equals("/api/v1/auth/refresh")) {
             filterChain.doFilter(request, response);
 
             return;
         }
 
-        if(authHeader != null || authHeader.startsWith("Bearer"))
-            jwtToken = authHeader.substring(7);
-        else
-            jwtToken = Arrays.stream(request.getCookies())
-                    .filter(c -> "accessToken".equals(c.getName()))
-                    .map(Cookie::getValue)
-                    .findFirst()
-                    .orElse(null);
+        final String authHeader = request.getHeader("Authorization");
+        String jwtToken;
+        String email;
 
-        if(jwtToken == null) {
+        if(authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
 
             return;
         }
+
+        jwtToken = authHeader.substring(7);
 
         if(jwtService.isTokenExpired(jwtToken)) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());

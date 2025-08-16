@@ -2,8 +2,8 @@ import useSecureStore from "@/app/hooks/useSecureStore";
 import { createContext, ReactNode, useContext } from "react";
 import { AuthResponse, SuccessResponse } from "./types";
 
-// const API_URL = "http://127.0.0.1:8080/api/v1"; 
-const API_URL = "http://10.0.2.2:8080/api/v1"; // enable when running on emulator
+const API_URL = "http://127.0.0.1:8080/api/v1";
+// const API_URL = "http://10.0.2.2:8080/api/v1"; // enable when running on emulator
 
 interface ApiProviderProps {
     children: ReactNode;

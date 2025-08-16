@@ -23,17 +23,15 @@ public class UserDAO implements DAO<User> {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<User> rowMapper = (rs, rowNum) -> {
-        return User.builder()
-                .id(rs.getInt("id"))
-                .name(rs.getString("name"))
-                .email(rs.getString("email"))
-                .password(rs.getString("password"))
-                .role(Role.valueOf(rs.getString("role")))
-                .updatedAt(rs.getTimestamp("updated_at"))
-                .createdAt(rs.getTimestamp("created_at"))
-                .build();
-    };
+    private final RowMapper<User> rowMapper = (rs, rowNum) -> User.builder()
+            .id(rs.getInt("id"))
+            .name(rs.getString("name"))
+            .email(rs.getString("email"))
+            .password(rs.getString("password"))
+            .role(Role.valueOf(rs.getString("role")))
+            .updatedAt(rs.getTimestamp("updated_at"))
+            .createdAt(rs.getTimestamp("created_at"))
+            .build();
 
     @Override
     public List<User> getAll() {

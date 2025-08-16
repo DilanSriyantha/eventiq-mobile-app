@@ -56,7 +56,7 @@ public class AuthService {
                 .build();
     }
 
-    public AuthResponse login(LoginRequest request) throws  Exception {
+    public AuthResponse login(LoginRequest request) throws Exception {
         var user = userDAO.getByEmail(request.getEmail())
                 .orElseThrow(() -> new Exception("User not found."));
 
