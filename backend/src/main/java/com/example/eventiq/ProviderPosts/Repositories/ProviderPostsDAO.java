@@ -81,20 +81,22 @@ public class ProviderPostsDAO implements DAO<ProviderPost> {
     public void create(ProviderPost providerPost) {
         var sql = "CALL CreateProviderPost(?, ?, ?, ?, ?);";
 
-        jdbcTemplate.update(sql,
+        int affectedRows = jdbcTemplate.update(sql,
                 providerPost.getProviderId(),
                 providerPost.getTitle(),
                 providerPost.getDescription(),
                 providerPost.getTags(),
                 providerPost.getImageUrl()
         );
+
+        log.info("Post created, affectedRows={}", affectedRows);
     }
 
     @Override
     public void update(int id, ProviderPost providerPost) {
         var sql = "CALL UpdateProviderPost(?, ?, ?, ?, ?, ?);";
 
-        jdbcTemplate.update(sql,
+        int affectedRows = jdbcTemplate.update(sql,
                 providerPost.getPostId(),
                 providerPost.getTitle(),
                 providerPost.getDescription(),
@@ -102,12 +104,16 @@ public class ProviderPostsDAO implements DAO<ProviderPost> {
                 providerPost.getImageUrl(),
                 providerPost.getRate()
         );
+
+        log.info("Post id={} updated, affectedRows={}", id, affectedRows);
     }
 
     @Override
     public void delete(int id) {
         var sql = "CALL DeleteProviderPost(?);";
 
-        jdbcTemplate.update(sql, id);
+        int affectedRows = jdbcTemplate.update(sql, id);
+
+        log.info("Post id={} has been deleted, affectedRows={}", id, affectedRows);
     }
 }

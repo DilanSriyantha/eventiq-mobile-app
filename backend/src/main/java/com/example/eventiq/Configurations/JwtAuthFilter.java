@@ -62,7 +62,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String email;
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json");
+            response.getWriter().write("{\"statusCode\":" + HttpStatus.UNAUTHORIZED.value() + ",\"message\":\"Authorization header is not found.\"}");
 
             return;
         }
