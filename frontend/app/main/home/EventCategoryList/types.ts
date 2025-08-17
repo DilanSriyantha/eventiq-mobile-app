@@ -14,3 +14,10 @@ export interface Category {
     caption: string;
     image: ImageSourcePropType;
 };
+
+export interface CategoryButtonProps {
+    onClick: () => void | Promise<void>;
+    caption: string;
+    image: ImageSourcePropType;
+    selected: boolean;
+};

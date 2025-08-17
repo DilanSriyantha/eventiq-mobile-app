@@ -7,22 +7,22 @@ const CATEGORY_OPTIONS: Category[] = [
     {
         id: 0,
         caption: "All",
-        image: require("../../assets/images/other.png"),
+        image: require("../../../../assets/images/other.png"),
     },
     {
         id: 1,
         caption: "Birthday",
-        image: require("../../assets/images/bday.png"),
+        image: require("../../../../assets/images/bday.png"),
     },
     {
         id: 2,
         caption: "Wedding",
-        image: require("../../assets/images/wedding.png"),
+        image: require("../../../../assets/images/wedding.png"),
     },
     {
         id: 3,
         caption: "Gathering",
-        image: require("../../assets/images/gathering.png"),
+        image: require("../../../../assets/images/gathering.png"),
     },
 ];
 

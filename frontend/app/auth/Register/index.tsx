@@ -1,28 +1,30 @@
 import { useAuth } from "@/context/AuthProvider";
 import { useSnackbar } from "@/context/SnackbarProvider";
-import { memo, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Surface } from "react-native-paper";
-import AnimatedRegistrationForm from "./Register/AnimatedRegistrationForm";
-import { LoginFormResult, RegisterFormResult } from "./Register/AnimatedRegistrationForm/types";
+import Role from "../../enums/Role";
+import AnimatedRegistrationForm from "./AnimatedRegistrationForm";
+import { LoginFormResult, RegisterFormResult } from "./AnimatedRegistrationForm/types";
 
-function Login() {
+export default function Register() {
     const [loading, setLoading] = useState<boolean>(false);
 
     const auth = useAuth();
     const snackbar = useSnackbar();
 
     const onFinished = useCallback((result: RegisterFormResult | LoginFormResult) => {
-        login(result as LoginFormResult);
+        register(result as RegisterFormResult);
     }, []);
 
-    const login = useCallback(async(form: LoginFormResult) => {
+    const register = useCallback(async (form: RegisterFormResult) => {
         setLoading(true);
 
-        try{
-            await auth.login(form.email, form.password);
-        }catch(err){
+        try {
+            await auth.register( form.name, form.email, form.password, Role.ADMIN);
+        } catch (err) {
             snackbar.showError(err instanceof Error ? err.message : "An unknown error occurred.");
+
             setLoading(false);
         }
     }, []);
@@ -33,7 +35,7 @@ function Login() {
                 <AnimatedRegistrationForm
                     onFinished={onFinished}
                     loading={loading}
-                    mode={"login"}
+                    mode={"register"}
                 />
             </Surface>
         </View>
@@ -52,5 +54,3 @@ const styles = StyleSheet.create({
         paddingTop: 60
     }
 });
-
-export default memo(Login);

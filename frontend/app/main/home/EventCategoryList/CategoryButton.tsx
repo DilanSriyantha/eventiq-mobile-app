@@ -1,13 +1,7 @@
 import { memo } from "react";
-import { Image, ImageSourcePropType, StyleSheet, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Surface, Text, useTheme } from "react-native-paper";
-
-interface CategoryButtonProps {
-    onClick: () => void | Promise<void>;
-    caption: string;
-    image: ImageSourcePropType;
-    selected: boolean;
-};
+import { CategoryButtonProps } from "./types";
 
 function CategoryButton(props: CategoryButtonProps){
     const theme = useTheme();

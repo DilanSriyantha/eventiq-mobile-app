@@ -1,9 +1,9 @@
-import EventCategoriesList from "@/components/EventCategoryList/EventCategoriesList";
-import { Category, EventCategoriesListHandle } from "@/components/EventCategoryList/types";
 import { Post } from "@/context/PostsProvider/types";
 import { useRouter } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import EventCategoriesList from "./EventCategoryList";
+import { Category, EventCategoriesListHandle } from "./EventCategoryList/types";
 import PostsList from "./PostsList";
 import SearchBox from "./SearchBox";
 import { SearchBoxHandle } from "./SearchBox/types";

@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { Button, Card, Chip, Icon, Text } from "react-native-paper";
-import { PostProps } from "./types";
+import { PostProps } from "../types";
 
 const Post = ({ post, onRatePressed, onCheckPressed }: PostProps) => {
 
