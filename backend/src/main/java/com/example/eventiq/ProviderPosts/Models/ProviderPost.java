@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class ProviderPost {
 
-    private Integer postId;
+    private Integer id;
 
     private Integer providerId;
 

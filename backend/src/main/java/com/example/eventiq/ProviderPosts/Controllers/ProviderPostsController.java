@@ -46,7 +46,7 @@ public class ProviderPostsController {
 
     @PostMapping("/update")
     public @ResponseBody ResponseEntity<SuccessResponse> update(@RequestBody ProviderPost updateRequest) {
-        providerPostsService.update(updateRequest.getPostId(), updateRequest);
+        providerPostsService.update(updateRequest.getId(), updateRequest);
 
         var response = SuccessResponse.builder()
                 .status(HttpStatus.OK.value())

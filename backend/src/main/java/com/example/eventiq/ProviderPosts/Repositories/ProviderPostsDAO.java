@@ -22,7 +22,7 @@ public class ProviderPostsDAO implements DAO<ProviderPost> {
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<ProviderPost> rowMapper = (rs, rowNum) -> ProviderPost.builder()
-            .postId(rs.getInt("postId"))
+            .id(rs.getInt("postId"))
             .providerId(rs.getInt("providerId"))
             .providerName(rs.getString("providerName"))
             .title(rs.getString("title"))
@@ -97,7 +97,7 @@ public class ProviderPostsDAO implements DAO<ProviderPost> {
         var sql = "CALL UpdateProviderPost(?, ?, ?, ?, ?, ?);";
 
         int affectedRows = jdbcTemplate.update(sql,
-                providerPost.getPostId(),
+                providerPost.getId(),
                 providerPost.getTitle(),
                 providerPost.getDescription(),
                 providerPost.getTags(),
