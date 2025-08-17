@@ -12,6 +12,11 @@ export const setPage = (page: number): PostsListAction => ({
     payload: page,
 });
 
+export const setSearchKey = (searchKey: string): PostsListAction => ({
+    type: ActionType.SET_SEARCH_KEY,
+    payload: searchKey,
+});
+
 export const startLoading = (): PostsListAction => ({
     type: ActionType.START_LOADING
 });

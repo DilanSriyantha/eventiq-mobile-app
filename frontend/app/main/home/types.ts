@@ -1,9 +1,7 @@
+import { Post } from "@/context/PostsProvider/types";
 
 export interface PostProps {
-    title: string;
-    imageUrl: string;
-    rate: number;
-    tags: string;
-    onRatePress: () => void;
-    onCheckPress: () => void;
+    post: Post;
+    onRatePressed?: (post: Post) => void;
+    onCheckPressed?: (post: Post) => void;
 };

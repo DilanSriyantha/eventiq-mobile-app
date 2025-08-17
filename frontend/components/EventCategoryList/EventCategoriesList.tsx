@@ -1,43 +1,47 @@
-import { useState } from "react";
-import { ImageSourcePropType, ScrollView, StyleSheet, View } from "react-native";
-import { useTheme } from "react-native-paper";
+import { forwardRef, memo, useCallback, useImperativeHandle, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
 import CategoryButton from "./CategoryButton";
-
-interface EventCategoriesListProps {
-    onChange: () => void | Promise<void>;
-};
-
-interface Category {
-    id: number;
-    caption: string;
-    image: ImageSourcePropType;
-};
+import { Category, EventCategoriesListHandle, EventCategoriesListProps } from "./types";
 
 const CATEGORY_OPTIONS: Category[] = [
     {
         id: 0,
+        caption: "All",
+        image: require("../../assets/images/other.png"),
+    },
+    {
+        id: 1,
         caption: "Birthday",
         image: require("../../assets/images/bday.png"),
     },
     {
-        id: 1,
+        id: 2,
         caption: "Wedding",
         image: require("../../assets/images/wedding.png"),
     },
     {
-        id: 2,
+        id: 3,
         caption: "Gathering",
         image: require("../../assets/images/gathering.png"),
     },
-    {
-        id: 3,
-        caption: "Other",
-        image: require("../../assets/images/other.png"),
-    },
 ];
 
-export default function EventCategoriesList({ onChange }: EventCategoriesListProps) {
+const EventCategoriesList = forwardRef<EventCategoriesListHandle, EventCategoriesListProps>(({ onChange }, ref) => {
     const [selected, setSelected] = useState<number>(0);
+
+    useImperativeHandle(ref, () => ({
+        select: handleSelect,
+        reset: handleReset,
+    }));
+
+    const handleSelect = useCallback((idx: number) => {
+        setSelected(idx);
+        onChange?.apply(null, [CATEGORY_OPTIONS[idx]]);
+    }, []);
+
+    const handleReset = useCallback(() => {
+        setSelected(0);
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -48,16 +52,18 @@ export default function EventCategoriesList({ onChange }: EventCategoriesListPro
                         caption={co.caption}
                         image={co.image}
                         selected={co.id === selected}
-                        onClick={() => setSelected(co.id)}
+                        onClick={() => handleSelect(idx)}
                     />
                 ))}
             </ScrollView>
         </View>
     );
-}
+});
 
 const styles = StyleSheet.create({
     container: {
         display: "flex",
     },
 });
+
+export default memo(EventCategoriesList);
