@@ -23,9 +23,9 @@ INSERT IGNORE INTO users (name, email, password, role) VALUES
 
 -- Insert Posts
 INSERT INTO posts (title, description, tags, imageUrl, rate) VALUES
-('Wedding Photography', 'Professional wedding photography services', 'wedding,photography', 'images/wedding.jpg', 4.8),
-('Catering Service', 'Delicious catering for all events', 'catering,food', 'images/catering.jpg', 4.5),
-('Event DJ', 'Experienced DJ for parties and events', 'dj,music', 'images/dj.jpg', 4.7)^;
+('Wedding Photography', 'Professional wedding photography services', 'wedding,photography', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3CQKsrGzxxhe51hBTUoWMqtqNFnIBmChwZA&s', 4.8),
+('Catering Service', 'Delicious catering for all events', 'catering,food', 'https://www.steamboat.lk/images/site-specific/catering-services/test/new/5-1920x1280px.jpg', 4.5),
+('Event DJ', 'Experienced DJ for parties and events', 'dj,music', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8gj-P0i_3EaifrFtmGgB5l48bJv9KQPAZpw&s', 4.7)^;
 
 -- Link Providers to Posts
 INSERT INTO provider_posts (provider_id, post_id) VALUES
