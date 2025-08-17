@@ -2,28 +2,28 @@ import { StyleSheet, View } from "react-native";
 import { Button, Card, Chip, Icon, Text } from "react-native-paper";
 import { PostProps } from "./types";
 
-const Post = ({ title, imageUrl, rate, tags, onRatePress, onCheckPress }: PostProps) => {
+const Post = ({ post, onRatePressed, onCheckPressed }: PostProps) => {
 
     return (
         <Card style={styles.container} mode="contained">
-            <Card.Cover resizeMode="cover" source={{ uri: imageUrl }} />
+            <Card.Cover resizeMode="cover" source={{ uri: post.imageUrl }} />
             <View style={styles.cardContentContainer}>
-                <Text variant="titleLarge" style={styles.title}>{title}</Text>
+                <Text variant="titleLarge" style={styles.title}>{post.title}</Text>
                 <View style={styles.ratingContainer}>
-                    <Text variant="bodyLarge">{rate}</Text>
+                    <Text variant="bodyLarge">{post.rate}</Text>
                     <Icon source={"star"} size={20} />
                 </View>
             </View>
             <View style={styles.tagsContainer}>
                 {
-                    tags.split(",").map((tag, idx) => (
+                    post.tags.split(",").map((tag, idx) => (
                         <Chip mode="outlined" key={idx}>{tag.trim()}</Chip>
                     ))
                 }
             </View>
             <Card.Actions>
-                <Button icon={"star-outline"} onPress={onRatePress}>Rate</Button>
-                <Button icon={"arrow-right"} onPress={onCheckPress}>Check</Button>
+                <Button icon={"star-outline"} onPress={() => onRatePressed?.apply(null, [post])}>Rate</Button>
+                <Button icon={"arrow-right"} onPress={() => onCheckPressed?.apply(null, [post])}>Check</Button>
             </Card.Actions>
         </Card>
     );
