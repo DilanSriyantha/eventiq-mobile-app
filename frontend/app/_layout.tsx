@@ -8,18 +8,18 @@ import { PaperProvider } from "react-native-paper";
 
 export default function RootLayout() {
     return (
-        <UserProvider>
-            <ApiProvider>
-                <AuthProvider>
-                    <PostsProvider>
-                        <SnackbarProvider>
-                            <PaperProvider>
-                                <Slot />
-                            </PaperProvider>
-                        </SnackbarProvider>
-                    </PostsProvider>
-                </AuthProvider>
-            </ApiProvider>
-        </UserProvider>
+        <PaperProvider>
+            <UserProvider>
+                <ApiProvider>
+                    <AuthProvider>
+                        <PostsProvider>
+                            <SnackbarProvider>
+                                    <Slot />
+                            </SnackbarProvider>
+                        </PostsProvider>
+                    </AuthProvider>
+                </ApiProvider>
+            </UserProvider>
+        </PaperProvider>
     );
 }
