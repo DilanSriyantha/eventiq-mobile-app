@@ -1,10 +1,11 @@
 -- Clear existing data in correct dependency order
 SET FOREIGN_KEY_CHECKS = 0^;
 
-TRUNCATE TABLE event_comments^;
 TRUNCATE TABLE comments^;
 TRUNCATE TABLE event_services^;
 TRUNCATE TABLE services^;
+TRUNCATE TABLE provider_services^;
+TRUNCATE TABLE service_comments^;
 TRUNCATE TABLE user_events^;
 TRUNCATE TABLE events^;
 TRUNCATE TABLE provider_posts^;
@@ -15,23 +16,24 @@ SET FOREIGN_KEY_CHECKS = 1^;
 
 -- Insert Users
 INSERT IGNORE INTO users (name, email, password, role) VALUES
-('Admin User', 'admin@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'CONSUMER'),
-('John Doe', 'john@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'PROVIDER'),
+('Dilan Sriyantha', 'dilans091@gmail.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'ADMIN'),
+('John Doe', 'john@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'CONSUMER'),
 ('Jane Smith', 'jane@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'CONSUMER'),
-('Mike Johnson', 'mike@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'PROVIDER'),
-('Dilan Sriyantha', 'dilans091@gmail.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'ADMIN')^;
+('Studio Artigala', 'studioartigala@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'PROVIDER'),
+('Tasty Caters', 'tastycaters@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'PROVIDER'),
+('McCallum Runner', 'mcrunner@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'PROVIDER')^;
 
 -- Insert Posts
 INSERT INTO posts (title, description, tags, imageUrl, rate) VALUES
-('Wedding Photography', 'Professional wedding photography services', 'wedding,photography', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3CQKsrGzxxhe51hBTUoWMqtqNFnIBmChwZA&s', 4.8),
+('Photography', 'Professional photography services', 'wedding,photography', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3CQKsrGzxxhe51hBTUoWMqtqNFnIBmChwZA&s', 4.8),
 ('Catering Service', 'Delicious catering for all events', 'catering,food', 'https://www.steamboat.lk/images/site-specific/catering-services/test/new/5-1920x1280px.jpg', 4.5),
 ('Event DJ', 'Experienced DJ for parties and events', 'dj,music', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8gj-P0i_3EaifrFtmGgB5l48bJv9KQPAZpw&s', 4.7)^;
 
 -- Link Providers to Posts
 INSERT INTO provider_posts (provider_id, post_id) VALUES
-(2, 1),
-(4, 2),
-(4, 3)^;
+(4, 1),
+(5, 2),
+(6, 3)^;
 
 -- Insert Events
 INSERT INTO events (title, description, eventDate) VALUES
@@ -46,24 +48,30 @@ INSERT INTO user_events (user_id, event_id) VALUES
 
 -- Insert Services
 INSERT INTO services (title, description, imageUrl, rate) VALUES
-('Full Catering', 'Complete catering package for events', 'images/full_catering.jpg', 1500.00),
-('Stage Lighting', 'Professional lighting setup', 'images/lighting.jpg', 500.00),
-('Sound System', 'High-quality sound system rental', 'images/sound.jpg', 800.00)^;
+('Wedding Photography', 'Complete wedding photography package', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3CQKsrGzxxhe51hBTUoWMqtqNFnIBmChwZA&s', 4.2),
+('Catering Package Light', 'Minimal catering package', 'https://www.steamboat.lk/images/site-specific/catering-services/test/new/5-1920x1280px.jpg', 4.0),
+('Daytime DJ', 'High-quality DJ experience during daytime 4hrs', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8gj-P0i_3EaifrFtmGgB5l48bJv9KQPAZpw&s', 3.7)^;
+
+INSERT INTO provider_services (provider_id, service_id) VALUES
+(4, 1),
+(5, 2),
+(6, 3)^;
 
 -- Link Events to Services
 INSERT INTO event_services (event_id, service_id) VALUES
-(1, 1),  -- Summer Festival -> Full Catering
-(1, 2),  -- Summer Festival -> Stage Lighting
-(2, 3)^;  -- Corporate Gala -> Sound System
+(1, 1),
+(1, 2),
+(2, 1),
+(2, 2),
+(2, 3)^;
 
 -- Insert Comments
 INSERT INTO comments (comment) VALUES
-('Great event, had a wonderful time!'),
-('Food was amazing and staff were friendly.'),
-('Music was fantastic!')^;
+('Very professional and flexible service, had a wonderful album end of the day!'),
+('Very good food they offer.'),
+('Really good sound system and talented DJ. We enjoyed having them at our event.')^;
 
--- Link Events to Comments
-INSERT INTO event_comments (event_id, comment_id, user_id) VALUES
-(1, 1, 1),  -- Summer Festival -> Great event
-(1, 3, 2),  -- Summer Festival -> Music was fantastic
-(2, 2, 3)^;  -- Corporate Gala -> Food was amazing
+INSERT INTO service_comments (service_id, comment_id, user_id) VALUES
+(1, 1, 1),
+(2, 2, 2),
+(3, 3, 3)^;

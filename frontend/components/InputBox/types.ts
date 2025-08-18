@@ -16,7 +16,7 @@ export type TextHandle = {
 export interface DropdownProps {
     data: DropdownItem[];
     selectedIndex?: number;
-    placeHolder?: string;
+    label?: string;
     iconName?: string;
     containerStyle?: ViewStyle;
     dropdownStyle?: ViewStyle;
@@ -35,6 +35,7 @@ export interface DropdownItem {
 
 export interface ModalMenuProps {
     data: DropdownItem[];
+    onMenuItemPress?: (item: DropdownItem, index: number) => void;
 };
 
 export type ModalMenuHandle = {

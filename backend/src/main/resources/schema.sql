@@ -83,6 +83,24 @@ CREATE TABLE IF NOT EXISTS services (
     CONSTRAINT pk_service_id PRIMARY KEY (id)
 )^;
 
+CREATE TABLE IF NOT EXISTS provider_services (
+    provider_id INTEGER NOT NULL,
+    service_id INTEGER NOT NULL,
+
+    CONSTRAINT pk_provider_services
+    PRIMARY KEY (provider_id, service_id),
+
+    CONSTRAINT fk_provider_services_provider_id
+    FOREIGN KEY (provider_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE,
+
+    CONSTRAINT fk_provider_services_service_id
+    FOREIGN KEY (service_id)
+    REFERENCES services(id)
+    ON DELETE CASCADE
+)^;
+
 CREATE TABLE IF NOT EXISTS event_services (
     event_id INTEGER NOT NULL,
     service_id INTEGER NOT NULL,
@@ -110,25 +128,25 @@ CREATE TABLE IF NOT EXISTS comments (
     CONSTRAINT pk_comment_id PRIMARY KEY (id)
 )^;
 
-CREATE TABLE IF NOT EXISTS event_comments (
-    event_id INTEGER NOT NULL,
+CREATE TABLE IF NOT EXISTS service_comments (
+    service_id INTEGER NOT NULL,
     comment_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
 
-    CONSTRAINT pk_event_comment
-    PRIMARY KEY (event_id, comment_id, user_id),
+    CONSTRAINT pk_service_comment
+    PRIMARY KEY (service_id, comment_id, user_id),
 
-    CONSTRAINT fk_event_comments_event_id
-    FOREIGN KEY (event_id)
-    REFERENCES events(id)
+    CONSTRAINT fk_service_comments_service_id
+    FOREIGN KEY (service_id)
+    REFERENCES services(id)
     ON DELETE CASCADE,
 
-    CONSTRAINT fk_event_comments_comment_id
+    CONSTRAINT fk_service_comments_comment_id
     FOREIGN KEY (comment_id)
     REFERENCES comments(id)
     ON DELETE CASCADE,
 
-    CONSTRAINT fk_event_comments_user_id
+    CONSTRAINT fk_service_comments_user_id
     FOREIGN KEY (user_id)
     REFERENCES users(id)
     ON DELETE CASCADE
@@ -224,10 +242,9 @@ END^;
 DROP PROCEDURE IF EXISTS GetProviderPostsCount^;
 CREATE PROCEDURE GetProviderPostsCount()
 BEGIN
-    SELECT COUNT(*)
-    FROM provider_posts pp
-    JOIN users u ON pp.provider_id = u.id
-    JOIN posts p ON pp.post_id = p.id;
+    SELECT
+        COUNT(*)
+    FROM provider_posts pp;
 END^;
 
 DROP PROCEDURE IF EXISTS GetProviderPostsSearchResultsCount^;
@@ -235,7 +252,8 @@ CREATE PROCEDURE GetProviderPostsSearchResultsCount(
     IN p_search_key VARCHAR(255)
 )
 BEGIN
-    SELECT COUNT(*)
+    SELECT
+        COUNT(*)
     FROM provider_posts pp
     JOIN users u ON pp.provider_id = u.id
     JOIN posts p ON pp.post_id = p.id
@@ -340,7 +358,8 @@ CREATE PROCEDURE GetConsumerEventsCount(
     IN p_user_id INT
 )
 BEGIN
-    SELECT COUNT(*)
+    SELECT
+        COUNT(*)
     FROM user_events ue
     JOIN users u ON ue.user_id = u.id
     JOIN events e ON ue.event_id = e.id
@@ -408,113 +427,153 @@ BEGIN
 END^;
 
 
--- EventComments Procedures
+-- ProviderServices Procedures
 
-DROP PROCEDURE IF EXISTS GetEventComments^;
-CREATE PROCEDURE GetEventComments()
+DROP PROCEDURE IF EXISTS GetAllProviderServices^;
+CREATE PROCEDURE GetAllProviderServices()
 BEGIN
     SELECT
-        ec.comment_id AS id,
-        ec.event_id AS event_id,
-        ec.user_id AS user_id,
-        u.name AS user_name,
-        c.comment,
-        c.created_at,
-        c.updated_at
-    FROM event_comments ec
-    JOIN events e ON ec.event_id = e.id
-    JOIN comments c ON ec.comment_id = c.id
-    JOIN users u ON ec.user_id = u.id;
+        s.id,
+        p.id AS providerId,
+        p.name AS providerName,
+        s.title,
+        s.description,
+        s.imageUrl,
+        s.rate,
+        s.created_at,
+        s.updated_at
+    FROM provider_services ps
+    JOIN users p ON ps.provider_id = p.id
+    JOIN services s ON ps.service_id = s.id;
 END^;
 
-DROP PROCEDURE IF EXISTS GetEventCommentsPage^;
-CREATE PROCEDURE GetEventCommentsPage(
-    IN p_event_id INT,
+DROP PROCEDURE IF EXISTS GetProviderServicesPage^;
+CREATE PROCEDURE GetProviderServicesPage (
     IN p_limit INT,
     IN p_offset INT
 )
 BEGIN
     SELECT
-        ec.comment_id AS id,
-        ec.event_id AS event_id,
-        ec.user_id AS user_id,
-        u.name AS user_name,
-        c.comment,
-        c.created_at,
-        c.updated_at
-    FROM (SELECT * FROM event_comments WHERE event_id = p_event_id) ec
-    JOIN events e ON ec.event_id = e.id
-    JOIN comments c ON ec.comment_id = c.id
-    JOIN users u ON ec.user_id = u.id
+        s.id,
+        p.id AS providerId,
+        p.name AS providerName,
+        s.title,
+        s.description,
+        s.imageUrl,
+        s.rate,
+        s.created_at,
+        s.updated_at
+    FROM provider_services ps
+    JOIN users p ON ps.provider_id = p.id
+    JOIN services s ON ps.service_id = s.id
     LIMIT p_limit OFFSET p_offset;
 END^;
 
-DROP PROCEDURE IF EXISTS GetEventCommentsCount^;
-CREATE PROCEDURE GetEventCommentsCount (
-    IN p_event_id INT
-)
-BEGIN
-    SELECT COUNT(*)
-    FROM (SELECT * FROM event_comments WHERE event_id = p_event_id) ec
-    JOIN events e ON ec.event_id = e.id
-    JOIN comments c ON ec.comment_id = c.id
-    JOIN users u ON ec.user_id = u.id;
-END^;
-
-DROP PROCEDURE IF EXISTS GetEventComment^;
-CREATE PROCEDURE GetEventComment (
-    IN p_comment_id INT
+DROP PROCEDURE IF EXISTS GetProviderServicesPageByProviderId^;
+CREATE PROCEDURE GetProviderServicesPageByProviderId(
+    IN p_provider_id INT,
+    IN p_limit INT,
+    IN p_offset INT
 )
 BEGIN
     SELECT
-        ec.comment_id AS id,
-        ec.event_id AS event_id,
-        ec.user_id AS user_id,
-        u.name AS user_name,
-        c.comment,
-        c.created_at,
-        c.updated_at
-    FROM (SELECT * FROM event_comments WHERE comment_id = p_comment_id) ec
-    JOIN events e ON ec.event_id = e.id
-    JOIN comments c ON ec.comment_id = c.id
-    JOIN users u ON ec.user_id = u.id;
+        s.id,
+        p.id AS providerId,
+        p.name AS providerName,
+        s.title,
+        s.description,
+        s.imageUrl,
+        s.rate,
+        s.created_at,
+        s.updated_at
+    FROM (SELECT * FROM provider_services WHERE provider_id = p_provider_id) ps
+    JOIN users p ON ps.provider_id = p.id
+    JOIN services s ON ps.service_id = s.id
+    LIMIT p_limit OFFSET p_offset;
 END^;
 
-DROP PROCEDURE IF EXISTS CreateEventComment^;
-CREATE PROCEDURE CreateEventComment (
-    IN p_user_id INT,
-    IN p_event_id INT,
-    IN p_comment VARCHAR(255)
+DROP PROCEDURE IF EXISTS GetProviderService^;
+CREATE PROCEDURE GetProviderService (
+    IN p_id INT
 )
 BEGIN
-    DECLARE last_comment_id INT;
-
-    INSERT INTO comments (comment) VALUES (p_comment);
-
-    SET last_comment_id = LAST_INSERT_ID();
-
-    INSERT INTO event_comments (user_id, event_id, comment_id) VALUES (p_user_id, p_event_id, last_comment_id);
+    SELECT
+        s.id,
+        p.id AS providerId,
+        p.name AS providerName,
+        s.title,
+        s.description,
+        s.imageUrl,
+        s.rate,
+        s.created_at,
+        s.updated_at
+    FROM (SELECT * FROM provider_services WHERE service_id = p_id) ps
+    JOIN users p ON ps.provider_id = p.id
+    JOIN services s ON ps.service_id = s.id;
 END^;
 
-DROP PROCEDURE IF EXISTS UpdateEventComment^;
-CREATE PROCEDURE UpdateEventComment (
-    IN p_comment_id INT,
-    IN p_comment VARCHAR(255)
+DROP PROCEDURE IF EXISTS CreateProviderService^;
+CREATE PROCEDURE CreateProviderService (
+    IN p_provider_id INT,
+    IN p_title VARCHAR(255),
+    IN p_description VARCHAR(255),
+    IN p_imageUrl VARCHAR(255),
+    IN p_rate FLOAT
 )
 BEGIN
-    UPDATE comments
-    SET comment = p_comment
-    WHERE id = p_comment_id;
+    DECLARE last_service_id INT;
+
+    INSERT INTO services (title, description, imageUrl, rate) VALUES
+    (p_title, p_description, p_imageUrl, p_rate);
+
+    SET last_service_id = LAST_INSERT_ID();
+
+    INSERT INTO provider_services (provider_id, service_id) VALUES
+    (p_provider_id, last_service_id);
 END^;
 
-DROP PROCEDURE IF EXISTS DeleteEventComment^;
-CREATE PROCEDURE DeleteEventComment(
-    IN p_comment_id INT
+DROP PROCEDURE IF EXISTS UpdateProviderService^;
+CREATE PROCEDURE UpdateProviderService (
+    IN p_id INT,
+    IN p_title VARCHAR(255),
+    IN p_description VARCHAR(255),
+    IN p_imageUrl VARCHAR(255),
+    IN p_rate FLOAT
 )
 BEGIN
-    DELETE FROM comments
-    WHERE id = p_comment_id;
+    UPDATE services SET
+        title = p_title,
+        description = p_description,
+        imageUrl = p_imageUrl,
+        rate = p_rate
+    WHERE id = p_id;
+END^;
 
-    DELETE FROM event_comments
-    WHERE comment_id = p_comment_id;
+DROP PROCEDURE IF EXISTS DeleteProviderService^;
+CREATE PROCEDURE DeleteProviderService (
+    IN p_id INT
+)
+BEGIN
+    DELETE FROM services WHERE id = p_id;
+
+    DELETE FROM provider_services WHERE service_id = p_id;
+END^;
+
+DROP PROCEDURE IF EXISTS GetProviderServicesCount^;
+CREATE PROCEDURE GetProviderServicesCount()
+BEGIN
+    SELECT
+        COUNT(*)
+    FROM provider_services;
+END^;
+
+DROP PROCEDURE IF EXISTS GetProviderServicesCountByProviderId^;
+CREATE PROCEDURE GetProviderServicesCountByProviderId(
+    IN p_provider_id INT
+)
+BEGIN
+    SELECT
+        COUNT(*)
+    FROM provider_services
+    WHERE provider_id = p_provider_id;
 END^;

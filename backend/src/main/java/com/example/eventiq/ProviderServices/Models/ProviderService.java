@@ -1,4 +1,4 @@
-package com.example.eventiq.EventComments.Models;
+package com.example.eventiq.ProviderServices.Models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,17 +11,21 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventComment {
+public class ProviderService {
 
     private Integer id;
 
-    private Integer eventId;
+    private Integer providerId;
 
-    private Integer userId;
+    private String providerName;
 
-    private String userName;
+    private String title;
 
-    private String comment;
+    private String description;
+
+    private String imageUrl;
+
+    private Float rate;
 
     private Timestamp createdAt;
 

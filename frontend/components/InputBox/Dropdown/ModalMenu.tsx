@@ -1,10 +1,12 @@
 import { forwardRef, memo, useCallback, useImperativeHandle, useState } from "react";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Modal, Text } from "react-native-paper";
+import { Divider, Modal, Text, useTheme } from "react-native-paper";
 import { ModalMenuHandle, ModalMenuProps } from "../types";
 
-const ModalMenu = forwardRef<ModalMenuHandle, ModalMenuProps>(({ data }, ref) => {
-const [isVisible, setVisible] = useState<boolean>(false);
+const ModalMenu = forwardRef<ModalMenuHandle, ModalMenuProps>(({ data, onMenuItemPress }, ref) => {
+    const [isVisible, setVisible] = useState<boolean>(false);
+
+    const theme = useTheme();
 
     useImperativeHandle(ref, () => ({
         show: handleShow,
@@ -20,49 +22,48 @@ const [isVisible, setVisible] = useState<boolean>(false);
     }, []);
 
     const handleMenuItemPress = useCallback((idx: number) => {
-
+        handleDismiss();
+        onMenuItemPress?.apply(null, [data[idx], idx]);
     }, [data]);
 
     return (
         <Modal
             visible={isVisible}
             onDismiss={handleDismiss}
+            contentContainerStyle={{ ...styles.menu, backgroundColor: theme.colors.onSecondary }}
         >
-            <TouchableOpacity
-                style={styles.overlay}
-                onPress={handleDismiss}
-                activeOpacity={1}
-            >
-                <View style={styles.menu}>
-                    <FlatList
-                        data={data}
-                        keyExtractor={(item, idx) => `${item.value}-${idx}`}
-                        renderItem={({ item, index }) => (
-                            <TouchableOpacity
-                                style={styles.menuItem}
-                                onPress={() => handleMenuItemPress(index)}
-                            >
-                                <Text>{item.label}</Text>
-                            </TouchableOpacity>
-                        )}
-                    />
-                </View>
-            </TouchableOpacity>
+            <View style={styles.headerContainer}>
+                <Text variant={"bodyLarge"}>Select an option...</Text>
+            </View>
+            <Divider />
+            <FlatList
+                data={data}
+                keyExtractor={(item, idx) => `${item.value}-${idx}`}
+                renderItem={({ item, index }) => (
+                    <TouchableOpacity
+                        style={styles.menuItem}
+                        onPress={() => handleMenuItemPress(index)}
+                    >
+                        <Text>{item.label}</Text>
+                    </TouchableOpacity>
+                )}
+            />
         </Modal>
     );
 });
 
 const styles = StyleSheet.create({
-    overlay: {
-        flex: 1,
-        justifyContent: "center",
-        backgroundColor: "#00000055"
+    headerContainer: {
+        paddingTop: 12,
+        paddingBottom: 10,
+        paddingHorizontal: 16
     },
     menu: {
         marginHorizontal: 40,
         borderRadius: 8,
         paddingVertical: 0,
-        elevation: 4,
+        // elevation: 4,
+        elevation: 0,
     },
     menuItem: {
         flex: 1,
