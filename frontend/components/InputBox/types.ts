@@ -3,6 +3,7 @@ import { ViewStyle } from "react-native";
 import { TextInputProps } from "react-native-paper";
 
 export interface TextProps extends TextInputProps {
+    passwordShowHideEnabled?: boolean;
     onTextChange?: (text: string) => void;
     onSubmit?: (text: string) => void;
 };
@@ -45,4 +46,5 @@ export type ModalMenuHandle = {
 
 export interface InputBoxComponentType extends React.MemoExoticComponent<React.ForwardRefExoticComponent<TextProps & RefAttributes<TextHandle>>> {
     Dropdown: ForwardRefExoticComponent<DropdownProps & RefAttributes<DropdownHandle>>;
+    Text: ForwardRefExoticComponent<TextProps & RefAttributes<TextHandle>>;
 };

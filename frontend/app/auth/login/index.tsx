@@ -1,44 +1,42 @@
 import { useAuth } from "@/context/AuthProvider";
 import { useSnackbar } from "@/context/SnackbarProvider";
 import { Link } from "expo-router";
-import { useCallback, useRef, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
-import Role from "../../enums/Role";
-import PlainRegistrationForm from "./PlainRegistrationForm";
-import { PlainRegistrationFormHandle } from "./PlainRegistrationForm/types";
-import TitleContent from "./TitleContent";
+import TitleContent from "../register/TitleContent";
+import PlainLoginForm from "./PlainLoginForm";
+import { PlainLoginFormHandle } from "./PlainLoginForm/types";
 
-export default function Register() {
+function Login() {
     const [loading, setLoading] = useState<boolean>(false);
 
     const theme = useTheme();
 
-    const registrationFormRef = useRef<PlainRegistrationFormHandle>(null);
+    const loginFormRef = useRef<PlainLoginFormHandle>(null);
 
     const auth = useAuth();
     const snackbar = useSnackbar();
 
-    const handleSignUp = useCallback(() => {
-        register();
+    const handleSignIn = useCallback(() => {
+        login();
     }, []);
 
-    const register = useCallback(async () => {
+    const login = useCallback(async () => {
         setLoading(true);
 
         try {
-            if (!registrationFormRef.current)
+            if (!loginFormRef.current)
                 throw new Error("Something went wrong!");
 
-            const form = registrationFormRef.current.submit();
+            const form = loginFormRef.current.submit();
 
             if (!form)
-                throw new Error("Invalid inputs!");
+                throw new Error("Invalid inputs");
 
-            await auth.register(form.name, form.email, form.password, Role.ADMIN);
+            await auth.login(form.email, form.password);
         } catch (err) {
             snackbar.showError(err instanceof Error ? err.message : "An unknown error occurred.");
-
             setLoading(false);
         }
     }, []);
@@ -51,15 +49,16 @@ export default function Register() {
                 </View>
 
                 <View>
-                    <PlainRegistrationForm ref={registrationFormRef} />
+                    <PlainLoginForm ref={loginFormRef} />
                 </View>
 
                 <View style={styles.message}>
-                    <Text variant="bodyLarge" style={{ textAlign: "center" }}>Creating an account means you are okay with our terms of services and out Privacy Policy.</Text>
-                    <Text variant="bodyLarge" style={{ textAlign: "center" }}>Have an account? <Link href={"/auth/login"} style={{ color: theme.colors.primary }}>Sign in</Link></Text>
+                    <Text variant="bodyLarge" style={{ textAlign: "center" }}>Haven't an account? <Link href={"/auth/register"} style={{ color: theme.colors.primary }}>Sign up</Link></Text>
                 </View>
 
-                <Button mode="contained" style={styles.button} onPress={handleSignUp} loading={loading}>Sign up</Button>
+                <View>
+                    <Button mode="contained" style={styles.button} onPress={handleSignIn} loading={loading}>Sign in</Button>
+                </View>
             </Surface>
         </View>
     );
@@ -78,7 +77,7 @@ const styles = StyleSheet.create({
     },
     button: {
         borderRadius: 5,
-        padding: 5,
+        padding: 5
     },
     message: {
         flex: 1,
@@ -87,5 +86,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         justifyContent: "flex-start",
         alignItems: "center"
-    },
+    }
 });
+
+export default memo(Login);

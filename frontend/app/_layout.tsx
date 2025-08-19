@@ -4,22 +4,25 @@ import PostsProvider from "@/context/PostsProvider";
 import SnackbarProvider from "@/context/SnackbarProvider";
 import UserProvider from "@/context/UserProvider";
 import { Slot } from "expo-router";
-import { PaperProvider } from "react-native-paper";
+import { ThemeProvider } from "./themes/ThemeProvider";
+import ThemeWrapper from "./themes/ThemeWrapper";
 
 export default function RootLayout() {
     return (
-        <PaperProvider>
-            <UserProvider>
-                <ApiProvider>
-                    <AuthProvider>
-                        <PostsProvider>
-                            <SnackbarProvider>
+        <ThemeProvider>
+            <ThemeWrapper>
+                <UserProvider>
+                    <ApiProvider>
+                        <AuthProvider>
+                            <PostsProvider>
+                                <SnackbarProvider>
                                     <Slot />
-                            </SnackbarProvider>
-                        </PostsProvider>
-                    </AuthProvider>
-                </ApiProvider>
-            </UserProvider>
-        </PaperProvider>
+                                </SnackbarProvider>
+                            </PostsProvider>
+                        </AuthProvider>
+                    </ApiProvider>
+                </UserProvider>
+            </ThemeWrapper>
+        </ThemeProvider>
     );
 }

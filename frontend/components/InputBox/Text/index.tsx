@@ -4,7 +4,8 @@ import { TextInput } from "react-native-paper";
 import { TextHandle, TextProps } from "../types";
 
 const Text = forwardRef<TextHandle, TextProps>((props, ref) => {
-    const [text, setText] = useState<string>(""); 
+    const [text, setText] = useState<string>("");
+    const [showPassword, setShowPassword] = useState<boolean>(props.secureTextEntry ? true : false);
 
     useImperativeHandle(ref, () => ({
         setText: handleSetText,
@@ -36,9 +37,16 @@ const Text = forwardRef<TextHandle, TextProps>((props, ref) => {
     return (
         <TextInput
             {...props}
+            secureTextEntry={showPassword}
             onChange={handleChange}
             onSubmitEditing={handleSubmitEditing}
             value={text}
+            right={props.passwordShowHideEnabled && (
+                <TextInput.Icon
+                    icon={showPassword ? "eye" : "eye-off"}
+                    onPress={() => setShowPassword(!showPassword)}
+                />
+            )}
         />
     );
 });
