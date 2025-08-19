@@ -1,41 +1,30 @@
 import { useAuth } from "@/context/AuthProvider";
 import { useSnackbar } from "@/context/SnackbarProvider";
-import { Link } from "expo-router";
-import { useCallback, useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Button, Surface, Text, useTheme } from "react-native-paper";
-import Role from "../../enums/Role";
+import { useCallback, useState } from "react";
+import { StyleSheet } from "react-native";
+import { Surface } from "react-native-paper";
 import PlainRegistrationForm from "./PlainRegistrationForm";
-import { PlainRegistrationFormHandle } from "./PlainRegistrationForm/types";
+import { RegisterFormResult } from "./PlainRegistrationForm/types";
 import TitleContent from "./TitleContent";
 
 export default function Register() {
     const [loading, setLoading] = useState<boolean>(false);
 
-    const theme = useTheme();
-
-    const registrationFormRef = useRef<PlainRegistrationFormHandle>(null);
-
     const auth = useAuth();
     const snackbar = useSnackbar();
 
-    const handleSignUp = useCallback(() => {
-        register();
+    const handleSignUp = useCallback((form: RegisterFormResult | null) => {
+        register(form);
     }, []);
 
-    const register = useCallback(async () => {
+    const register = useCallback(async (form: RegisterFormResult | null) => {
         setLoading(true);
 
         try {
-            if (!registrationFormRef.current)
-                throw new Error("Something went wrong!");
-
-            const form = registrationFormRef.current.submit();
-
             if (!form)
                 throw new Error("Invalid inputs!");
 
-            await auth.register(form.name, form.email, form.password, Role.ADMIN);
+            await auth.register(form.name, form.email, form.password, form.role);
         } catch (err) {
             snackbar.showError(err instanceof Error ? err.message : "An unknown error occurred.");
 
@@ -44,48 +33,24 @@ export default function Register() {
     }, []);
 
     return (
-        <View style={styles.container}>
-            <Surface mode="flat" style={styles.contentContainer}>
-                <View>
-                    <TitleContent />
-                </View>
-
-                <View>
-                    <PlainRegistrationForm ref={registrationFormRef} />
-                </View>
-
-                <View style={styles.message}>
-                    <Text variant="bodyLarge" style={{ textAlign: "center" }}>Creating an account means you are okay with our terms of services and out Privacy Policy.</Text>
-                    <Text variant="bodyLarge" style={{ textAlign: "center" }}>Have an account? <Link href={"/auth/login"} style={{ color: theme.colors.primary }}>Sign in</Link></Text>
-                </View>
-
-                <Button mode="contained" style={styles.button} onPress={handleSignUp} loading={loading}>Sign up</Button>
-            </Surface>
-        </View>
+        <Surface mode="flat" style={styles.container}>
+            <TitleContent style={styles.titleContent} />
+            <PlainRegistrationForm style={styles.form} loading={loading} onSubmit={handleSignUp} />
+        </Surface>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        gap: 1
-    },
-    contentContainer: {
-        flex: 1,
+        flex: 2,
         gap: 1,
         padding: 10,
-        paddingTop: 60
+        paddingBottom: 20,
     },
-    button: {
-        borderRadius: 5,
-        padding: 5,
-    },
-    message: {
+    titleContent: {
         flex: 1,
-        gap: 10,
-        paddingTop: 15,
-        textAlign: "center",
-        justifyContent: "flex-start",
-        alignItems: "center"
+    },
+    form: {
+        gap: 15,
     },
 });

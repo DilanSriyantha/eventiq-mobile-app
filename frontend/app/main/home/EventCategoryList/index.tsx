@@ -45,7 +45,7 @@ const EventCategoriesList = forwardRef<EventCategoriesListHandle, EventCategorie
 
     return (
         <View style={styles.container}>
-            <ScrollView horizontal showsVerticalScrollIndicator={false}>
+            <ScrollView horizontal showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
                 {CATEGORY_OPTIONS.map((co, idx) => (
                     <CategoryButton
                         key={idx}

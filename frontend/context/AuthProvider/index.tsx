@@ -1,4 +1,4 @@
-import Role from "@/app/enums/Role";
+import { Role } from "@/app/enums/Role";
 import { useRouter } from "expo-router";
 import { createContext, ReactNode, useContext } from "react";
 import { useApi } from "../ApiProvider";

@@ -1,4 +1,9 @@
+import { Role } from "@/app/enums/Role";
 import { Action, ActionType } from "./types";
+
+export const setRole = (role: Role): Action => {
+    return { type: ActionType.SET_ROLE, payload: role };
+};
 
 export const setUsername = (username: string): Action => {
     return { type: ActionType.SET_USERNAME, payload: username };

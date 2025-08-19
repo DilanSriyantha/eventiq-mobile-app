@@ -5,13 +5,15 @@ export function validateAndGenerateResult(state: PlainRegistrationFormState): Re
     const registerFormResult: RegisterFormResult = {
         name: state.userName,
         email: state.email,
-        password: state.password
+        password: state.password,
+        role: state.role,
     };
 
     const valid = Validator.areValid(
         registerFormResult.name, Validator.ValueType.text,
         registerFormResult.email, Validator.ValueType.email,
-        registerFormResult.password, Validator.ValueType.text
+        registerFormResult.password, Validator.ValueType.text,
+        registerFormResult.role, Validator.ValueType.except
     );
 
     if (!valid) return null;

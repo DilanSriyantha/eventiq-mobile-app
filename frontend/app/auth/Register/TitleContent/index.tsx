@@ -1,10 +1,11 @@
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
+import { TitleContentProps } from "./types";
 
-export default function TitleContent() {
+export default function TitleContent(props: TitleContentProps) {
 
     return (
-        <View style={styles.container}>
+        <View {...props}>
             <View style={styles.titleContainer}>
                 <Text variant="headlineLarge" style={styles.titleHeadline}>EVORA</Text>
                 <Text variant="headlineSmall">Join with us!</Text>

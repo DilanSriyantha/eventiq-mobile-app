@@ -1,5 +1,5 @@
 import React, { ForwardRefExoticComponent, RefAttributes } from "react";
-import { ViewStyle } from "react-native";
+import { ViewProps, ViewStyle } from "react-native";
 import { TextInputProps } from "react-native-paper";
 
 export interface TextProps extends TextInputProps {
@@ -37,6 +37,7 @@ export interface DropdownItem {
 export interface ModalMenuProps {
     data: DropdownItem[];
     onMenuItemPress?: (item: DropdownItem, index: number) => void;
+    style?: ViewProps["style"];
 };
 
 export type ModalMenuHandle = {

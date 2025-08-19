@@ -31,7 +31,7 @@ const SnackbarView = forwardRef<SnackbarViewHandle, any>(({ }, ref) => {
     }));
 
     return (
-        <View>
+        <View style={styles.container}>
             <Snackbar
                 visible={!!options}
                 onDismiss={handleDismiss}
@@ -39,7 +39,6 @@ const SnackbarView = forwardRef<SnackbarViewHandle, any>(({ }, ref) => {
                     backgroundColor: theme.colors.surface
                 }}
             >
-                {/* {options?.message} */}
                 <View style={styles.content}>
                     <Icon
                         source={
@@ -65,6 +64,14 @@ const SnackbarView = forwardRef<SnackbarViewHandle, any>(({ }, ref) => {
 })
 
 const styles = StyleSheet.create({
+    container: {
+        position: "absolute",
+        height: 120,
+        width: "100%",
+        top: 0,
+        left: 0,
+        right: 0
+    },
     content: {
         flexDirection: "row",
         gap: 10,

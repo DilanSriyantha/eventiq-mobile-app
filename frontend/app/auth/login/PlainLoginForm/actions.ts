@@ -8,6 +8,6 @@ export const setPassword = (password: string): Action => {
     return { type: ActionType.SET_PASSWORD, payload: password };
 };
 
-export const clear = () => {
+export const clear = (): Action => {
     return { type: ActionType.CLEAR };
 };

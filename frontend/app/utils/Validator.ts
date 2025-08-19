@@ -67,6 +67,7 @@ namespace Validator {
         number,
         telephone,
         email,
+        except,
     };
 
     export function areValid(...typesAfterValues: any[]): boolean {
@@ -83,12 +84,15 @@ namespace Validator {
             const type = typesAfterValues[i];
 
             const isInvalid =
-                (type === ValueType.text && !isValidText(tmpVal)) ||
-                (type === ValueType.number && !isValidNumber(tmpVal)) ||
-                (type === ValueType.telephone && !isValidLKPhoneNumber(tmpVal)) ||
-                (type === ValueType.email && !isValidEmail(tmpVal));
+                (type !== ValueType.except) && (
+                    (type === ValueType.text && !isValidText(tmpVal)) ||
+                    (type === ValueType.number && !isValidNumber(tmpVal)) ||
+                    (type === ValueType.telephone && !isValidLKPhoneNumber(tmpVal)) ||
+                    (type === ValueType.email && !isValidEmail(tmpVal))
+                );
 
             if (isInvalid) {
+                console.log(tmpVal);
                 valid = false;
                 break;
             }

@@ -1,6 +1,6 @@
 import { forwardRef, memo, useCallback, useImperativeHandle, useRef, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
-import { TextInput } from "react-native-paper";
+import { Portal, TextInput } from "react-native-paper";
 import { DropdownHandle, DropdownItem, DropdownProps, ModalMenuHandle } from "../types";
 import ModalMenu from "./ModalMenu";
 
@@ -28,6 +28,7 @@ const Dropdown = forwardRef<DropdownHandle, DropdownProps>((props, ref) => {
 
     const handleMenuItemPress = useCallback((_item: DropdownItem, index: number) => {
         setSelectedIndex(index);
+        props.onSelect?.apply(null, [props.data[index], index]);
     }, []);
 
     return (
@@ -41,15 +42,23 @@ const Dropdown = forwardRef<DropdownHandle, DropdownProps>((props, ref) => {
                         focusable
                         editable={false}
                         label={props.label}
-                        value={props.data[selecteIndex].value}
+                        value={props.data[selecteIndex].label}
+                        right={
+                            <TextInput.Icon
+                                icon={"chevron-down"}
+                                onPress={handlePress}
+                            />
+                        }
                     />
                 </TouchableOpacity>
             </View>
-            <ModalMenu
-                ref={modalMenuRef}
-                data={props.data}
-                onMenuItemPress={handleMenuItemPress}
-            />
+            <Portal>
+                <ModalMenu
+                    ref={modalMenuRef}
+                    data={props.data}
+                    onMenuItemPress={handleMenuItemPress}
+                />
+            </Portal>
         </>
     );
 });

@@ -2,7 +2,7 @@ import { Action, ActionType, PlainLoginFormState } from "./types";
 
 export const initialState: PlainLoginFormState = {
     email: "",
-    password: ""
+    password: "",
 };
 
 export const reducer = (state: PlainLoginFormState, action: Action): PlainLoginFormState => {

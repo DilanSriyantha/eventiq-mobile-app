@@ -1,16 +1,20 @@
+import { Role } from "@/app/enums/Role";
 import { Action, ActionType, PlainRegistrationFormState } from "./types";
 
 export const initialState: PlainRegistrationFormState = {
+    role: Role.CONSUMER,
     userName: "",
     email: "",
     password: "",
     passwordRepeat: "",
     passwordRepeatError: false,
-    loading: false,
 };
 
 export const reducer = (state: PlainRegistrationFormState, action: Action): PlainRegistrationFormState => {
     switch (action.type) {
+        case ActionType.SET_ROLE:
+            return { ...state, role: action.payload };
+
         case ActionType.SET_USERNAME:
             return { ...state, userName: action.payload };
 

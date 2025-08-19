@@ -17,11 +17,11 @@ export default function Home() {
     const router = useRouter();
 
     function handleCheckPress(post: Post) {
-        router.push("/providers?title=provider_overview" as any);
+        router.push(`/providers?title=provider_overview&provider_id=${post.providerId}` as any);
     }
 
     const onCategoryChange = useCallback((category: Category) => {
-        if(category.caption.toLowerCase() === "all"){
+        if (category.caption.toLowerCase() === "all") {
             setSearchKey("");
             return;
         }

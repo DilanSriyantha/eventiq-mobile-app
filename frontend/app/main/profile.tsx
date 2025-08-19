@@ -58,18 +58,18 @@ const styles = StyleSheet.create({
         gap: 1
     },
     userNameContainer: {
+        width: "100%",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center"
     },
     nameContainer: {
         flex: 1,
-        // maxWidth: "70%",
+        width: "100%",
         flexWrap: "nowrap",
         paddingRight: 10,
     },
     avatarContainer: {
-        flex: 1,
     },
     menu: {
         flex: 1,
