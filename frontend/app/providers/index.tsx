@@ -1,13 +1,13 @@
-import AnimatedCustomizedFAB, { AnimatedCustomizedFABHandle } from "@/components/AnimatedCustomizedFAB";
+import { AnimatedCustomizedFABHandle } from "@/components/AnimatedCustomizedFAB";
 import FABGroup from "@/components/FABGroup";
 import FeaturedOption from "@/components/FeaturedOption";
 import GeneralOptionsPanel, { GeneralOptionsPanelHandle } from "@/components/GeneralOptionsPanel";
-import ParallaxViewWrapper from "@/components/ParallaxViewWrapper";
+import ParallaxViewWrapper from "@/components/ParallaxViewWrapper/index";
 import RatingStrip from "@/components/RatingStrip";
 import { useRouter } from "expo-router";
 import { useCallback, useRef } from "react";
 import { Dimensions, FlatList, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, View } from "react-native";
-import { Chip, FAB, Text, useTheme } from "react-native-paper";
+import { Chip, Text } from "react-native-paper";
 
 const item = {
     title: "River Green Restaurant",
