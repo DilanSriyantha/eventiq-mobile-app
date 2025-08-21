@@ -3,7 +3,6 @@ package com.example.eventiq.Authentication.Repositories;
 import com.example.eventiq.Authentication.Models.User;
 import com.example.eventiq.Enums.Role;
 import com.example.eventiq.Utils.DAO;
-import com.example.eventiq.Utils.OnCompleted;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -35,7 +34,7 @@ public class UserDAO implements DAO<User> {
 
     @Override
     public List<User> getAll() {
-        var sql = "SELECT * FROM users;";
+        var sql = "CALL GetAllUsers();";
 
         var users = jdbcTemplate.query(sql, rowMapper);
 
@@ -44,12 +43,12 @@ public class UserDAO implements DAO<User> {
 
     @Override
     public Page<User> getPage(int page, int pageSize) {
-        var contentSql = "SELECT * FROM users ORDER BY id ASC LIMIT ? OFFSET ?;";
+        var contentSql = "CALL GetUsersPage(?, ?);";
 
         var offset = page * pageSize;
         var content = jdbcTemplate.query(contentSql, rowMapper, pageSize, offset);
 
-        var countSql = "SELECT COUNT(*) FROM users;";
+        var countSql = "CALL GetUsersCount();";
         var count = jdbcTemplate.queryForObject(countSql, Integer.class);
 
         return new PageImpl<>(content, PageRequest.of(page, pageSize), count);
@@ -57,30 +56,34 @@ public class UserDAO implements DAO<User> {
 
     @Override
     public Optional<User> get(int id) {
-        var sql = "SELECT * FROM users WHERE id=?;";
+        var sql = "CALL GetUserById(?);";
 
-        var user = jdbcTemplate.queryForObject(sql, rowMapper, id);
+        var user = jdbcTemplate.query(sql, rowMapper, id);
 
-        return Optional.of(user);
+        if(user.isEmpty()) return Optional.empty();
+
+        return Optional.of(user.getFirst());
     }
 
     public Optional<User> getByEmail(String email) {
-        var sql = "SELECT * FROM users WHERE email=?;";
+        var sql = "CALL GetUserByEmail(?);";
 
-        var user = jdbcTemplate.queryForObject(sql, rowMapper, email);
+        var user = jdbcTemplate.query(sql, rowMapper, email);
 
-        return Optional.ofNullable(user);
+        if(user.isEmpty()) return Optional.empty();
+
+        return Optional.of(user.getFirst());
     }
 
     @Override
-    public void create(User user) {
-        var sql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?);";
+    public void create(User request) {
+        var sql = "CALL CreateUser(?, ?, ?, ?);";
 
         var rowsAffected = jdbcTemplate.update(sql,
-                user.getName(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getRole().name()
+                request.getName(),
+                request.getEmail(),
+                request.getPassword(),
+                request.getRole().name()
         );
 
         if(rowsAffected > 0) {
@@ -92,14 +95,15 @@ public class UserDAO implements DAO<User> {
     }
 
     @Override
-    public void update(int id, User newDetails) {
-        var sql = "UPDATE users SET name=?, email=?, role=? WHERE id=?;";
+    public void update(int id, User request) {
+        var sql = "CALL UpdateUser(?, ?, ?, ?, ?);";
 
         var rowsAffected = jdbcTemplate.update(sql,
-                newDetails.getName(),
-                newDetails.getEmail(),
-                newDetails.getRole()
-        , id);
+                id,
+                request.getName(),
+                request.getEmail(),
+                request.getRole()
+        );
 
         if(rowsAffected > 0){
             log.info("User updated successfully.");
@@ -111,7 +115,7 @@ public class UserDAO implements DAO<User> {
 
     @Override
     public void delete(int id) {
-        var sql = "DELETE FROM users WHERE id=?;";
+        var sql = "CALL DeleteUser(?);";
 
         var rowsAffected = jdbcTemplate.update(sql, id);
 
