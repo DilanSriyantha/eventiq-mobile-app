@@ -11,6 +11,37 @@ CREATE TABLE IF NOT EXISTS users (
     CONSTRAINT uc_user_email UNIQUE (email)
 )^;
 
+CREATE TABLE IF NOT EXISTS provider_info (
+    id INTEGER AUTO_INCREMENT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    welcome_note VARCHAR(255) NOT NULL,
+    tags VARCHAR(255) NOT NULL,
+    rating FLOAT DEFAULT 0.0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT pk_provider_info
+    PRIMARY KEY (id)
+)^;
+
+CREATE TABLE IF NOT EXISTS provider_provider_info (
+    provider_id INTEGER NOT NULL,
+    info_id INTEGER NOT NULL,
+
+    CONSTRAINT pk_provider_provider_info
+    PRIMARY KEY (provider_id, info_id),
+
+    CONSTRAINT fk_provider_provider_info_provider_id
+    FOREIGN KEY (provider_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE,
+
+    CONSTRAINT fk_provider_provider_info_info_id
+    FOREIGN KEY (info_id)
+    REFERENCES provider_info(id)
+    ON DELETE CASCADE
+)^;
+
 CREATE TABLE IF NOT EXISTS posts (
     id INTEGER AUTO_INCREMENT NOT NULL,
     title VARCHAR(255) NOT NULL,
@@ -153,6 +184,111 @@ CREATE TABLE IF NOT EXISTS service_comments (
 )^;
 
 -- create procedures
+
+-- Users procedures
+
+DROP PROCEDURE IF EXISTS GetAllUsers^;
+CREATE PROCEDURE GetAllUsers ()
+BEGIN
+    SELECT *
+    FROM users;
+END^;
+
+DROP PROCEDURE IF EXISTS GetUserById^;
+CREATE PROCEDURE GetUserById (
+    IN p_id INT
+)
+BEGIN
+    SELECT *
+    FROM users WHERE id = p_id;
+END^;
+
+DROP PROCEDURE IF EXISTS GetUserByEmail^;
+CREATE PROCEDURE GetUserByEmail (
+    IN p_email VARCHAR(255)
+)
+BEGIN
+    SELECT *
+    FROM users WHERE email = p_email;
+END^;
+
+DROP PROCEDURE IF EXISTS GetUsersPage^;
+CREATE PROCEDURE GetUsersPage (
+    IN p_limit INT,
+    IN p_offset INT
+)
+BEGIN
+    SELECT *
+    FROM users
+    ORDER BY id ASC
+    LIMIT p_limit OFFSET p_offset;
+END^;
+
+DROP PROCEDURE IF EXISTS GetUsersCount^;
+CREATE PROCEDURE GetUsersCount ()
+BEGIN
+    SELECT COUNT(*)
+    FROM users;
+END^;
+
+DROP PROCEDURE IF EXISTS CreateUser^;
+CREATE PROCEDURE CreateUser (
+    IN p_name VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_password VARCHAR(255),
+    IN p_role VARCHAR(50)
+)
+BEGIN
+    DECLARE last_user_id INT;
+    DECLARE last_info_id INT;
+
+    CASE
+        WHEN p_role = 'PROVIDER' THEN
+            INSERT INTO users (name, email, password, role) VALUES
+            (p_name, p_email, p_password, p_role);
+
+            SET last_user_id = LAST_INSERT_ID();
+
+            INSERT INTO provider_info (title, welcome_note, tags) VALUES (
+                CONCAT(p_name, '\'s business'),
+                CONCAT('Welcome to ', p_name, '\'s business'),
+                ''
+            );
+
+            SET last_info_id = LAST_INSERT_ID();
+
+            INSERT INTO provider_provider_info (provider_id, info_id) VALUES
+            (last_user_id, last_info_id);
+        ELSE
+            INSERT INTO users (name, email, password, role) VALUES
+            (p_name, p_email, p_password, p_role);
+    END CASE;
+END^;
+
+DROP PROCEDURE IF EXISTS UpdateUser^;
+CREATE PROCEDURE UpdateUser (
+    IN p_id INT,
+    IN p_name VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_password VARCHAR(255),
+    IN p_role VARCHAR(50)
+)
+BEGIN
+    UPDATE users SET
+        name = p_name,
+        email = p_email,
+        password = p_password,
+        role = p_role
+    WHERE id = p_id;
+END^;
+
+DROP PROCEDURE IF EXISTS DeleteUser^;
+CREATE PROCEDURE DeleteUser (
+    IN p_id INT
+)
+BEGIN
+    DELETE FROM users WHERE id = p_id;
+END^;
 
 -- ProviderPosts procedures
 
@@ -576,4 +712,139 @@ BEGIN
         COUNT(*)
     FROM provider_services
     WHERE provider_id = p_provider_id;
+END^;
+
+
+--Provider Procedures
+
+DROP PROCEDURE IF EXISTS GetAllServiceProviders^;
+CREATE PROCEDURE GetAllServiceProviders()
+BEGIN
+    SELECT
+        i.id,
+        u.id AS providerId,
+        u.name AS providerName,
+        i.title,
+        i.welcome_note,
+        i.tags,
+        i.rating,
+        i.created_at,
+        i.updated_at
+    FROM provider_provider_info ppi
+    JOIN users u ON ppi.provider_id = u.id
+    JOIN provider_info i ON ppi.info_id = i.id;
+END^;
+
+DROP PROCEDURE IF EXISTS GetServiceProvidersPage^;
+CREATE PROCEDURE GetServiceProvidersPage(
+    IN p_limit INT,
+    IN p_offset INT
+)
+BEGIN
+    SELECT
+        i.id,
+        u.id AS providerId,
+        u.name AS providerName,
+        i.title,
+        i.welcome_note,
+        i.tags,
+        i.rating,
+        i.created_at,
+        i.updated_at
+    FROM provider_provider_info ppi
+    JOIN users u ON ppi.provider_id = u.id
+    JOIN provider_info i ON ppi.info_id = i.id
+    LIMIT p_limit OFFSET p_offset;
+END^;
+
+DROP PROCEDURE IF EXISTS GetServiceProviderByInfoId^;
+CREATE PROCEDURE GetServiceProviderByInfoId (
+    IN p_info_id INT
+)
+BEGIN
+    SELECT
+        i.id,
+        u.id AS providerId,
+        u.name AS providerName,
+        i.title,
+        i.welcome_note,
+        i.tags,
+        i.rating,
+        i.created_at,
+        i.updated_at
+    FROM (SELECT * FROM provider_provider_info WHERE info_id = p_info_id) ppi
+    JOIN users u ON ppi.provider_id = u.id
+    JOIN provider_info i ON ppi.info_id = i.id;
+END^;
+
+DROP PROCEDURE IF EXISTS GetServiceProviderByProviderId^;
+CREATE PROCEDURE GetServiceProviderByProviderId (
+    IN p_provider_id INT
+)
+BEGIN
+    SELECT
+        i.id,
+        u.id AS providerId,
+        u.name AS providerName,
+        i.title,
+        i.welcome_note,
+        i.tags,
+        i.rating,
+        i.created_at,
+        i.updated_at
+    FROM (SELECT * FROM provider_provider_info WHERE provider_id = p_provider_id) ppi
+    JOIN users u ON ppi.provider_id = u.id
+    JOIN provider_info i ON ppi.info_id = i.id;
+END^;
+
+DROP PROCEDURE IF EXISTS CreateServiceProvider^;
+CREATE PROCEDURE CreateServiceProvider (
+    IN p_provider_id INT,
+    IN p_title VARCHAR(255),
+    IN p_welcome_note VARCHAR(255),
+    IN p_tags VARCHAR(255)
+)
+BEGIN
+    DECLARE last_info_id INT;
+
+    INSERT INTO provider_info (title, welcome_note, tags) VALUES
+    (p_title, p_welcome_note, p_tags);
+
+    SET last_info_id = LAST_INSERT_ID();
+
+    INSERT INTO provider_provider_info (provider_id, info_id) VALUES
+    (p_provider_id, last_info_id);
+END^;
+
+DROP PROCEDURE IF EXISTS UpdateServiceProvider^;
+CREATE PROCEDURE UpdateServiceProvider (
+    IN p_info_id INT,
+    IN p_title VARCHAR(255),
+    IN p_welcome_note VARCHAR(255),
+    IN p_tags VARCHAR(255)
+)
+BEGIN
+    UPDATE provider_info SET
+        title = p_title,
+        welcome_note = p_welcome_note,
+        tags = p_tags
+    WHERE id = p_info_id;
+END^;
+
+DROP PROCEDURE IF EXISTS DeleteServiceProvider^;
+CREATE PROCEDURE DeleteServiceProvider (
+    IN p_info_id INT
+)
+BEGIN
+    DELETE FROM provider_info WHERE id = p_info_id;
+
+    DELETE FROM provider_provider_info WHERE info_id = p_info_id;
+END^;
+
+DROP PROCEDURE IF EXISTS GetServiceProvidersCount^;
+CREATE PROCEDURE GetServiceProvidersCount ()
+BEGIN
+    SELECT
+        COUNT(*)
+    FROM provider_provider_info;
 END^;

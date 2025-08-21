@@ -1,6 +1,8 @@
 -- Clear existing data in correct dependency order
 SET FOREIGN_KEY_CHECKS = 0^;
 
+TRUNCATE TABLE provider_info^;
+TRUNCATE TABLE provider_provider_info^;
 TRUNCATE TABLE comments^;
 TRUNCATE TABLE event_services^;
 TRUNCATE TABLE services^;
@@ -19,8 +21,8 @@ INSERT IGNORE INTO users (name, email, password, role) VALUES
 ('Dilan Sriyantha', 'dilans091@gmail.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'ADMIN'),
 ('John Doe', 'john@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'CONSUMER'),
 ('Jane Smith', 'jane@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'CONSUMER'),
-('Studio Artigala', 'studioartigala@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'PROVIDER'),
-('Tasty Caters', 'tastycaters@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'PROVIDER'),
+('James Artigala', 'studioartigala@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'PROVIDER'),
+('Jack Marston', 'tastycaters@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'PROVIDER'),
 ('McCallum Runner', 'mcrunner@example.com', '$2a$10$KJBMKHnjZ8g365/oopFiuupcGruZx2XKW60xEMzI7lzCDJ/4TJvTq', 'PROVIDER')^;
 
 -- Insert Posts
@@ -75,3 +77,13 @@ INSERT INTO service_comments (service_id, comment_id, user_id) VALUES
 (1, 1, 1),
 (2, 2, 2),
 (3, 3, 3)^;
+
+INSERT INTO provider_info (title, welcome_note, tags, rating) VALUES
+("Artigala Studio", "Lorem ipsum lorem ipsum", "wedding, photography, party, album", 4.0),
+("Tasty Caters", "Lorem ipsum lorem ipsum", "catering, food, event-catering", 4.2),
+("DJ Runner", "Lorem ipsum lorem ipsum", "party, dance, dj, music", 3.7)^;
+
+INSERT INTO provider_provider_info (provider_id, info_id) VALUES
+(4, 1),
+(5, 2),
+(6, 3)^;

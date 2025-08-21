@@ -3,7 +3,7 @@ import { Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Surface, Text, useTheme } from "react-native-paper";
 import { CategoryButtonProps } from "./types";
 
-function CategoryButton(props: CategoryButtonProps){
+function CategoryButton(props: CategoryButtonProps) {
     const theme = useTheme();
 
     return (

@@ -1,10 +1,7 @@
 package com.example.eventiq.ProviderPosts.Services;
 
-import com.example.eventiq.ProviderPosts.DTOs.CreateRequest;
-import com.example.eventiq.ProviderPosts.DTOs.UpdateRequest;
 import com.example.eventiq.ProviderPosts.Models.ProviderPost;
 import com.example.eventiq.ProviderPosts.Repositories.ProviderPostsDAO;
-import com.example.eventiq.Types.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;

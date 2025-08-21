@@ -10,13 +10,13 @@ export default function ParallaxHeader({ title, subTitle, image, screenHeight, h
         <Animated.View style={[headerStyle, { zIndex: 10000000 }]}>
             <View style={{ ...styles.headerContent, height: screenHeight * .3 }}>
                 <View style={styles.imageOverlay}>
-                    <View style={styles.backdrop} />
+                    <View style={{ ...styles.backdrop, backgroundColor: theme.colors.backdrop }} />
                     <View style={{ position: "fixed", borderRadius: 100, marginTop: 50, zIndex: 10000000 }}>
-                        <IconButton icon="arrow-left" onPress={onBackPress} />
-                    </View>
+                        <IconButton icon="arrow-left" onPress={onBackPress} iconColor={theme.colors.onPrimary} />
+                    </View>*
                     <View style={styles.headerTextContainer}>
-                        <Text variant="titleLarge">{title}</Text>
-                        <Text variant="bodyMedium">{subTitle}</Text>
+                        <Text variant="titleLarge" style={{ color: theme.colors.onPrimary }}>{title}</Text>
+                        <Text variant="bodyMedium" style={{ color: theme.colors.onPrimary }}>{subTitle}</Text>
                     </View>
                     <Animated.View style={[{ ...styles.divider, backgroundColor: theme.colors.elevation.level1 }, dividerStyle]} />
                 </View>
@@ -43,11 +43,10 @@ const styles = StyleSheet.create({
         zIndex: 100
     },
     backdrop: {
-        backgroundColor: "#000",
-        opacity: .5,
         height: "100%",
         position: "absolute",
         width: "100%",
+        zIndex: -100
     },
     headerTextContainer: {
         flex: 1,

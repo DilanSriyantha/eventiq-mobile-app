@@ -1,6 +1,6 @@
 package com.example.eventiq.ConsumerEvents.Repositories;
 
-import com.example.eventiq.ConsumerEvents.Models.ConsumerEvent;
+import  com.example.eventiq.ConsumerEvents.Models.ConsumerEvent;
 import com.example.eventiq.Utils.DAO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,26 +69,26 @@ public class ConsumerEventsDAO implements DAO<ConsumerEvent> {
     }
 
     @Override
-    public void create(ConsumerEvent consumerEvent) {
+    public void create(ConsumerEvent request) {
         var sql = "CALL CreateConsumerEvent(?, ?, ?, ?);";
 
         jdbcTemplate.update(sql,
-                consumerEvent.getUserId(),
-                consumerEvent.getTitle(),
-                consumerEvent.getDescription(),
-                consumerEvent.getDate()
+                request.getUserId(),
+                request.getTitle(),
+                request.getDescription(),
+                request.getDate()
         );
     }
 
     @Override
-    public void update(int id, ConsumerEvent consumerEvent) {
+    public void update(int id, ConsumerEvent request) {
         var sql = "CALL UpdateConsumerEvent(?, ?, ?, ?);";
 
         jdbcTemplate.update(sql,
-                consumerEvent.getId(),
-                consumerEvent.getTitle(),
-                consumerEvent.getDescription(),
-                consumerEvent.getDate()
+                request.getId(),
+                request.getTitle(),
+                request.getDescription(),
+                request.getDate()
         );
     }
 
