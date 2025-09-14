@@ -15,6 +15,9 @@ CREATE TABLE IF NOT EXISTS provider_info (
     id INTEGER AUTO_INCREMENT NOT NULL,
     title VARCHAR(255) NOT NULL,
     welcome_note VARCHAR(255) NOT NULL,
+    contact_number VARCHAR(15) DEFAULT 'Not Set',
+    address VARCHAR(255) DEFAULT 'Not Set',
+    business_email VARCHAR(255) DEFAULT 'Not Set',
     tags VARCHAR(255) NOT NULL,
     rating FLOAT DEFAULT 0.0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -802,13 +805,16 @@ CREATE PROCEDURE CreateServiceProvider (
     IN p_provider_id INT,
     IN p_title VARCHAR(255),
     IN p_welcome_note VARCHAR(255),
+    IN p_contact_number VARCHAR(15),
+    IN p_address VARCHAR(255),
+    IN p_business_email VARCHAR(255),
     IN p_tags VARCHAR(255)
 )
 BEGIN
     DECLARE last_info_id INT;
 
     INSERT INTO provider_info (title, welcome_note, tags) VALUES
-    (p_title, p_welcome_note, p_tags);
+    (p_title, p_welcome_note, p_contact_number, p_address, p_business_email, p_tags);
 
     SET last_info_id = LAST_INSERT_ID();
 
