@@ -854,3 +854,173 @@ BEGIN
         COUNT(*)
     FROM provider_provider_info;
 END^;
+
+
+-- EventServices Procedures
+
+DROP PROCEDURE IF EXISTS GetAllEventServices^;
+CREATE PROCEDURE GetALlEventServices(
+    IN p_event_id INT
+)
+BEGIN
+    SELECT
+        es.event_id,
+        es.service_id,
+        e.title AS event_title,
+        e.description AS event_description,
+        e.eventDate AS event_date,
+        s.title AS service_title,
+        s.description AS service_description,
+        s.imageUrl AS service_img,
+        s.rate AS service_rate
+    FROM (SELECT * FROM event_services WHERE event_id = p_event_id) es
+    JOIN events e ON es.event_id = e.id
+    JOIN services s ON es.service_id = s.id;
+END^;
+
+DROP PROCEDURE IF EXISTS GetEventServicesPage^;
+CREATE PROCEDURE GetEventServicesPage (
+    IN p_event_id INT,
+    IN p_limit INT,
+    IN p_offset INT
+)
+BEGIN
+    SELECT
+        es.event_id,
+        es.service_id,
+        e.title AS event_title,
+        e.description AS event_description,
+        e.eventDate AS event_date,
+        s.title AS service_title,
+        s.description AS service_description,
+        s.imageUrl AS service_img,
+        s.rate AS service_rate
+    FROM (SELECT * FROM event_services WHERE event_id = p_event_id) es
+    JOIN events e ON es.event_id = e.id
+    JOIN services s ON es.service_id = s.id
+    LIMIT p_limit OFFSET p_offset;
+END^;
+
+DROP PROCEDURE IF EXISTS AddServiceToEvent^;
+CREATE PROCEDURE AddServiceToEvent (
+    IN p_event_id INT,
+    IN p_service_id INT
+)
+BEGIN
+    INSERT IGNORE INTO event_services (event_id, service_id) VALUES (p_event_id, p_service_id);
+END^;
+
+DROP PROCEDURE IF EXISTS RemoveServiceFromEvent^;
+CREATE PROCEDURE RemoveServiceFromEvent (
+    IN p_event_id INT,
+    IN p_service_id INT
+)
+BEGIN
+    DELETE FROM event_services WHERE event_id = p_event_id AND service_id = p_service_id;
+END^;
+
+DROP PROCEDURE IF EXISTS GetEventServicesCount^;
+CREATE PROCEDURE GetEventServicesCount (
+    IN p_event_id INT
+)
+BEGIN
+    SELECT COUNT(*)
+    FROM event_services
+    WHERE event_id = p_event_id;
+END^;
+
+
+-- ServiceComments procedures
+
+DROP PROCEDURE IF EXISTS GetAllComments^;
+CREATE PROCEDURE GetAllComments (
+    IN p_service_id INT
+)
+BEGIN
+    SELECT
+        c.id AS comment_id,
+        c.comment AS comment_body,
+        c.created_at,
+        c.updated_at,
+        u.id AS user_id,
+        u.name AS username,
+        s.id AS service_id,
+        s.title AS service_title
+    FROM service_comments sc
+    JOIN comments c ON sc.comment_id = c.id
+    JOIN services s ON sc.service_id = s.id
+    JOIN users u ON sc.user_id = u.id;
+END^;
+
+DROP PROCEDURE IF EXISTS GetCommentsPage^;
+CREATE PROCEDURE GetCommentsPage (
+    IN p_service_id INT,
+    IN p_limit INT,
+    IN p_offset INT
+)
+BEGIN
+    SELECT
+        c.id AS comment_id,
+        c.comment AS comment_body,
+        c.created_at,
+        c.updated_at,
+        u.id AS user_id,
+        u.name AS username,
+        s.id AS service_id,
+        s.title AS service_title
+    FROM service_comments sc
+    JOIN comments c ON sc.comment_id = c.id
+    JOIN services s ON sc.service_id = s.id
+    JOIN users u ON sc.user_id = u.id
+    LIMIT p_limit OFFSET p_offset;
+END^;
+
+DROP PROCEDURE IF EXISTS CreateComment^;
+CREATE PROCEDURE CreateComment (
+    IN p_user_id INT,
+    IN p_service_id INT,
+    IN p_comment_body VARCHAR(255)
+)
+BEGIN
+    DECLARE last_comment_id INT;
+
+    INSERT INTO comments (comment) VALUES (p_comment_body);
+
+    SET last_comment_id = LAST_INSERT_ID();
+
+    INSERT INTO service_comments (service_id, comment_id, user_id) VALUES (p_service_Id, last_comment_id, p_user_id);
+END^;
+
+DROP PROCEDURE IF EXISTS UpdateComment^;
+CREATE PROCEDURE UpdateComment (
+    IN p_comment_id INT,
+    IN p_comment_body VARCHAR(255)
+)
+BEGIN
+    UPDATE comments
+    SET comment = p_comment_body
+    WHERE id = p_comment_id;
+END^;
+
+DROP PROCEDURE IF EXISTS DeleteComment^;
+CREATE PROCEDURE DeleteComment (
+    IN p_comment_id INT
+)
+BEGIN
+    DELETE FROM service_comments
+    WHERE comment_id = p_comment_id;
+
+    DELETE FROM comments
+    WHERE id = p_comment_id;
+END^;
+
+DROP PROCEDURE IF EXISTS GetCommentsCount^;
+CREATE PROCEDURE GetCommentsCount (
+    IN p_service_id INT
+)
+BEGIN
+    SELECT
+        COUNT(*)
+    FROM service_comments
+    WHERE service_id = p_service_id;
+END^;

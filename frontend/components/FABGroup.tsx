@@ -1,13 +1,15 @@
 import { memo, useState } from "react";
 import { FAB } from "react-native-paper";
 
+type Action = {
+    icon: string;
+    label: string;
+    onPress: () => void;
+}
+
 interface FABGroupProps {
     icon: string;
-    actions: Array<{
-        icon: string;
-        label: string;
-        onPress: () => void;
-    }>
+    actions: Action[];
 };
 
 function FABGroup(props: FABGroupProps) {
@@ -19,7 +21,7 @@ function FABGroup(props: FABGroupProps) {
             visible
             icon={open ? "close" : props.icon}
             actions={props.actions}
-            onStateChange={({open}) => setOpen(open)}
+            onStateChange={({ open }) => setOpen(open)}
             onPress={() => setOpen(!open)}
         />
     );

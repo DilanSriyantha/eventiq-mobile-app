@@ -1,6 +1,9 @@
 import ApiProvider from "@/context/ApiProvider";
 import AuthProvider from "@/context/AuthProvider";
+import CommentsProvider from "@/context/CommentsProvider";
 import PostsProvider from "@/context/PostsProvider";
+import ProviderServicesProvider from "@/context/ProviderServicesProvider";
+import ServiceProvidersProvider from "@/context/ServiceProvidersProvider";
 import SnackbarProvider from "@/context/SnackbarProvider";
 import UserProvider from "@/context/UserProvider";
 import { Slot } from "expo-router";
@@ -15,9 +18,15 @@ export default function RootLayout() {
                     <ApiProvider>
                         <AuthProvider>
                             <PostsProvider>
-                                <SnackbarProvider>
-                                    <Slot />
-                                </SnackbarProvider>
+                                <ServiceProvidersProvider>
+                                    <ProviderServicesProvider>
+                                        <CommentsProvider>
+                                            <SnackbarProvider>
+                                                <Slot />
+                                            </SnackbarProvider>
+                                        </CommentsProvider>
+                                    </ProviderServicesProvider>
+                                </ServiceProvidersProvider>
                             </PostsProvider>
                         </AuthProvider>
                     </ApiProvider>

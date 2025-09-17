@@ -107,11 +107,11 @@ export default function ParallaxViewWrapper(props: ParallaxViewWrapperProps) {
                         <View style={styles.imageOverlay}>
                             <View style={styles.backdrop} />
                             <View style={{ position: "fixed", borderRadius: 100, marginTop: 50, zIndex: 10000000 }}>
-                                <IconButton icon="arrow-left" onPress={props.onBackPress} />
+                                <IconButton icon="arrow-left" iconColor={"#fff"} onPress={props.onBackPress} />
                             </View>
                             <View style={styles.headerTextContainer}>
-                                <Text variant="titleLarge">{props.title}</Text>
-                                <Text variant="bodyMedium">{props.subTitle}</Text>
+                                <Text variant="titleLarge" style={{ color: "#fff" }}>{props.title}</Text>
+                                <Text variant="bodyMedium" style={{ color: "#fff" }}>{props.subTitle}</Text>
                             </View>
                             <Animated.View style={[{ ...styles.divider, backgroundColor: theme.colors.background }, dividerBorderStyle]} />
                         </View>

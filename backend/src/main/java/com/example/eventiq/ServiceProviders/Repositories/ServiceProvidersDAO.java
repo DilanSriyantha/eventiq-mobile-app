@@ -25,6 +25,7 @@ public class ServiceProvidersDAO implements DAO<ServiceProvider> {
             .infoId(rs.getInt("id"))
             .title(rs.getString("title"))
             .welcomeNote(rs.getString("welcome_note"))
+            .rating(rs.getFloat("rating"))
             .tags(rs.getString("tags"))
             .createdAt(rs.getTimestamp("created_at"))
             .updatedAt(rs.getTimestamp("updated_at"))

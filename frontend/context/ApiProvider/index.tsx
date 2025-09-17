@@ -15,6 +15,7 @@ type ApiProviderType = {
     getAll: <T>(endpoint: string) => Promise<T[]>;
     getOneById: <T>(endpoint: string, id: number) => Promise<T | null>;
     post: <T, R>(endpoint: string, body: T) => Promise<R>;
+    deleteOne: (endpoint: string) => Promise<SuccessResponse>;
     deleteOneById: (endpoint: string, id: number) => Promise<SuccessResponse>;
 };
 
@@ -133,6 +134,32 @@ const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
         });
     }
 
+    function deleteOne(endpoint: string): Promise<SuccessResponse> {
+        return new Promise(async (resolve, reject) => {
+            const url = API_URL + endpoint;
+
+            try {
+                const res = await fetch(url, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${currentUser?.accessToken}`
+                    }
+                });
+
+                if (!res)
+                    throw new Error("Empty response");
+
+                if (!res.ok)
+                    throw new Error(await res.text());
+
+                resolve(await res.json() as any as SuccessResponse);
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
+
     function deleteOneById(endpoint: string, id: number): Promise<SuccessResponse> {
         return new Promise(async (resolve, reject) => {
             const url = API_URL + endpoint + `?id=${id}`;
@@ -160,7 +187,7 @@ const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
     }
 
     return (
-        <ApiContext.Provider value={{ get, getAll, getOneById, post, deleteOneById, }}>
+        <ApiContext.Provider value={{ get, getAll, getOneById, post, deleteOne, deleteOneById, }}>
             {children}
         </ApiContext.Provider>
     );

@@ -3,7 +3,7 @@ import { useSnackbar } from "@/context/SnackbarProvider";
 import { memo, useCallback, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Surface } from "react-native-paper";
-import TitleContent from "../register/TitleContent";
+import TitleContent from "../Register/TitleContent";
 import PlainLoginForm from "./PlainLoginForm";
 import { LoginFormResult } from "./PlainLoginForm/types";
 
