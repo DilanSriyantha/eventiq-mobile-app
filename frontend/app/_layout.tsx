@@ -1,6 +1,7 @@
 import ApiProvider from "@/context/ApiProvider";
 import AuthProvider from "@/context/AuthProvider";
 import CommentsProvider from "@/context/CommentsProvider";
+import { EventsProvider } from "@/context/EventsProvider";
 import PostsProvider from "@/context/PostsProvider";
 import ProviderServicesProvider from "@/context/ProviderServicesProvider";
 import ServiceProvidersProvider from "@/context/ServiceProvidersProvider";
@@ -21,9 +22,11 @@ export default function RootLayout() {
                                 <ServiceProvidersProvider>
                                     <ProviderServicesProvider>
                                         <CommentsProvider>
-                                            <SnackbarProvider>
-                                                <Slot />
-                                            </SnackbarProvider>
+                                            <EventsProvider>
+                                                <SnackbarProvider>
+                                                    <Slot />
+                                                </SnackbarProvider>
+                                            </EventsProvider>
                                         </CommentsProvider>
                                     </ProviderServicesProvider>
                                 </ServiceProvidersProvider>

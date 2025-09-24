@@ -35,9 +35,7 @@ public class ServiceProvidersDAO implements DAO<ServiceProvider> {
     public List<ServiceProvider> getAll() {
         var sql = "CALL GetAllServiceProviders();";
 
-        var serviceProviders = jdbcTemplate.query(sql, rowMapper);
-
-        return serviceProviders;
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
@@ -51,6 +49,11 @@ public class ServiceProvidersDAO implements DAO<ServiceProvider> {
         var count = jdbcTemplate.queryForObject(countSql, Integer.class);
 
         return new PageImpl<>(content, PageRequest.of(page, pageSize), count);
+    }
+
+    @Override
+    public Page<ServiceProvider> getPageById(int id, int page, int pageSize) {
+        return null;
     }
 
     @Override
@@ -75,31 +78,34 @@ public class ServiceProvidersDAO implements DAO<ServiceProvider> {
     }
 
     @Override
-    public void create(ServiceProvider serviceProvider) {
+    public ServiceProvider create(Object... args) throws Exception {
+        if(args.length < 4)
+            throw new Exception("Expected 4 arguments, received only " + args.length + " arguments");
+
         var sql = "CALL CreateServiceProvider(?, ?, ?, ?);";
+        var serviceProvider = jdbcTemplate.queryForObject(sql, rowMapper, args);
 
-        var rowsAffected = jdbcTemplate.update(sql,
-                serviceProvider.getId(),
-                serviceProvider.getTitle(),
-                serviceProvider.getWelcomeNote(),
-                serviceProvider.getTags()
-        );
+        log.info("Service provider created successfully, with id={}", serviceProvider.getId());
 
-        log.info("Service provider created successfully, rowsAffected={}", rowsAffected);
+        return serviceProvider;
     }
 
     @Override
-    public void update(int id, ServiceProvider serviceProvider) {
+    public ServiceProvider update(int id, Object... args) throws Exception {
+        if(args.length < 3)
+            throw new Exception("Expected 3 arguments, received only " + args.length + " arguments");
+
         var sql = "CALL UpdateServiceProvider(?, ?, ?, ?);";
 
-        var rowsAffected = jdbcTemplate.update(sql,
-                id,
-                serviceProvider.getTitle(),
-                serviceProvider.getWelcomeNote(),
-                serviceProvider.getTags()
-        );
+        var params = new Object[args.length + 1];
+        params[0] = id;
+        System.arraycopy(args, 0, params, 1, args.length);
 
-        log.info("Service provider id={} updated successfully, rowsAffected={}", id, rowsAffected);
+        var serviceProvider = jdbcTemplate.queryForObject(sql, rowMapper, params);
+
+        log.info("Service provider id={} updated successfully", serviceProvider.getId());
+
+        return serviceProvider;
     }
 
     @Override

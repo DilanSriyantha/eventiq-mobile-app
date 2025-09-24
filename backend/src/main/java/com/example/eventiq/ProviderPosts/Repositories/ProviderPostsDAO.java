@@ -54,6 +54,11 @@ public class ProviderPostsDAO implements DAO<ProviderPost> {
         return new PageImpl<>(content, PageRequest.of(page, pageSize), count);
     }
 
+    @Override
+    public Page<ProviderPost> getPageById(int id, int pageSize, int page) {
+        return null;
+    }
+
     public Page<ProviderPost> getSearchResultsPage(String searchKey, int pageSize, int page) {
         var contentSql = "CALL GetProviderPostsSearchResultsPage(?, ?, ?);";
 
@@ -78,34 +83,34 @@ public class ProviderPostsDAO implements DAO<ProviderPost> {
     }
 
     @Override
-    public void create(ProviderPost providerPost) {
+    public ProviderPost create(Object... args) throws Exception {
+        if(args.length < 5)
+            throw new Exception("Expected 5 arguments, received only " + args.length + " arguments");
+
         var sql = "CALL CreateProviderPost(?, ?, ?, ?, ?);";
+        var post = jdbcTemplate.queryForObject(sql, rowMapper, args);
 
-        int affectedRows = jdbcTemplate.update(sql,
-                providerPost.getProviderId(),
-                providerPost.getTitle(),
-                providerPost.getDescription(),
-                providerPost.getTags(),
-                providerPost.getImageUrl()
-        );
+        log.info("Post created successfully, with id={}", post.getId());
 
-        log.info("Post created, affectedRows={}", affectedRows);
+        return post;
     }
 
     @Override
-    public void update(int id, ProviderPost providerPost) {
+    public ProviderPost update(int id, Object... args) throws Exception {
+        if(args.length < 5)
+            throw new Exception("Expected 5 arguments, received only " + args.length + " arguments");
+
         var sql = "CALL UpdateProviderPost(?, ?, ?, ?, ?, ?);";
 
-        int affectedRows = jdbcTemplate.update(sql,
-                providerPost.getId(),
-                providerPost.getTitle(),
-                providerPost.getDescription(),
-                providerPost.getTags(),
-                providerPost.getImageUrl(),
-                providerPost.getRate()
-        );
+        var params = new Object[args.length + 1];
+        params[0] = id;
+        System.arraycopy(args, 0, params, 1, args.length);
 
-        log.info("Post id={} updated, affectedRows={}", id, affectedRows);
+        var post = jdbcTemplate.queryForObject(sql, rowMapper, params);
+
+        log.info("Post id={} updated", post.getId());
+
+        return post;
     }
 
     @Override

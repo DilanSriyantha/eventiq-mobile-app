@@ -14,6 +14,7 @@ function CommentWriterComp({ onSend }: CommentWriterCompProps) {
 
     const handleSendPress = useCallback(() => {
         onSend.apply(null, [comment]);
+        setComment("");
     }, [comment]);
 
     return (

@@ -1,11 +1,11 @@
 package com.example.eventiq.ServiceProviders.Services;
 
+import com.example.eventiq.ServiceProviders.DTOs.CreateServiceProviderInfoRequest;
+import com.example.eventiq.ServiceProviders.DTOs.UpdateServiceProviderInfoRequest;
 import com.example.eventiq.ServiceProviders.Models.ServiceProvider;
 import com.example.eventiq.ServiceProviders.Repositories.ServiceProvidersDAO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,12 +32,22 @@ public class ServiceProvidersService {
         return serviceProvidersDAO.getByProviderId(providerId);
     }
 
-    public void create(ServiceProvider createRequest) {
-        serviceProvidersDAO.create(createRequest);
+    public ServiceProvider create(CreateServiceProviderInfoRequest request) throws Exception {
+        return serviceProvidersDAO.create(
+                request.getId(),
+                request.getTitle(),
+                request.getWelcomeNote(),
+                request.getTags()
+        );
     }
 
-    public void update(ServiceProvider updateRequest) {
-        serviceProvidersDAO.update(updateRequest.getInfoId(), updateRequest);
+    public ServiceProvider update(UpdateServiceProviderInfoRequest request) throws Exception {
+        return serviceProvidersDAO.update(
+                request.getInfoId(),
+                request.getTitle(),
+                request.getWelcomeNote(),
+                request.getTitle()
+        );
     }
 
     public void delete(int id) {

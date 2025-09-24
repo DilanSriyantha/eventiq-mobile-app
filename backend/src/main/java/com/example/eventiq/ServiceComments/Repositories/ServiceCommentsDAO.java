@@ -1,6 +1,5 @@
 package com.example.eventiq.ServiceComments.Repositories;
 
-import com.example.eventiq.ServiceComments.DTOs.CommentCreateRequest;
 import com.example.eventiq.ServiceComments.DTOs.CommentUpdateRequest;
 import com.example.eventiq.ServiceComments.Models.Comment;
 import com.example.eventiq.Utils.DAO;
@@ -48,13 +47,14 @@ public class ServiceCommentsDAO implements DAO<Comment> {
         return null;
     }
 
-    public Page<Comment> getPage(int serviceId, int page, int pageSize) {
+    @Override
+    public Page<Comment> getPageById(int id, int page, int pageSize) {
         var contentSql = "CALL GetCommentsPage(?,?,?)";
         var offset = page * pageSize;
-        var content = jdbcTemplate.query(contentSql, rowMapper, serviceId, pageSize, offset);
+        var content = jdbcTemplate.query(contentSql, rowMapper, id, pageSize, offset);
 
         var countSql = "CALL GetCommentsCount(?)";
-        var count = jdbcTemplate.queryForObject(countSql, Integer.class, serviceId);
+        var count = jdbcTemplate.queryForObject(countSql, Integer.class, id);
 
         return new PageImpl<>(content, PageRequest.of(page, pageSize), count);
     }
@@ -65,29 +65,34 @@ public class ServiceCommentsDAO implements DAO<Comment> {
     }
 
     @Override
-    public void create(Comment request) {
+    public Comment create(Object... args) throws Exception {
+        if(args.length < 3)
+            throw new Exception("Expected 3 arguments, received only " + args.length + " arguments");
 
-    }
-
-    public void create(int userId, int serviceId, String commentBody) {
         var sql = "CALL CreateComment(?,?,?)";
+        var comment = jdbcTemplate.queryForObject(sql, rowMapper, args);
 
-        var affectedRows = jdbcTemplate.update(sql, userId, serviceId, commentBody);
+        log.info("Comment created successfully, with id={}", comment.getId());
 
-        log.info("Comment created successfully, rowsAffected={}", affectedRows);
+        return comment;
     }
 
     @Override
-    public void update(int id, Comment request) {
+    public Comment update(int id, Object... args) throws Exception {
+        if(args.length < 2)
+            throw new Exception("Expected 2 arguments, received only " + args.length + " arguments");
 
-    }
-
-    public void update(CommentUpdateRequest request) {
         var sql = "CALL UpdateComment(?,?)";
 
-        var affectedRows = jdbcTemplate.update(sql, request.getCommentId(), request.getCommentBody());
+        var params = new Object[args.length + 1];
+        params[0] = id;
+        System.arraycopy(args, 0, params, 1, args.length);
 
-        log.info("Comment updated successfully, rowsAffected={}", affectedRows);
+        var comment = jdbcTemplate.queryForObject(sql, rowMapper, params);
+
+        log.info("Comment id={} updated successfully", comment.getId());
+
+        return comment;
     }
 
     @Override

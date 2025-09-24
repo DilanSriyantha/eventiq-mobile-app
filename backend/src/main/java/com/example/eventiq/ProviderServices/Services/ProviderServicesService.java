@@ -23,18 +23,18 @@ public class ProviderServicesService {
     }
 
     public Page<ProviderService> getPageByProvider(int providerId, int pageSize, int page) {
-        return providerServicesDAO.getPageByProvider(providerId, page, pageSize);
+        return providerServicesDAO.getPageById(providerId, page, pageSize);
     }
 
     public Optional<ProviderService> get(int id) {
         return providerServicesDAO.get(id);
     }
 
-    public void create(ProviderService createRequest) {
+    public void create(ProviderService createRequest) throws Exception {
         providerServicesDAO.create(createRequest);
     }
 
-    public void update(ProviderService updateRequest) {
+    public void update(ProviderService updateRequest) throws Exception {
         providerServicesDAO.update(updateRequest.getId(), updateRequest);
     }
 

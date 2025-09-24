@@ -1,5 +1,8 @@
 package com.example.eventiq.ConsumerEvents.Services;
 
+import com.example.eventiq.Authentication.Repositories.UserDAO;
+import com.example.eventiq.ConsumerEvents.DTOs.CreateEventRequest;
+import com.example.eventiq.ConsumerEvents.DTOs.UpdateEventRequest;
 import com.example.eventiq.ConsumerEvents.Models.ConsumerEvent;
 import com.example.eventiq.ConsumerEvents.Repositories.ConsumerEventsDAO;
 import lombok.RequiredArgsConstructor;
@@ -13,25 +16,46 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ConsumerEventsService {
     private final ConsumerEventsDAO consumerEventsDAO;
+    private final UserDAO userDAO;
 
-    public List<ConsumerEvent> getAll(int userId) {
-        return consumerEventsDAO.getAll(userId);
+    public List<ConsumerEvent> getAllByUser(String userEmail) throws Exception {
+        var user = userDAO.getByEmail(userEmail)
+                .orElseThrow(() -> new Exception("User not found"));
+
+        return consumerEventsDAO.getAllById(user.getId());
     }
 
-    public Page<ConsumerEvent> getPage(int userId, int page, int pageSize) {
-        return consumerEventsDAO.getPage(userId, page, pageSize);
+    public Page<ConsumerEvent> getPage(String userEmail, int page, int pageSize) throws Exception {
+        var user = userDAO.getByEmail(userEmail)
+                .orElseThrow(() -> new Exception("User not found"));
+
+        return consumerEventsDAO.getPageById(user.getId(), page, pageSize);
     }
 
     public Optional<ConsumerEvent> get(int eventId) {
         return consumerEventsDAO.get(eventId);
     }
 
-    public void create(ConsumerEvent createRequest) {
-        consumerEventsDAO.create(createRequest);
+    public ConsumerEvent create(CreateEventRequest request) throws Exception {
+        var event = consumerEventsDAO.create(
+                request.getUserId(),
+                request.getTitle(),
+                request.getDescription(),
+                request.getDate()
+        );
+
+        return (ConsumerEvent) event;
     }
 
-    public void update(ConsumerEvent updateRequest) {
-        consumerEventsDAO.update(updateRequest.getId(), updateRequest);
+    public ConsumerEvent update(UpdateEventRequest request) throws Exception {
+        var event = consumerEventsDAO.update(
+                request.getId(),
+                request.getTitle(),
+                request.getDescription(),
+                request.getDate()
+        );
+
+        return (ConsumerEvent) event;
     }
 
     public void delete(int eventId) {

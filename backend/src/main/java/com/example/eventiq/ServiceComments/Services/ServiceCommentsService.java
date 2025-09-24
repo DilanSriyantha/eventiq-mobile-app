@@ -22,18 +22,21 @@ public class ServiceCommentsService {
     }
 
     public Page<Comment> getPage(int serviceId, int page, int pageSize) {
-        return serviceCommentsDAO.getPage(serviceId, page, pageSize);
+        return serviceCommentsDAO.getPageById(serviceId, page, pageSize);
     }
 
-    public void create(CommentCreateRequest request) throws Exception {
+    public Comment create(CommentCreateRequest request) throws Exception {
         var user = userDAO.getByEmail(request.getUserEmail())
                 .orElseThrow(() -> new Exception("User not found"));
 
-        serviceCommentsDAO.create(user.getId(), request.getServiceId(), request.getCommentBody());
+        return serviceCommentsDAO.create(user.getId(), request.getServiceId(), request.getCommentBody());
     }
 
-    public void update(CommentUpdateRequest request) {
-        serviceCommentsDAO.update(request);
+    public void update(CommentUpdateRequest request) throws Exception {
+        serviceCommentsDAO.update(
+                request.getCommentId(),
+                request.getCommentBody()
+        );
     }
 
     public void delete(int id) {

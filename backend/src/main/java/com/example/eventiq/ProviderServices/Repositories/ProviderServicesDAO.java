@@ -35,9 +35,7 @@ public class ProviderServicesDAO implements DAO<ProviderService> {
     public List<ProviderService> getAll() {
         var sql = "CALL GetAllProviderServices();";
 
-        var providerServices = jdbcTemplate.query(sql, rowMapper);
-
-        return providerServices;
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
@@ -53,7 +51,8 @@ public class ProviderServicesDAO implements DAO<ProviderService> {
         return new PageImpl<>(content, PageRequest.of(page, pageSize), count);
     }
 
-    public Page<ProviderService> getPageByProvider(int providerId, int page, int pageSize) {
+    @Override
+    public Page<ProviderService> getPageById(int providerId, int page, int pageSize) {
         var contentSql = "CALL GetProviderServicesPageByProviderId(?, ?, ?);";
 
         var offset = page * pageSize;
@@ -77,33 +76,34 @@ public class ProviderServicesDAO implements DAO<ProviderService> {
     }
 
     @Override
-    public void create(ProviderService providerService) {
+    public ProviderService create(Object... args) throws Exception {
+        if(args.length < 5)
+            throw new Exception("Expected 5 arguments, received only " + args.length + " arguments");
+
         var sql = "CALL CreateProviderService(?, ?, ?, ?, ?);";
+        var providerService = jdbcTemplate.queryForObject(sql, rowMapper, args);
 
-        var rowsAffected = jdbcTemplate.update(sql,
-                providerService.getProviderId(),
-                providerService.getTitle(),
-                providerService.getDescription(),
-                providerService.getImageUrl(),
-                providerService.getRate()
-        );
+        log.info("ProviderService created successfully, with id={}", providerService.getId());
 
-        log.info("ProviderService created successfully, rowsAffected={}", rowsAffected);
+        return providerService;
     }
 
     @Override
-    public void update(int id, ProviderService providerService) {
+    public ProviderService update(int id, Object... args) throws Exception {
+        if(args.length < 5)
+            throw new Exception("Expected 5 arguments, received only " + args.length + " arguments");
+
         var sql = "CALL UpdateProviderService(?, ?, ?, ?, ?);";
 
-        var rowsAffected = jdbcTemplate.update(sql,
-                providerService.getId(),
-                providerService.getTitle(),
-                providerService.getDescription(),
-                providerService.getImageUrl(),
-                providerService.getRate()
-        );
+        var params = new Object[args.length + 1];
+        params[0] = id;
+        System.arraycopy(args, 0, params, 1, args.length);
 
-        log.info("ProviderService updated successfully, rowsAffected={}", rowsAffected);
+        var providerService = jdbcTemplate.queryForObject(sql, rowMapper, params);
+
+        log.info("ProviderService updated successfully");
+
+        return providerService;
     }
 
     @Override

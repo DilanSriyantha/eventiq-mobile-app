@@ -12,7 +12,9 @@ export interface CommentSectionState {
 export enum ActionType {
     START_LOADING,
     STOP_LOADING,
-    SET_COMMENTS
+    SET_COMMENTS,
+    ADD_COMMENT,
+    REMOVE_COMMENT
 }
 
 export type Action = { type: ActionType, payload: any };

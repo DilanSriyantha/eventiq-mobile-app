@@ -31,18 +31,14 @@ public class ServiceCommentsController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<SuccessResponse> create(@RequestBody CommentCreateRequest request) throws Exception {
-        serviceCommentsService.create(request);
+    public ResponseEntity<Comment> create(@RequestBody CommentCreateRequest request) throws Exception {
+        var comment = serviceCommentsService.create(request);
 
-        var response = SuccessResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message("Comment created successfully")
-                .build();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(comment);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<SuccessResponse> update(@RequestBody CommentUpdateRequest request) {
+    public ResponseEntity<SuccessResponse> update(@RequestBody CommentUpdateRequest request) throws Exception {
         serviceCommentsService.update(request);
 
         var response = SuccessResponse.builder()

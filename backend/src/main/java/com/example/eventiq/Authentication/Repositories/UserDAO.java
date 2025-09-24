@@ -55,6 +55,11 @@ public class UserDAO implements DAO<User> {
     }
 
     @Override
+    public Page<User> getPageById(int id, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public Optional<User> get(int id) {
         var sql = "CALL GetUserById(?);";
 
@@ -76,41 +81,34 @@ public class UserDAO implements DAO<User> {
     }
 
     @Override
-    public void create(User request) {
-        var sql = "CALL CreateUser(?, ?, ?, ?);";
+    public User create(Object... args) throws Exception {
+        if(args.length < 4)
+            throw new Exception("Expected 4 arguments, received only " + args.length + " arguments");
 
-        var rowsAffected = jdbcTemplate.update(sql,
-                request.getName(),
-                request.getEmail(),
-                request.getPassword(),
-                request.getRole().name()
-        );
+        var sql = "CALL CreateUser(?,?,?,?)";
+        var user = jdbcTemplate.queryForObject(sql, rowMapper, args);
 
-        if(rowsAffected > 0) {
-            log.info("User created successfully.");
+        log.info("User created successfully with id={}", user.getId());
 
-            return;
-        }
-        log.error("Error occurred while creating a new user.");
+        return user;
     }
 
     @Override
-    public void update(int id, User request) {
-        var sql = "CALL UpdateUser(?, ?, ?, ?, ?);";
+    public User update(int id, Object... args) throws Exception {
+        if(args.length < 4)
+            throw new Exception("Expected 4 arguments, received only " + args.length + " arguments");
 
-        var rowsAffected = jdbcTemplate.update(sql,
-                id,
-                request.getName(),
-                request.getEmail(),
-                request.getRole()
-        );
+        var sql = "CALL UpdateUser(?,?,?,?,?)";
 
-        if(rowsAffected > 0){
-            log.info("User updated successfully.");
+        var params = new Object[args.length + 1];
+        params[0] = id;
+        System.arraycopy(args, 0, params, 1, args.length);
 
-            return;
-        }
-        log.error("Error occurred while updating user id={}", id);
+        var user = jdbcTemplate.queryForObject(sql, rowMapper, params);
+
+        log.info("User updated successfully");
+
+        return user;
     }
 
     @Override

@@ -40,7 +40,7 @@ public class ProviderServicesController {
     }
 
     @PostMapping("/create")
-    public @ResponseBody ResponseEntity<SuccessResponse> create(@RequestBody ProviderService createRequest) {
+    public @ResponseBody ResponseEntity<SuccessResponse> create(@RequestBody ProviderService createRequest) throws Exception {
         providerServicesService.create(createRequest);
 
         var response = SuccessResponse.builder()
@@ -52,7 +52,7 @@ public class ProviderServicesController {
     }
 
     @PostMapping("/update")
-    public @ResponseBody ResponseEntity<SuccessResponse> update(@RequestBody ProviderService updateRequest) {
+    public @ResponseBody ResponseEntity<SuccessResponse> update(@RequestBody ProviderService updateRequest) throws Exception {
         providerServicesService.update(updateRequest);
 
         var response = SuccessResponse.builder()

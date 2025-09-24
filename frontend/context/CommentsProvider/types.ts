@@ -27,7 +27,7 @@ export interface UpdateCommentRequest {
 export type CommentsProviderType = {
     getAll: (serviceId: number) => Promise<Comment[]>;
     getPage: (serviceId: number, page: number, pageSize: number) => Promise<Page<Comment>>;
-    create: (request: CreateCommentRequest) => Promise<SuccessResponse>;
+    create: (request: CreateCommentRequest) => Promise<Comment>;
     update: (request: UpdateCommentRequest) => Promise<SuccessResponse>;
     deleteOne: (commentId: number) => Promise<SuccessResponse>;
 };

@@ -16,6 +16,12 @@ const reducer = (state: CommentSectionState, action: Action): CommentSectionStat
         case ActionType.SET_COMMENTS:
             return { ...state, comments: [...state.comments, ...action.payload], loading: false };
 
+        case ActionType.ADD_COMMENT:
+            return { ...state, comments: [...state.comments, action.payload], loading: state.loading ? false : state.loading };
+
+        case ActionType.REMOVE_COMMENT:
+            return { ...state, comments: state.comments.filter((c) => c.id !== action.payload) };
+
         default:
             return state;
     }

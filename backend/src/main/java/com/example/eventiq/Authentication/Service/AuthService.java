@@ -53,7 +53,7 @@ public class AuthService {
         return userDAO.getByEmail(email);
     }
 
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) throws Exception {
         var user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -61,7 +61,12 @@ public class AuthService {
                 .role(request.getRole())
                 .build();
 
-        userDAO.create(user);
+        userDAO.create(
+                user.getName(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getRole()
+        );
 
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);

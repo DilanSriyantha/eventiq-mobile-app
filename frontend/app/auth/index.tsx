@@ -25,18 +25,18 @@ export default function Login() {
                     <Text variant="headlineMedium">Let's get started</Text>
                 </Surface>
                 <Surface mode="flat" style={styles.optionsContainer}>
-                    <Button 
-                        style={styles.withGoogleButton} 
-                        icon={"google"} 
-                        mode="contained-tonal" 
+                    <Button
+                        style={styles.withGoogleButton}
+                        icon={"google"}
+                        mode="contained-tonal"
                         onPress={handleContinueWithGooglePress}
-                        >
-                            Continue with google
+                    >
+                        Continue with google
                     </Button>
-                    <Button 
-                        style={styles.withGoogleButton} 
-                        icon={"email"} 
-                        mode="contained-tonal" 
+                    <Button
+                        style={styles.withGoogleButton}
+                        icon={"email"}
+                        mode="contained-tonal"
                         onPress={handleContinueWithEmailPress}
                     >
                         Continue with Email
@@ -45,9 +45,9 @@ export default function Login() {
                     <Surface mode="flat" style={styles.subheaderContainer}>
                         <Text variant="titleMedium">Already have an account?</Text>
                     </Surface>
-                    <Button 
-                        style={styles.withGoogleButton} 
-                        icon={"login"} 
+                    <Button
+                        style={styles.withGoogleButton}
+                        icon={"login"}
                         mode="contained-tonal"
                         onPress={handleLoginPress}
                     >

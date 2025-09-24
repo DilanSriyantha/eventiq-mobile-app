@@ -1,5 +1,7 @@
 package com.example.eventiq.ConsumerEvents.Controllers;
 
+import com.example.eventiq.ConsumerEvents.DTOs.CreateEventRequest;
+import com.example.eventiq.ConsumerEvents.DTOs.UpdateEventRequest;
 import com.example.eventiq.ConsumerEvents.Models.ConsumerEvent;
 import com.example.eventiq.ConsumerEvents.Services.ConsumerEventsService;
 import com.example.eventiq.Types.SuccessResponse;
@@ -20,13 +22,13 @@ public class ConsumerEventsController {
     private final ConsumerEventsService consumerEventsService;
 
     @GetMapping("/getAll")
-    public @ResponseBody ResponseEntity<List<ConsumerEvent>> getAll(@RequestParam("userId") int userId) {
-        return ResponseEntity.ok(consumerEventsService.getAll(userId));
+    public @ResponseBody ResponseEntity<List<ConsumerEvent>> getAll(@RequestParam("userEmail") String userEmail) throws Exception {
+        return ResponseEntity.ok(consumerEventsService.getAllByUser(userEmail));
     }
 
     @GetMapping("/getPage")
-    public @ResponseBody ResponseEntity<Page<ConsumerEvent>> getPage(@RequestParam("userId") int userId, @RequestParam("page") int page, @RequestParam("pageSize") int pageSize) {
-        return ResponseEntity.ok(consumerEventsService.getPage(userId, page, pageSize));
+    public @ResponseBody ResponseEntity<Page<ConsumerEvent>> getPage(@RequestParam("userEmail") String userEmail, @RequestParam("page") int page, @RequestParam("pageSize") int pageSize) throws Exception {
+        return ResponseEntity.ok(consumerEventsService.getPage(userEmail, page, pageSize));
     }
 
     @GetMapping("/get")
@@ -35,27 +37,17 @@ public class ConsumerEventsController {
     }
 
     @PostMapping("/create")
-    public @ResponseBody ResponseEntity<SuccessResponse> create(@RequestBody ConsumerEvent createRequest) {
-        consumerEventsService.create(createRequest);
+    public @ResponseBody ResponseEntity<ConsumerEvent> create(@RequestBody CreateEventRequest request) throws Exception {
+        var event = consumerEventsService.create(request);
 
-        var successResponse = SuccessResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message("Event created successfully")
-                .build();
-
-        return ResponseEntity.ok(successResponse);
+        return ResponseEntity.ok(event);
     }
 
     @PostMapping("/update")
-    public @ResponseBody ResponseEntity<SuccessResponse> update(@RequestBody ConsumerEvent updateRequest) {
-        consumerEventsService.update(updateRequest);
+    public @ResponseBody ResponseEntity<ConsumerEvent> update(@RequestBody UpdateEventRequest request) throws Exception {
+        var event = consumerEventsService.update(request);
 
-        var successResponse = SuccessResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message("Event id=" + updateRequest.getId() + " has been updated successfully.")
-                .build();
-
-        return ResponseEntity.ok(successResponse);
+        return ResponseEntity.ok(event);
     }
 
     @DeleteMapping("/delete")

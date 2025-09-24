@@ -16,11 +16,11 @@ public class EventServicesService {
     private final EventServicesDAO eventServicesDAO;
 
     public List<EventService> getAll(int eventId) {
-        return eventServicesDAO.getAll(eventId);
+        return eventServicesDAO.getAllById(eventId);
     }
 
     public Page<EventService> getPage(int eventId, int page, int pageSize) {
-        return eventServicesDAO.getPage(eventId, page, pageSize);
+        return eventServicesDAO.getPageById(eventId, page, pageSize);
     }
 
     public void addServiceToEvent(AddServiceRequest request) {

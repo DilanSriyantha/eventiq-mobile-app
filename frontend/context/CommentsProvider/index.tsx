@@ -26,7 +26,7 @@ function CommentsProvider({ children }: CommentsProviderProps) {
     async function create(request: CreateCommentRequest) {
         const endpoint = `/service-comments/create`;
 
-        return api.post<CreateCommentRequest, SuccessResponse>(endpoint, request);
+        return api.post<CreateCommentRequest, Comment>(endpoint, request);
     }
 
     async function update(request: UpdateCommentRequest) {

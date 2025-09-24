@@ -25,11 +25,11 @@ public class ProviderPostsService {
         return providerPostsDAO.getSearchResultsPage(searchKey, pageSize, page);
     }
 
-    public void create(ProviderPost createRequest) {
+    public void create(ProviderPost createRequest) throws Exception {
         providerPostsDAO.create(createRequest);
     }
 
-    public void update(int id, ProviderPost updateRequest) {
+    public void update(int id, ProviderPost updateRequest) throws Exception {
         providerPostsDAO.update(id, updateRequest);
     }
 

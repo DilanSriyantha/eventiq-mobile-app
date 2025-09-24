@@ -8,8 +8,9 @@ import java.util.Optional;
 public interface DAO <T> {
     List<T> getAll();
     Page<T> getPage(int page, int pageSize);
+    Page<T> getPageById(int id, int page, int pageSize);
     Optional<T> get(int id);
-    void create(T request);
-    void update(int id, T request);
+    Object create(Object... args) throws Exception;
+    Object update(int id, Object... args) throws Exception;
     void delete(int id);
 }

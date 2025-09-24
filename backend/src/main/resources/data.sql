@@ -40,13 +40,14 @@ INSERT INTO provider_posts (provider_id, post_id) VALUES
 -- Insert Events
 INSERT INTO events (title, description, eventDate) VALUES
 ('Summer Festival', 'Annual community summer festival', '2025-07-15'),
-('Corporate Gala', 'Formal gala dinner for corporate clients', '2025-09-10')^;
+('Corporate Gala', 'Formal gala dinner for corporate clients', '2025-09-10'),
+('Birthday Party', 'Lorem ipsum lorem ipsum', '2025-10-15')^;
 
 -- Link Users to Events
 INSERT INTO user_events (user_id, event_id) VALUES
-(3, 1),  -- Jane attending Summer Festival
-(2, 2),  -- John attending Corporate Gala
-(4, 1)^;  -- Mike attending Summer Festival
+(3, 1),
+(2, 2),
+(4, 3)^;
 
 -- Insert Services
 INSERT INTO services (title, description, imageUrl, rate) VALUES

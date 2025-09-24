@@ -266,6 +266,8 @@ BEGIN
             INSERT INTO users (name, email, password, role) VALUES
             (p_name, p_email, p_password, p_role);
     END CASE;
+
+    CALL GetUserById(last_user_id);
 END^;
 
 DROP PROCEDURE IF EXISTS UpdateUser^;
@@ -283,6 +285,8 @@ BEGIN
         password = p_password,
         role = p_role
     WHERE id = p_id;
+
+    CALL GetUserById(p_id);
 END^;
 
 DROP PROCEDURE IF EXISTS DeleteUser^;
@@ -417,6 +421,8 @@ BEGIN
 
     INSERT INTO provider_posts (provider_id, post_id)
     VALUES (p_provider_id, new_post_id);
+
+    CALL GetProviderPost(p_provider_id);
 END^;
 
 DROP PROCEDURE IF EXISTS UpdateProviderPost^;
@@ -435,6 +441,8 @@ BEGIN
         tags = p_tags,
         imageUrl = p_imageUrl
     WHERE id = p_id;
+
+    CALL GetProviderPost(p_id);
 END^;
 
 DROP PROCEDURE IF EXISTS DeleteProviderPost^;
@@ -538,6 +546,8 @@ BEGIN
     SET last_event_id = LAST_INSERT_ID();
 
     INSERT INTO user_events (user_id, event_id) VALUES (p_user_id, last_event_id);
+
+    CALL GetConsumerEvent(last_event_id);
 END^;
 
 DROP PROCEDURE IF EXISTS UpdateConsumerEvent^;
@@ -553,6 +563,8 @@ BEGIN
         description = p_description,
         eventDate = p_date
     WHERE id = p_event_id;
+
+    CALL GetConsumerEvent(p_event_id);
 END^;
 
 DROP PROCEDURE IF EXISTS DeleteConsumerEvent^;
@@ -669,6 +681,8 @@ BEGIN
 
     INSERT INTO provider_services (provider_id, service_id) VALUES
     (p_provider_id, last_service_id);
+
+    CALL GetProviderService(last_service_id);
 END^;
 
 DROP PROCEDURE IF EXISTS UpdateProviderService^;
@@ -686,6 +700,8 @@ BEGIN
         imageUrl = p_imageUrl,
         rate = p_rate
     WHERE id = p_id;
+
+    CALL GetProviderService(p_id);
 END^;
 
 DROP PROCEDURE IF EXISTS DeleteProviderService^;
@@ -820,6 +836,8 @@ BEGIN
 
     INSERT INTO provider_provider_info (provider_id, info_id) VALUES
     (p_provider_id, last_info_id);
+
+    CALL GetServiceProviderByInfoId(last_info_id);
 END^;
 
 DROP PROCEDURE IF EXISTS UpdateServiceProvider^;
@@ -835,6 +853,8 @@ BEGIN
         welcome_note = p_welcome_note,
         tags = p_tags
     WHERE id = p_info_id;
+
+    CALL GetServiceProviderByInfoId(p_info_id);
 END^;
 
 DROP PROCEDURE IF EXISTS DeleteServiceProvider^;
@@ -975,6 +995,26 @@ BEGIN
     LIMIT p_limit OFFSET p_offset;
 END^;
 
+DROP PROCEDURE IF EXISTS GetCommentById^;
+CREATE PROCEDURE GetCommentById (
+    IN p_comment_id INT
+)
+BEGIN
+    SELECT
+        c.id AS comment_id,
+        c.comment AS comment_body,
+        c.created_at,
+        c.updated_at,
+        u.id AS user_id,
+        u.name AS username,
+        s.id AS service_id,
+        s.title AS service_title
+    FROM (SELECT * FROM service_comments WHERE comment_id = p_comment_id) sc
+    JOIN comments c ON sc.comment_id = c.id
+    JOIN services s ON sc.service_id = s.id
+    JOIN users u ON sc.user_id = u.id;
+END^;
+
 DROP PROCEDURE IF EXISTS CreateComment^;
 CREATE PROCEDURE CreateComment (
     IN p_user_id INT,
@@ -989,6 +1029,8 @@ BEGIN
     SET last_comment_id = LAST_INSERT_ID();
 
     INSERT INTO service_comments (service_id, comment_id, user_id) VALUES (p_service_Id, last_comment_id, p_user_id);
+
+    CALL GetCommentById(last_comment_id);
 END^;
 
 DROP PROCEDURE IF EXISTS UpdateComment^;
@@ -1000,6 +1042,8 @@ BEGIN
     UPDATE comments
     SET comment = p_comment_body
     WHERE id = p_comment_id;
+
+    CALL GetCommentById(p_comment_id);
 END^;
 
 DROP PROCEDURE IF EXISTS DeleteComment^;

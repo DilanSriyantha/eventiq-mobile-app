@@ -1,5 +1,7 @@
 package com.example.eventiq.ServiceProviders.Controllers;
 
+import com.example.eventiq.ServiceProviders.DTOs.CreateServiceProviderInfoRequest;
+import com.example.eventiq.ServiceProviders.DTOs.UpdateServiceProviderInfoRequest;
 import com.example.eventiq.ServiceProviders.Models.ServiceProvider;
 import com.example.eventiq.ServiceProviders.Services.ServiceProvidersService;
 import com.example.eventiq.Types.SuccessResponse;
@@ -40,7 +42,7 @@ public class ServiceProvidersController {
     }
 
     @PostMapping("/create")
-    public @ResponseBody ResponseEntity<SuccessResponse> create(@RequestBody ServiceProvider createRequest) {
+    public @ResponseBody ResponseEntity<SuccessResponse> create(@RequestBody CreateServiceProviderInfoRequest createRequest) throws Exception {
         serviceProvidersService.create(createRequest);
 
         var response = SuccessResponse.builder()
@@ -52,7 +54,7 @@ public class ServiceProvidersController {
     }
 
     @PostMapping("/update")
-    public @ResponseBody ResponseEntity<SuccessResponse> update(@RequestBody ServiceProvider updateRequest) {
+    public @ResponseBody ResponseEntity<SuccessResponse> update(@RequestBody UpdateServiceProviderInfoRequest updateRequest) throws Exception {
         serviceProvidersService.update(updateRequest);
 
         var response = SuccessResponse.builder()

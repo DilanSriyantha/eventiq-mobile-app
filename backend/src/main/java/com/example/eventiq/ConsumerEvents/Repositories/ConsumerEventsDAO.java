@@ -35,10 +35,10 @@ public class ConsumerEventsDAO implements DAO<ConsumerEvent> {
         return null;
     }
 
-    public List<ConsumerEvent> getAll(int id) {
+    public List<ConsumerEvent> getAllById(int userId) {
         var sql = "CALL GetConsumerEvents(?);";
 
-        return jdbcTemplate.query(sql, rowMapper, id);
+        return jdbcTemplate.query(sql, rowMapper, userId);
     }
 
     @Override
@@ -46,7 +46,8 @@ public class ConsumerEventsDAO implements DAO<ConsumerEvent> {
         return null;
     }
 
-    public Page<ConsumerEvent> getPage(int userId, int page, int pageSize) {
+    @Override
+    public Page<ConsumerEvent> getPageById(int userId, int page, int pageSize) {
         var contentSql = "CALL GetConsumerEventsPage(?, ?, ?);";
 
         var offset = page * pageSize;
@@ -69,27 +70,34 @@ public class ConsumerEventsDAO implements DAO<ConsumerEvent> {
     }
 
     @Override
-    public void create(ConsumerEvent request) {
-        var sql = "CALL CreateConsumerEvent(?, ?, ?, ?);";
+    public Object create(Object... args) throws Exception {
+        if(args.length < 4)
+            throw new Exception("Expected 4 arguments, received only " + args.length + " arguments");
 
-        jdbcTemplate.update(sql,
-                request.getUserId(),
-                request.getTitle(),
-                request.getDescription(),
-                request.getDate()
-        );
+        var sql = "CALL CreateConsumerEvent(?,?,?,?)";
+        var event = jdbcTemplate.queryForObject(sql, rowMapper, args);
+
+        log.info("Event created successfully, with id={}", event.getId());
+
+        return event;
     }
 
     @Override
-    public void update(int id, ConsumerEvent request) {
-        var sql = "CALL UpdateConsumerEvent(?, ?, ?, ?);";
+    public Object update(int id, Object... args) throws Exception {
+        if(args.length < 3)
+            throw new Exception("Expected 4 arguments, received only " + args.length + " arguments");
 
-        jdbcTemplate.update(sql,
-                request.getId(),
-                request.getTitle(),
-                request.getDescription(),
-                request.getDate()
-        );
+        var sql = "CALL UpdateConsumerEvent(?,?,?,?)";
+
+        var params = new Object[args.length + 1];
+        params[0] = id;
+        System.arraycopy(args, 0, params, 1, args.length);
+
+        var event = jdbcTemplate.queryForObject(sql, rowMapper, params);
+
+        log.info("Event updated successfully");
+
+        return event;
     }
 
     @Override

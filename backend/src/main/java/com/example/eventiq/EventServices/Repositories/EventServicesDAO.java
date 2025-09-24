@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,19 +32,35 @@ public class EventServicesDAO implements DAO<EventService> {
             .rate(rs.getFloat("service_rate"))
             .build();
 
-    public List<EventService> getAll(int eventId) {
+    @Override
+    public List<EventService> getAll() {
+        return null;
+    }
+
+    @Override
+    public Optional<EventService> get(int id) {
+        return Optional.empty();
+    }
+
+    public List<EventService> getAllById(int eventId) {
         var sql = "CALL GetAllEventServices(?)";
 
         return jdbcTemplate.query(sql, rowMapper, eventId);
     }
 
-    public Page<EventService> getPage(int eventId, int page, int pageSize) {
+    @Override
+    public Page<EventService> getPage(int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Page<EventService> getPageById(int id, int page, int pageSize) {
         var contentSql = "CALL GetEventServicesPage(?,?,?)";
         var offset = page * pageSize;
-        var content = jdbcTemplate.query(contentSql, rowMapper, eventId, pageSize, offset);
+        var content = jdbcTemplate.query(contentSql, rowMapper, id, pageSize, offset);
 
         var countSql = "CALL GetEventServicesCount(?)";
-        var count = jdbcTemplate.queryForObject(countSql, Integer.class, eventId);
+        var count = jdbcTemplate.queryForObject(countSql, Integer.class, id);
 
         return new PageImpl<>(content, PageRequest.of(page, pageSize), count);
     }
@@ -65,28 +82,13 @@ public class EventServicesDAO implements DAO<EventService> {
     }
 
     @Override
-    public List<EventService> getAll() {
+    public Object create(Object... args) throws Exception {
         return null;
     }
 
     @Override
-    public Page<EventService> getPage(int page, int pageSize) {
+    public Object update(int id, Object... args) throws Exception {
         return null;
-    }
-
-    @Override
-    public Optional<EventService> get(int id) {
-        return Optional.empty();
-    }
-
-    @Override
-    public void create(EventService request) {
-
-    }
-
-    @Override
-    public void update(int id, EventService request) {
-
     }
 
     @Override
