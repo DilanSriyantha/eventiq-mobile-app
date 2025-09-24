@@ -17,11 +17,6 @@ function LazyLoadingList({ renderItem, keyExtractor, onLoad }: LazyLoadingListPr
     useEffect(() => {
         if (state.loading) return;
 
-        if (state.page < 0) {
-            dispatch(setPage(state.page + 1));
-            return;
-        }
-
         loadMore();
     }, [state.page]);
 

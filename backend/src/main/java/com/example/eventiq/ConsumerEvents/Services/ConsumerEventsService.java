@@ -37,8 +37,11 @@ public class ConsumerEventsService {
     }
 
     public ConsumerEvent create(CreateEventRequest request) throws Exception {
+        var user = userDAO.getByEmail(request.getUserEmail())
+                .orElseThrow(() -> new Exception("User not found"));
+
         var event = consumerEventsDAO.create(
-                request.getUserId(),
+                user.getId(),
                 request.getTitle(),
                 request.getDescription(),
                 request.getDate()

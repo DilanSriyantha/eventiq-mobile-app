@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class CreateEventRequest {
 
-    private int userId;
+    private String userEmail;
 
     private String title;
 

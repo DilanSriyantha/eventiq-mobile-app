@@ -45,7 +45,19 @@ export type ModalMenuHandle = {
     dismiss: () => void;
 };
 
+export type DateHandle = {
+    setDate: (date: Date) => void;
+    getDate: () => Date | undefined;
+    clear: () => void;
+};
+
+export interface DateProps {
+    date: Date;
+    onDateChange?: (date: Date | undefined) => void;
+};
+
 export interface InputBoxComponentType extends React.MemoExoticComponent<React.ForwardRefExoticComponent<TextProps & RefAttributes<TextHandle>>> {
     Dropdown: ForwardRefExoticComponent<DropdownProps & RefAttributes<DropdownHandle>>;
     Text: ForwardRefExoticComponent<TextProps & RefAttributes<TextHandle>>;
+    Date: ForwardRefExoticComponent<DateProps & React.RefAttributes<DateHandle>>;
 };

@@ -4,7 +4,7 @@ import { Action, ActionType, LazyLoadingListState } from "./types";
 export const initialState: LazyLoadingListState = {
     loading: false,
     list: [],
-    page: -1,
+    page: 0,
     totalPages: -1,
 };
 

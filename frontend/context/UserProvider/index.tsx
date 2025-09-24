@@ -14,7 +14,7 @@ export default function UserProvider({ children }: UserProviderProps) {
     const [isReady, setIsReady] = useState<boolean>(false);
 
     useEffect(() => {
-        if(!isLoaded) return;
+        if (!isLoaded) return;
 
         setTimeout(() => setIsReady(true), 1000);
     }, [isLoaded]);
@@ -23,7 +23,7 @@ export default function UserProvider({ children }: UserProviderProps) {
         setCachedState(value);
     }, []);
 
-    if(!isReady) {
+    if (!isReady) {
         return (
             <Surface mode="flat" style={styles.container}>
                 <ActivityIndicator animating size={"large"} />
@@ -33,7 +33,7 @@ export default function UserProvider({ children }: UserProviderProps) {
 
     return (
         <UserContext.Provider value={[cachedState, setCurrentUser, isLoaded]}>
-            { children }
+            {children}
         </UserContext.Provider>
     );
 }
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 export function useCurrentUser(): UserProviderType {
     const userCtx = useContext(UserContext);
 
-    if(!userCtx)
+    if (!userCtx)
         throw new Error("useCurrentUser hook must be used within a <UserProvider>");
 
     return userCtx;
