@@ -17,6 +17,9 @@ const reducer = (state: EventDetailsInputFormState, action: Action): EventDetail
         case ActionType.SET_DESCRIPTION:
             return { ...state, description: action.payload };
 
+        case ActionType.POPULATE_FORM:
+            return { ...state, title: action.payload.title, date: action.payload.date, description: action.payload.description };
+
         case ActionType.CLEAR:
             return { ...state, title: "", date: new Date(), description: "" };
 

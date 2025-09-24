@@ -75,14 +75,14 @@ function CommentSection({ serviceId }: CommentSectionProps) {
                     <View style={styles.container}>
                         {
                             state.comments.map((c, idx) => (
-                                <>
-                                    <CommentComp {...c} key={`commentcomp-${idx}`} />
+                                <View key={idx}>
+                                    <CommentComp {...c} key={`commentcomp-${c.id}-${idx}`} />
                                     {
                                         idx !== state.comments.length - 1 && (
-                                            <Divider key={`divider-${idx}`} />
+                                            <Divider key={`divider-${idx}-${c.id}`} />
                                         )
                                     }
-                                </>
+                                </View>
                             ))
                         }
                         <View style={styles.commentWriterContainer}>

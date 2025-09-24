@@ -10,6 +10,7 @@ import UserProvider from "@/context/UserProvider";
 import { Slot } from "expo-router";
 import { ThemeProvider } from "./themes/ThemeProvider";
 import ThemeWrapper from "./themes/ThemeWrapper";
+import EventServicesProvider from "@/context/EventServicesProvider";
 
 export default function RootLayout() {
     return (
@@ -23,9 +24,11 @@ export default function RootLayout() {
                                     <ProviderServicesProvider>
                                         <CommentsProvider>
                                             <EventsProvider>
-                                                <SnackbarProvider>
-                                                    <Slot />
-                                                </SnackbarProvider>
+                                                <EventServicesProvider>
+                                                    <SnackbarProvider>
+                                                        <Slot />
+                                                    </SnackbarProvider>
+                                                </EventServicesProvider>
                                             </EventsProvider>
                                         </CommentsProvider>
                                     </ProviderServicesProvider>

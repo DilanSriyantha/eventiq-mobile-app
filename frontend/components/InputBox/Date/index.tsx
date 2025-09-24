@@ -1,8 +1,8 @@
-import { forwardRef, memo, useCallback, useImperativeHandle, useMemo, useReducer, useState } from "react";
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useReducer } from "react";
 import { DateHandle, DateProps } from "../types";
 import { TextInput } from "react-native-paper";
 import moment from "moment";
-import { DatePickerInput, DatePickerModal } from "react-native-paper-dates";
+import { DatePickerModal } from "react-native-paper-dates";
 import { CalendarDate } from "react-native-paper-dates/lib/typescript/Date/Calendar";
 import reducer, { initialState } from "./reducer";
 import { hideCalendar, setDate, showCalendar } from "./actions";
@@ -17,6 +17,12 @@ const DateInput = forwardRef<DateHandle, DateProps>((props, ref) => {
         getDate: handleGetDate,
         clear: handleClear
     }));
+
+    useEffect(() => {
+        if (!props.date) return;
+
+        dispatch(setDate(new Date(props.date)));
+    }, [props.date]);
 
     const handleSetDate = useCallback((date: Date) => {
         dispatch(setDate(date));
@@ -42,6 +48,9 @@ const DateInput = forwardRef<DateHandle, DateProps>((props, ref) => {
         if (!params.date) return;
 
         const date: Date = new Date(params.date.getTime());
+
+        props.onDateChange?.apply(null, [date]);
+
         dispatch(setDate(date));
     }, []);
 
@@ -61,6 +70,7 @@ const DateInput = forwardRef<DateHandle, DateProps>((props, ref) => {
             <DatePickerModal
                 locale="en"
                 mode="single"
+                label="Select date"
                 visible={state.visible}
                 date={state.date}
                 onDismiss={handleDismiss}

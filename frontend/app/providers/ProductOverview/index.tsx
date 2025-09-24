@@ -6,7 +6,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useReducer } from "react";
 import { StyleSheet, View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
-import RatingSection from "../components/RatingSection";
+import RatingSection from "../ProviderOverview/RatingSection";
 import { setProduct, startLoading } from "./actions";
 import CommentSectionWrapper from "./CommentSectionWrapper";
 import DescriptionSection from "./DescriptionSection";
@@ -42,7 +42,7 @@ export default function ProductOverview() {
     }, []);
 
     const handleAddPress = useCallback(() => {
-
+        router.replace(`/main/events?serviceId=${psId}`);
     }, []);
 
     return (
@@ -59,7 +59,7 @@ export default function ProductOverview() {
                     state.product && (
                         <>
                             <ParallaxViewWrapper
-                                image={state.product.imageUrl}
+                                image={{ uri: state.product.imageUrl }}
                                 title={state.product.title}
                                 subTitle={""}
                                 onBackPress={router.back}
@@ -85,7 +85,9 @@ export default function ProductOverview() {
                                     {
                                         icon: "plus",
                                         label: "Add to an event",
-                                        onPress: () => { }
+                                        onPress: () => {
+                                            handleAddPress();
+                                        }
                                     }
                                 ]}
                             />

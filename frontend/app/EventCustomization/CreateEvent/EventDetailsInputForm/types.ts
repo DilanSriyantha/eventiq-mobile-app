@@ -6,7 +6,10 @@ export type EventDetailsInputFormHandle = {
 };
 
 export interface EventDetailsInputFormProps {
-    loading?: boolean
+    loading?: boolean;
+    initialTitle?: string;
+    intialDate?: Date;
+    initialDescription?: string;
     onSubmit?: (formResult: EventDetailsFormResult | null) => void;
     onClear?: () => void;
 };
@@ -21,6 +24,7 @@ export enum ActionType {
     SET_TITLE,
     SET_DATE,
     SET_DESCRIPTION,
+    POPULATE_FORM,
     CLEAR,
 };
 

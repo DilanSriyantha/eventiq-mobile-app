@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useImperativeHandle, useState } from "react";
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { NativeSyntheticEvent, TextInputChangeEventData, TextInputSubmitEditingEventData } from "react-native";
 import { TextInput } from "react-native-paper";
 import { TextHandle, TextProps } from "../types";
@@ -12,6 +12,12 @@ const Text = forwardRef<TextHandle, TextProps>((props, ref) => {
         getText: handleGetText,
         clear: handleClear,
     }));
+
+    useEffect(() => {
+        if (!props.value) return;
+
+        setText(props.value);
+    }, [props.value]);
 
     const handleChange = useCallback((e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
         setText(e.nativeEvent.text);

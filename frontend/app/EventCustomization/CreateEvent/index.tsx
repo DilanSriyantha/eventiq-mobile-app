@@ -1,16 +1,19 @@
-import { useCallback, useReducer, useState } from "react";
-import { KeyboardAvoidingView, StyleSheet, View } from "react-native";
-import { Button, Surface, Text, TextInput, useTheme } from "react-native-paper";
-import { DatePickerInput } from "react-native-paper-dates";
+import { useCallback, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { Appbar, Surface } from "react-native-paper";
 import EventDetailsInputForm from "./EventDetailsInputForm";
 import { useEvents } from "@/context/EventsProvider";
 import { EventDetailsFormResult } from "./EventDetailsInputForm/types";
 import { useSnackbar } from "@/context/SnackbarProvider";
 import { useCurrentUser } from "@/context/UserProvider";
 import { CreateEventRequest } from "@/context/EventsProvider/types";
+import { useRouter } from "expo-router";
+import Utils from "@/app/utils/Utils";
 
 export default function CreateEvent() {
     const [loading, setLoading] = useState<boolean>(false);
+
+    const router = useRouter();
 
     const [user] = useCurrentUser();
 
@@ -41,24 +44,28 @@ export default function CreateEvent() {
 
             snackbar.showSuccess("Event created successfully.");
 
-            setTimeout(() => {
-                setLoading(false);
-            }, 1000);
+            await Utils.waitFor(1000);
+            setLoading(false);
 
+            await Utils.waitFor(100);
+            router.back();
         } catch (err) {
             console.log(err);
 
             snackbar.showError(err instanceof Error ? err.message : "An unknown error occurred");
 
-            setTimeout(() => {
-                setLoading(false);
-            }, 1000);
-
+            await Utils.waitFor(1000);
+            setLoading(false);
         }
     }, []);
 
     return (
         <View style={styles.container}>
+            <Appbar.Header>
+                <Appbar.BackAction onPress={() => router.back()} />
+                <Appbar.Content title={"Create Event"} />
+            </Appbar.Header>
+
             <Surface
                 mode="flat"
                 style={styles.contentContainer}

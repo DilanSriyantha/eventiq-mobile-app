@@ -27,7 +27,7 @@ function ServicesSection({ providerId }: FeaturedSectionProps) {
     }, []);
 
     const handleItemClick = useCallback((item: ProviderService): void => {
-        router.push(`/providers/product_overview?psId=${item.id}`);
+        router.push(`/providers/ProductOverview?psId=${item.id}`);
     }, []);
 
     return (

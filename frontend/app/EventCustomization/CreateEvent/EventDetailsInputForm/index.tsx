@@ -1,10 +1,10 @@
-import { forwardRef, memo, useCallback, useImperativeHandle, useReducer } from "react";
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useReducer } from "react";
 import { EventDetailsFormResult, EventDetailsInputFormHandle, EventDetailsInputFormProps } from "./types";
 import reducer, { initialState } from "./reducer";
 import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
 import InputBlock from "./InputBlock";
 import InputBox from "@/components/InputBox";
-import { clear, setDate, setDescription, setTitle } from "./actions";
+import { clear, populateForm, setDate, setDescription, setTitle } from "./actions";
 import { Button } from "react-native-paper";
 import Validator from "@/app/utils/Validator";
 
@@ -16,12 +16,23 @@ const EventDetailsInputForm = forwardRef<EventDetailsInputFormHandle, EventDetai
         clear: handleClear,
     }));
 
+    useEffect(() => {
+        const initialTitle = props.initialTitle;
+        const initialDate = props.intialDate;
+        const initialDescription = props.initialDescription;
+
+        if (initialTitle && initialDate && initialDescription)
+            dispatch(populateForm(initialTitle, initialDate, initialDescription));
+    }, []);
+
     const handleTitleChange = useCallback((text: string): void => {
         dispatch(setTitle(text))
     }, []);
 
     const handleDateChange = useCallback((date: Date | undefined) => {
         if (!date) return;
+
+        console.log(date);
 
         dispatch(setDate(date));
     }, []);
@@ -57,6 +68,7 @@ const EventDetailsInputForm = forwardRef<EventDetailsInputFormHandle, EventDetai
         >
             <InputBlock label="Title">
                 <InputBox.Text
+                    value={state.title}
                     mode="outlined"
                     onTextChange={handleTitleChange}
                 />

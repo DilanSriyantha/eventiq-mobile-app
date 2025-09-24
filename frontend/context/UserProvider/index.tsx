@@ -1,6 +1,6 @@
 import useSecureStore from "@/app/hooks/useSecureStore";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { ActivityIndicator, Surface } from "react-native-paper";
 import { AuthResponse } from "../ApiProvider/types";
 import { UserProviderProps, UserProviderType } from "./types";
@@ -25,9 +25,11 @@ export default function UserProvider({ children }: UserProviderProps) {
 
     if (!isReady) {
         return (
-            <Surface mode="flat" style={styles.container}>
-                <ActivityIndicator animating size={"large"} />
-            </Surface>
+            <View style={{ flex: 1, }}>
+                <Surface mode="flat" style={styles.container}>
+                    <ActivityIndicator animating size={"large"} />
+                </Surface>
+            </View>
         );
     }
 

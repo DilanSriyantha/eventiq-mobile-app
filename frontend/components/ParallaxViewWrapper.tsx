@@ -1,11 +1,11 @@
 import { ReactNode, useCallback } from "react";
-import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, View } from "react-native";
+import { Dimensions, ImageSourcePropType, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, View } from "react-native";
 import { Appbar, IconButton, Text, useTheme } from "react-native-paper";
-import Animated, { interpolate, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import Animated, { interpolate, SharedValue, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 
 interface ParallaxViewWrapperProps {
     children: ReactNode;
-    image: string;
+    image: ImageSourcePropType | SharedValue<ImageSourcePropType | undefined> | undefined;
     title: string;
     subTitle: string;
     onBackPress: () => void;
@@ -117,7 +117,7 @@ export default function ParallaxViewWrapper(props: ParallaxViewWrapperProps) {
                         </View>
                         <Animated.Image
                             style={[styles.imagebg, imageAnimatedStyle]}
-                            source={{ uri: props.image }}
+                            source={props.image}
                         />
                     </View>
                 </Animated.View>

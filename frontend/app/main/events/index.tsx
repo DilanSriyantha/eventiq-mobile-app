@@ -1,25 +1,34 @@
 import EventMenuItem from "@/components/EventMenuItem";
 import LazyLoadingList from "@/components/LazyLoadingList";
 import { PageUpdater } from "@/components/LazyLoadingList/types";
+import { useEventServices } from "@/context/EventServicesProvider";
 import { useEvents } from "@/context/EventsProvider";
 import { ConsumerEvent } from "@/context/EventsProvider/types";
+import { useSnackbar } from "@/context/SnackbarProvider";
 import { useCurrentUser } from "@/context/UserProvider";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { FAB } from "react-native-paper";
 
 export default function Events() {
     const router = useRouter();
-    const [user, setUser] = useCurrentUser();
+    const [user] = useCurrentUser();
     const events = useEvents();
+    const eventServices = useEventServices();
+    const snackbar = useSnackbar();
+
+    const { serviceId } = useLocalSearchParams();
 
     const handleEventClick = useCallback((id: number) => {
-        router.push("/event_customization/event_overview?title=Event Overview&id=" + id as any);
+        if (serviceId)
+            addServiceToEvent(id, parseInt(serviceId as string));
+
+        router.push(`/EventCustomization/EventOverview?title=Event Overview&id=${id}`);
     }, []);
 
     const handleAddEvent = useCallback(() => {
-        router.push("/event_customization?title=Create Event" as any);
+        router.push("/EventCustomization/CreateEvent?title=Create Event");
     }, []);
 
     const handleLoad = useCallback(async (page: number, updateList: PageUpdater) => {
@@ -31,6 +40,18 @@ export default function Events() {
             updateList(res);
         } catch (err) {
             console.log(err);
+        }
+    }, []);
+
+    const addServiceToEvent = useCallback(async (eventId: number, serviceId: number) => {
+        try {
+            const res = await eventServices.addServiceToEvent(eventId, serviceId);
+
+            snackbar.showSuccess(res.message);
+        } catch (err) {
+            console.log(err);
+
+            snackbar.showError(err instanceof Error ? err.message : "An unknown error occurred");
         }
     }, []);
 
