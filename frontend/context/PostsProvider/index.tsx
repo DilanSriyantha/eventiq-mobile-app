@@ -13,7 +13,13 @@ function PostsProvider({ children }: PostsProviderProps) {
 
     async function getPage(pageSize: number, page: number) {
         const endpoint = `/provider-posts/getPage?pageSize=${pageSize}&page=${page}`;
-        
+
+        return api.get<Page<Post>>(endpoint);
+    }
+
+    async function getPageByProviderEmail(pageSize: number, page: number, email: string) {
+        const endpoint = `/provider-posts/getPageByProviderEmail?pageSize=${pageSize}&page=${page}&providerEmail=${email}`;
+
         return api.get<Page<Post>>(endpoint);
     }
 
@@ -21,6 +27,12 @@ function PostsProvider({ children }: PostsProviderProps) {
         const endpoint = `/provider-posts/get?id=${postId}`;
 
         return api.get<Post>(endpoint);
+    }
+
+    async function getCountByProvider(email: string) {
+        const endpoint = `/provider-posts/getCountByProvider?providerEmail=${email}`;
+
+        return api.get<number>(endpoint);
     }
 
     async function search(searchKey: string, pageSize: number, page: number) {
@@ -48,8 +60,8 @@ function PostsProvider({ children }: PostsProviderProps) {
     }
 
     return (
-        <PostsContext.Provider value={{ getPage, get, search, create, update, deleteOne }}>
-            { children }
+        <PostsContext.Provider value={{ getPage, getPageByProviderEmail, get, getCountByProvider, search, create, update, deleteOne }}>
+            {children}
         </PostsContext.Provider>
     );
 }
@@ -57,7 +69,7 @@ function PostsProvider({ children }: PostsProviderProps) {
 export function usePosts(): PostsProviderType {
     const postsCtx = useContext(PostsContext);
 
-    if(!postsCtx)
+    if (!postsCtx)
         throw new Error("usePosts hook must be used within a <PostsProvider>");
 
     return postsCtx;

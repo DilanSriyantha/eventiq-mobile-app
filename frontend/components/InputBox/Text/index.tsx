@@ -26,6 +26,9 @@ const Text = forwardRef<TextHandle, TextProps>((props, ref) => {
 
     const handleSubmitEditing = useCallback((e: NativeSyntheticEvent<TextInputSubmitEditingEventData>): void => {
         props.onSubmit?.apply(null, [e.nativeEvent.text]);
+
+        if (props.clearOnSubmit)
+            setText("");
     }, []);
 
     const handleSetText = useCallback((txt: string) => {

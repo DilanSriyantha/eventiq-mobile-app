@@ -3,6 +3,7 @@ import { ViewProps, ViewStyle } from "react-native";
 import { TextInputProps } from "react-native-paper";
 
 export interface TextProps extends TextInputProps {
+    clearOnSubmit?: boolean;
     passwordShowHideEnabled?: boolean;
     onTextChange?: (text: string) => void;
     onSubmit?: (text: string) => void;

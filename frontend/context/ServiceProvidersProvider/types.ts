@@ -7,6 +7,9 @@ export interface ServiceProvider {
     infoId: number;
     name: string;
     title: string;
+    businessEmail: string;
+    contactNumber: string;
+    address: string;
     welcomeNote: string;
     tags: string;
     rating: number;
@@ -18,10 +21,14 @@ export interface ServiceProviderCreateRequest {
     id: number;
     title: string;
     welcomeNote: string;
-    tags: number;
+    tags: string;
 };
 
-export type ServiceProviderUpdateRequest = ServiceProviderCreateRequest;
+export interface ServiceProviderUpdateRequest extends Omit<ServiceProviderCreateRequest, "id"> {
+    contactNumber: string;
+    address: string;
+    businessEmail: string;
+};
 
 export interface ServiceProvidersProviderProps {
     children: ReactNode;
@@ -32,6 +39,7 @@ export type ServiceProvidersType = {
     getPage: (page: number, pageSize: number) => Promise<Page<ServiceProvider>>;
     getOneByProviderId: (providerId: number) => Promise<ServiceProvider>;
     getOneByInfoId: (infoId: number) => Promise<ServiceProvider>;
+    getOneByProviderEmail: (email: string) => Promise<ServiceProvider>;
     create: (request: ServiceProviderCreateRequest) => Promise<SuccessResponse>;
     update: (request: ServiceProviderUpdateRequest) => Promise<SuccessResponse>;
     deleteOne: (infoId: number) => Promise<SuccessResponse>;

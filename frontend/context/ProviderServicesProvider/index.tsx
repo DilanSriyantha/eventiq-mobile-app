@@ -29,6 +29,12 @@ function ProviderServicesProvider({ children }: ProviderServicesProps) {
         return api.get<Page<ProviderService>>(endpoint);
     }
 
+    async function getCountByProvider(providerEmail: string) {
+        const endpoint = `/provider-services/getCountByProvider?providerEmail=${providerEmail}`;
+
+        return api.get<number>(endpoint);
+    }
+
     async function getOne(id: number) {
         const endpoint = `/provider-services/get?id=${id}`;
 
@@ -54,7 +60,7 @@ function ProviderServicesProvider({ children }: ProviderServicesProps) {
     }
 
     return (
-        <ProviderServicesContext.Provider value={{ getAll, getPage, getPageByProviderId, getOne, create, update, deleteOne }}>
+        <ProviderServicesContext.Provider value={{ getAll, getPage, getPageByProviderId, getCountByProvider, getOne, create, update, deleteOne }}>
             {children}
         </ProviderServicesContext.Provider>
     )

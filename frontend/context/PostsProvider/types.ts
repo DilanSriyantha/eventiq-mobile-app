@@ -8,7 +8,9 @@ export interface PostsProviderProps {
 
 export type PostsProviderType = {
     getPage: (pageSize: number, page: number) => Promise<Page<Post>>;
+    getPageByProviderEmail: (pageSize: number, page: number, providerEmail: string) => Promise<Page<Post>>;
     get: (postId: number) => Promise<Post | null>;
+    getCountByProvider: (providerEmail: string) => Promise<number>;
     search: (searchKey: string, pageSize: number, page: number) => Promise<Page<Post>>;
     create: (createRequest: PostCreateRequest) => Promise<SuccessResponse>;
     update: (updateRequest: PostUpdateRequest) => Promise<SuccessResponse>;

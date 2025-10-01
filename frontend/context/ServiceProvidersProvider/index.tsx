@@ -35,6 +35,12 @@ function ServiceProvidersProvider({ children }: ServiceProvidersProviderProps) {
         return api.get<ServiceProvider>(endpoint);
     }
 
+    async function getOneByProviderEmail(email: string) {
+        const endpoint = `/service-providers/getByProviderEmail?providerEmail=${email}`;
+
+        return api.get<ServiceProvider>(endpoint);
+    }
+
     async function create(request: ServiceProviderCreateRequest) {
         const endpoint = "/service-providers/create";
 
@@ -54,7 +60,7 @@ function ServiceProvidersProvider({ children }: ServiceProvidersProviderProps) {
     }
 
     return (
-        <ServiceProvidersContext.Provider value={{ getAll, getPage, getOneByProviderId, getOneByInfoId, create, update, deleteOne }}>
+        <ServiceProvidersContext.Provider value={{ getAll, getPage, getOneByProviderId, getOneByInfoId, getOneByProviderEmail, create, update, deleteOne }}>
             {children}
         </ServiceProvidersContext.Provider>
     );
