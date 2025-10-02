@@ -150,7 +150,7 @@ function ProviderOverview() {
                             <ParallaxViewWrapper
                                 title={serviceProvider.title}
                                 subTitle={`${serviceProvider.rating.toFixed(1)}`}
-                                image={item.image}
+                                // image={item.image}
                                 onScroll={handleScroll}
                                 onBackPress={router.back}
                             >

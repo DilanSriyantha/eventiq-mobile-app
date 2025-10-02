@@ -9,7 +9,7 @@ export interface ParallaxAppBarProps {
 export interface ParallaxHeaderProps {
     title: string;
     subTitle: string;
-    image: string;
+    image?: string;
     screenHeight: number;
     headerStyle: ViewProps["style"];
     dividerStyle: ViewProps["style"];

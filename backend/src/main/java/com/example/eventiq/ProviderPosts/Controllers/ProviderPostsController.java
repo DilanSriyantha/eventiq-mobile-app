@@ -1,4 +1,6 @@
 package com.example.eventiq.ProviderPosts.Controllers;
+import com.example.eventiq.ProviderPosts.DTOs.PostCreateRequest;
+import com.example.eventiq.ProviderPosts.DTOs.PostUpdateRequest;
 import com.example.eventiq.ProviderPosts.Models.ProviderPost;
 import com.example.eventiq.ProviderPosts.Services.ProviderPostsService;
 import com.example.eventiq.Types.SuccessResponse;
@@ -22,9 +24,19 @@ public class ProviderPostsController {
         return ResponseEntity.ok(providerPostsService.getPage(pageSize, page));
     }
 
+    @GetMapping("/getPageByProviderEmail")
+    public @ResponseBody ResponseEntity<Page<ProviderPost>> getPageByProviderEmail(@RequestParam("pageSize") int pageSize, @RequestParam("page") int page, @RequestParam("providerEmail") String email) throws Exception {
+        return ResponseEntity.ok(providerPostsService.getPageByProviderEmail(pageSize, page, email));
+    }
+
     @GetMapping("/get")
     public @ResponseBody ResponseEntity<Optional<ProviderPost>> getOneById(@RequestParam("id") int id) {
         return ResponseEntity.ok(providerPostsService.getOneById(id));
+    }
+
+    @GetMapping("/getCountByProvider")
+    public @ResponseBody ResponseEntity<Integer> getCountByProvider(@RequestParam("providerEmail") String email) throws Exception {
+        return ResponseEntity.ok(providerPostsService.getCountByProvider(email));
     }
 
     @GetMapping("/search")
@@ -33,7 +45,7 @@ public class ProviderPostsController {
     }
 
     @PostMapping("/create")
-    public @ResponseBody ResponseEntity<SuccessResponse> create(@RequestBody ProviderPost createRequest) throws Exception {
+    public @ResponseBody ResponseEntity<SuccessResponse> create(@RequestBody PostCreateRequest createRequest) throws Exception {
         providerPostsService.create(createRequest);
 
         var response = SuccessResponse.builder()
@@ -45,8 +57,8 @@ public class ProviderPostsController {
     }
 
     @PostMapping("/update")
-    public @ResponseBody ResponseEntity<SuccessResponse> update(@RequestBody ProviderPost updateRequest) throws Exception {
-        providerPostsService.update(updateRequest.getId(), updateRequest);
+    public @ResponseBody ResponseEntity<SuccessResponse> update(@RequestBody PostUpdateRequest updateRequest) throws Exception {
+        providerPostsService.update(updateRequest);
 
         var response = SuccessResponse.builder()
                 .status(HttpStatus.OK.value())

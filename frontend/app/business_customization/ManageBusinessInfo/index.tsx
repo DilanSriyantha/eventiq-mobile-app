@@ -8,6 +8,7 @@ import BusinessDetailsInputForm from "./BusinessDetailsInputForm";
 import { BusinessDetailsInputsFormResult, onComplete, onError } from "./BusinessDetailsInputForm/types";
 import { useCurrentUser } from "@/context/UserProvider";
 import Utils from "@/app/utils/Utils";
+import AppBarView from "@/components/AppBarView";
 
 export default function ManageBusinessInfo() {
     const [user] = useCurrentUser();
@@ -37,6 +38,8 @@ export default function ManageBusinessInfo() {
         try {
             const res = await providers.update(result as ServiceProviderUpdateRequest);
 
+            console.log(res);
+
             await Utils.waitFor(1000);
             notifyCompletion();
         } catch (err) {
@@ -45,19 +48,12 @@ export default function ManageBusinessInfo() {
     }, []);
 
     return (
-        <>
-            <Appbar.Header>
-                <Appbar.BackAction onPress={() => router.back()} />
-                <Appbar.Content title={"Manage Business Info"} />
-            </Appbar.Header>
-
-            <Surface mode="flat" style={styles.container}>
-                <BusinessDetailsInputForm
-                    onInitialize={fetchProviderInfo}
-                    onSubmit={handleSubmit}
-                />
-            </Surface>
-        </>
+        <AppBarView title="Manage Business Info">
+            <BusinessDetailsInputForm
+                onInitialize={fetchProviderInfo}
+                onSubmit={handleSubmit}
+            />
+        </AppBarView>
     );
 }
 

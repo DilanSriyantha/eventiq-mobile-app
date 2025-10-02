@@ -3,7 +3,7 @@ import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 
 export interface ParallaxViewWrapperProps {
     children: ReactNode;
-    image: string;
+    image?: string;
     title: string;
     subTitle: string;
     onBackPress: () => void;

@@ -14,5 +14,11 @@ public class UpdateServiceProviderInfoRequest {
 
     private String welcomeNote;
 
+    private String contactNumber;
+
+    private String address;
+
+    private String businessEmail;
+
     private String tags;
 }

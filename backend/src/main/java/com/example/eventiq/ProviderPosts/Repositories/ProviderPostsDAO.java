@@ -59,6 +59,18 @@ public class ProviderPostsDAO implements DAO<ProviderPost> {
         return null;
     }
 
+    public Page<ProviderPost> getPageByProviderId(int providerId, int pageSize, int page) {
+        var contentSql = "CALL GetProviderPostsPageByProviderId(?, ?, ?)";
+
+        var offset = page * pageSize;
+        var content = jdbcTemplate.query(contentSql, rowMapper, pageSize, offset, providerId);
+
+        var countSql = "CALL GetProviderPostsCountByProviderId(?);";
+        var count = jdbcTemplate.queryForObject(countSql, Integer.class, providerId);
+
+        return new PageImpl<>(content, PageRequest.of(page, pageSize), count);
+    }
+
     public Page<ProviderPost> getSearchResultsPage(String searchKey, int pageSize, int page) {
         var contentSql = "CALL GetProviderPostsSearchResultsPage(?, ?, ?);";
 
@@ -80,6 +92,12 @@ public class ProviderPostsDAO implements DAO<ProviderPost> {
         if(post.isEmpty()) return Optional.empty();
 
         return Optional.of(post.getFirst());
+    }
+
+    public Integer getCountByProvider(int providerId) {
+        var sql = "CALL GetProviderPostsCountByProviderId(?)";
+
+        return jdbcTemplate.queryForObject(sql, Integer.class, providerId);
     }
 
     @Override

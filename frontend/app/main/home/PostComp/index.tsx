@@ -2,7 +2,7 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Card, Chip, Icon, IconButton, Text, useTheme } from "react-native-paper";
 import { PostProps } from "../types";
 
-const Post = ({ post, onRatePressed, onCheckPressed }: PostProps) => {
+const Post = ({ post, editable, onEditPress, onRatePressed, onCheckPressed }: PostProps) => {
 
     const theme = useTheme();
 
@@ -12,7 +12,13 @@ const Post = ({ post, onRatePressed, onCheckPressed }: PostProps) => {
                 <View style={styles.coverContainer}>
                     {/* <View style={styles.overlay} /> */}
                     <View style={styles.options}>
-                        <IconButton icon={"star-outline"} iconColor={theme.colors.primary} onPress={() => onRatePressed?.apply(null, [post])} />
+                        {
+                            editable ? (
+                                <IconButton icon={"file-edit-outline"} iconColor={theme.colors.primary} onPress={() => onEditPress?.apply(null, [post])} />
+                            ) : (
+                                <IconButton icon={"star-outline"} iconColor={theme.colors.primary} onPress={() => onRatePressed?.apply(null, [post])} />
+                            )
+                        }
                     </View>
                     <Card.Cover resizeMode="cover" source={{ uri: post.imageUrl }} />
                 </View>

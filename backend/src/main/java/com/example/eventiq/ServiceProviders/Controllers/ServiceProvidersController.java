@@ -41,6 +41,11 @@ public class ServiceProvidersController {
         return ResponseEntity.ok(serviceProvidersService.getByProviderId(providerId));
     }
 
+    @GetMapping("/getByProviderEmail")
+    public @ResponseBody ResponseEntity<Optional<ServiceProvider>> getByProviderEmail(@RequestParam("providerEmail") String email) throws Exception {
+        return ResponseEntity.ok(serviceProvidersService.getByProviderEmail(email));
+    }
+
     @PostMapping("/create")
     public @ResponseBody ResponseEntity<SuccessResponse> create(@RequestBody CreateServiceProviderInfoRequest createRequest) throws Exception {
         serviceProvidersService.create(createRequest);

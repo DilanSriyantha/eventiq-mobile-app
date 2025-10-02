@@ -20,10 +20,16 @@ export default function ParallaxHeader({ title, subTitle, image, screenHeight, h
                     </View>
                     <Animated.View style={[{ ...styles.divider, backgroundColor: theme.colors.elevation.level1 }, dividerStyle]} />
                 </View>
-                <Animated.Image
-                    style={[{ ...styles.imagebg, height: screenHeight * .3 }, imageStyle]}
-                    source={{ uri: image }}
-                />
+                {
+                    image ? (
+                        <Animated.Image
+                            style={[{ ...styles.imagebg, height: screenHeight * .3 }, imageStyle]}
+                            source={{ uri: image }}
+                        />
+                    ) : (
+                        <View style={{ backgroundColor: theme.colors.primaryContainer, height: screenHeight * .3 }} />
+                    )
+                }
             </View>
         </Animated.View>
     );

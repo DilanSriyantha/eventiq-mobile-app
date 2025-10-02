@@ -15,21 +15,21 @@ export interface ProviderService {
 };
 
 export interface ProviderServiceCreateRequest {
-    providerId: number;
+    providerEmail: string;
     title: string;
     description: string;
     imageUrl: string;
-    rate: number;
 };
 
 export interface ProviderServiceUpdateRequest extends ProviderServiceCreateRequest {
-    id: number;
+    serviceId: number;
 };
 
 export type ProviderServicesType = {
     getAll: () => Promise<ProviderService[]>;
     getPage: (page: number, pageSize: number) => Promise<Page<ProviderService>>;
     getPageByProviderId: (providerId: number, page: number, pageSize: number) => Promise<Page<ProviderService>>;
+    getPageByProviderEmail: (providerEmail: string, page: number, pageSize: number) => Promise<Page<ProviderService>>;
     getCountByProvider: (providerEmail: string) => Promise<number>;
     getOne: (id: number) => Promise<ProviderService>;
     create: (request: ProviderServiceCreateRequest) => Promise<SuccessResponse>;

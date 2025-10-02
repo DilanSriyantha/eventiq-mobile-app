@@ -338,6 +338,31 @@ BEGIN
     LIMIT p_limit OFFSET p_offset;
 END^;
 
+
+DROP PROCEDURE IF EXISTS GetProviderPostsPageByProviderId^;
+CREATE PROCEDURE GetProviderPostsPageByProviderId(
+    IN p_limit INT,
+    IN p_offset INT,
+    IN p_provider_id INT
+)
+BEGIN
+    SELECT
+        u.id AS providerId,
+        u.name AS providerName,
+        p.id AS postId,
+        p.title,
+        p.description,
+        p.tags,
+        p.imageUrl,
+        p.rate,
+        p.created_at,
+        p.updated_at
+    FROM provider_posts pp
+    JOIN (SELECT * FROM users WHERE id = p_provider_id) u ON pp.provider_id = u.id
+    JOIN posts p ON pp.post_id = p.id
+    LIMIT p_limit OFFSET p_offset;
+END^;
+
 DROP PROCEDURE IF EXISTS GetProviderPostsSearchResultsPage^;
 CREATE PROCEDURE GetProviderPostsSearchResultsPage(
     IN p_limit INT,
@@ -388,6 +413,17 @@ BEGIN
     SELECT
         COUNT(*)
     FROM provider_posts pp;
+END^;
+
+DROP PROCEDURE IF EXISTS GetProviderPostsCountByProviderId^;
+CREATE PROCEDURE GetProviderPostsCountByProviderId(
+    IN p_provider_id INT
+)
+BEGIN
+    SELECT
+        COUNT(*)
+    FROM provider_posts pp
+    WHERE pp.provider_id = p_provider_id;
 END^;
 
 DROP PROCEDURE IF EXISTS GetProviderPostsSearchResultsCount^;
@@ -744,6 +780,8 @@ BEGIN
         u.id AS providerId,
         u.name AS providerName,
         i.title,
+        i.business_email,
+        i.contact_number,
         i.welcome_note,
         i.tags,
         i.rating,
@@ -765,6 +803,9 @@ BEGIN
         u.id AS providerId,
         u.name AS providerName,
         i.title,
+        i.business_email,
+        i.contact_number,
+        i.address,
         i.welcome_note,
         i.tags,
         i.rating,
@@ -786,6 +827,9 @@ BEGIN
         u.id AS providerId,
         u.name AS providerName,
         i.title,
+        i.business_email,
+        i.contact_number,
+        i.address,
         i.welcome_note,
         i.tags,
         i.rating,
@@ -806,6 +850,9 @@ BEGIN
         u.id AS providerId,
         u.name AS providerName,
         i.title,
+        i.business_email,
+        i.contact_number,
+        i.address,
         i.welcome_note,
         i.tags,
         i.rating,
@@ -845,12 +892,18 @@ CREATE PROCEDURE UpdateServiceProvider (
     IN p_info_id INT,
     IN p_title VARCHAR(255),
     IN p_welcome_note VARCHAR(255),
+    IN p_contact_number VARCHAR(20),
+    IN p_address VARCHAR(255),
+    IN p_business_email VARCHAR(255),
     IN p_tags VARCHAR(255)
 )
 BEGIN
     UPDATE provider_info SET
         title = p_title,
         welcome_note = p_welcome_note,
+        contact_number = p_contact_number,
+        address = p_address,
+        business_email = p_business_email,
         tags = p_tags
     WHERE id = p_info_id;
 

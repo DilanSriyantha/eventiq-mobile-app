@@ -1,5 +1,8 @@
 package com.example.eventiq.ProviderServices.Services;
 
+import com.example.eventiq.Authentication.Repositories.UserDAO;
+import com.example.eventiq.ProviderServices.DTOs.ProviderServiceCreateRequest;
+import com.example.eventiq.ProviderServices.DTOs.ProviderServiceUpdateRequest;
 import com.example.eventiq.ProviderServices.Models.ProviderService;
 import com.example.eventiq.ProviderServices.Repositories.ProviderServicesDAO;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProviderServicesService {
     private final ProviderServicesDAO providerServicesDAO;
+    private final UserDAO userDAO;
 
     public List<ProviderService> getAll() {
         return providerServicesDAO.getAll();
@@ -26,16 +30,45 @@ public class ProviderServicesService {
         return providerServicesDAO.getPageById(providerId, page, pageSize);
     }
 
+    public Page<ProviderService> getPageByProviderEmail(String providerEmail, int pageSize, int page) throws Exception {
+        var user = userDAO.getByEmail(providerEmail)
+                .orElseThrow(() -> new Exception("provider not found"));
+
+        return providerServicesDAO.getPageById(user.getId(), page, pageSize);
+    }
+
     public Optional<ProviderService> get(int id) {
         return providerServicesDAO.get(id);
     }
 
-    public void create(ProviderService createRequest) throws Exception {
-        providerServicesDAO.create(createRequest);
+    public Integer getCountByProvider(String providerEmail) throws Exception {
+        var user = userDAO.getByEmail(providerEmail)
+                .orElseThrow(() -> new Exception("provider not found"));
+
+        return providerServicesDAO.getCountByProviderId(user.getId());
     }
 
-    public void update(ProviderService updateRequest) throws Exception {
-        providerServicesDAO.update(updateRequest.getId(), updateRequest);
+    public void create(ProviderServiceCreateRequest createRequest) throws Exception {
+        var user = userDAO.getByEmail(createRequest.getProviderEmail())
+                        .orElseThrow(() -> new Exception("provider not found"));
+
+        providerServicesDAO.create(
+                user.getId(),
+                createRequest.getTitle(),
+                createRequest.getDescription(),
+                createRequest.getImageUrl(),
+                0.0f
+        );
+    }
+
+    public void update(ProviderServiceUpdateRequest updateRequest) throws Exception {
+        providerServicesDAO.update(
+                updateRequest.getServiceId(),
+                updateRequest.getTitle(),
+                updateRequest.getDescription(),
+                updateRequest.getImageUrl(),
+                updateRequest.getRate()
+        );
     }
 
     public void delete(int id) {

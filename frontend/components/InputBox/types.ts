@@ -1,6 +1,7 @@
 import React, { ForwardRefExoticComponent, RefAttributes } from "react";
 import { ViewProps, ViewStyle } from "react-native";
 import { TextInputProps } from "react-native-paper";
+import { ImagePickerHandle, ImagePickerProps } from "./ImagePicker/types";
 
 export interface TextProps extends TextInputProps {
     clearOnSubmit?: boolean;
@@ -61,4 +62,5 @@ export interface InputBoxComponentType extends React.MemoExoticComponent<React.F
     Dropdown: ForwardRefExoticComponent<DropdownProps & RefAttributes<DropdownHandle>>;
     Text: ForwardRefExoticComponent<TextProps & RefAttributes<TextHandle>>;
     Date: ForwardRefExoticComponent<DateProps & React.RefAttributes<DateHandle>>;
+    ImagePicker: ForwardRefExoticComponent<ImagePickerProps & React.RefAttributes<ImagePickerHandle>>;
 };

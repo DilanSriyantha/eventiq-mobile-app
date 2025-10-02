@@ -75,6 +75,12 @@ public class ProviderServicesDAO implements DAO<ProviderService> {
         return Optional.of(providerServices.getFirst());
     }
 
+    public Integer getCountByProviderId(int id) {
+        var sql = "CALL GetProviderServicesCountByProviderId(?)";
+
+        return jdbcTemplate.queryForObject(sql, Integer.class, id);
+    }
+
     @Override
     public ProviderService create(Object... args) throws Exception {
         if(args.length < 5)
@@ -90,8 +96,8 @@ public class ProviderServicesDAO implements DAO<ProviderService> {
 
     @Override
     public ProviderService update(int id, Object... args) throws Exception {
-        if(args.length < 5)
-            throw new Exception("Expected 5 arguments, received only " + args.length + " arguments");
+        if(args.length < 4)
+            throw new Exception("Expected 4 arguments, received only " + args.length + " arguments");
 
         var sql = "CALL UpdateProviderService(?, ?, ?, ?, ?);";
 

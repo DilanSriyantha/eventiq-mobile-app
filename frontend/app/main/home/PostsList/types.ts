@@ -2,7 +2,9 @@ import { Post } from "@/context/PostsProvider/types";
 
 export interface PostsListProps {
     searchKey: string;
+    providerEmail?: string;
     onItemCheckPressed?: (post: Post) => void | Promise<void>;
+    onItemEditPressed?: (post: Post) => void | Promise<void>;
     onItemRatePressed?: (post: Post) => void | Promise<void>;
 };
 
@@ -22,4 +24,4 @@ export enum ActionType {
     STOP_LOADING,
 };
 
-export type PostsListAction = {type: ActionType, payload?: any};
+export type PostsListAction = { type: ActionType, payload?: any };

@@ -21,6 +21,12 @@ public class ServiceProvider {
 
     private String title;
 
+    private String businessEmail;
+
+    private String contactNumber;
+
+    private String address;
+
     private String welcomeNote;
 
     private String tags;

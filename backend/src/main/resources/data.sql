@@ -52,13 +52,19 @@ INSERT INTO user_events (user_id, event_id) VALUES
 -- Insert Services
 INSERT INTO services (title, description, imageUrl, rate) VALUES
 ('Wedding Photography', 'Complete wedding photography package', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3CQKsrGzxxhe51hBTUoWMqtqNFnIBmChwZA&s', 4.2),
+('Wedding Album Design', 'Design your memorable wedding album for an affordable price', 'https://img.freepik.com/free-psd/flat-design-wedding-template_23-2150124236.jpg?semt=ais_hybrid&w=740&q=80', 4.0),
+('Wedding Hall Booking', 'Book our wedding hall facilities for affordable range of price', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgLBrEBfISj9uQlO2CD5pIMuwFo6BL9Mrmpg&s', 4.5),
+('Wedding Decoration Service', 'Decorate your matrimonial event with flowers and a lot of love', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAxF1xoBskEBZmn4b5_1NUKLkcBsxVn4R2fQ&s', 4.3),
 ('Catering Package Light', 'Minimal catering package', 'https://www.steamboat.lk/images/site-specific/catering-services/test/new/5-1920x1280px.jpg', 4.0),
 ('Daytime DJ', 'High-quality DJ experience during daytime 4hrs', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8gj-P0i_3EaifrFtmGgB5l48bJv9KQPAZpw&s', 3.7)^;
 
 INSERT INTO provider_services (provider_id, service_id) VALUES
 (4, 1),
-(5, 2),
-(6, 3)^;
+(4, 2),
+(4, 3),
+(4, 4),
+(5, 5),
+(6, 6)^;
 
 -- Link Events to Services
 INSERT INTO event_services (event_id, service_id) VALUES

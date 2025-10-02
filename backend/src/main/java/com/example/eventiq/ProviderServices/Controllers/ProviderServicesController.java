@@ -1,5 +1,7 @@
 package com.example.eventiq.ProviderServices.Controllers;
 
+import com.example.eventiq.ProviderServices.DTOs.ProviderServiceCreateRequest;
+import com.example.eventiq.ProviderServices.DTOs.ProviderServiceUpdateRequest;
 import com.example.eventiq.ProviderServices.Models.ProviderService;
 import com.example.eventiq.ProviderServices.Services.ProviderServicesService;
 import com.example.eventiq.Types.SuccessResponse;
@@ -34,13 +36,23 @@ public class ProviderServicesController {
         return ResponseEntity.ok(providerServicesService.getPageByProvider(providerId, pageSize, page));
     }
 
+    @GetMapping("/getPageByProviderEmail")
+    public @ResponseBody ResponseEntity<Page<ProviderService>> getPageByProviderEmail(@RequestParam("providerEmail") String providerEmail, @RequestParam("pageSize") int pageSize, @RequestParam("page") int page) throws Exception {
+        return ResponseEntity.ok(providerServicesService.getPageByProviderEmail(providerEmail, pageSize, page));
+    }
+
     @GetMapping("/get")
     public @ResponseBody ResponseEntity<Optional<ProviderService>> get(@RequestParam("id") int id) {
         return ResponseEntity.ok(providerServicesService.get(id));
     }
 
+    @GetMapping("/getCountByProvider")
+    public @ResponseBody ResponseEntity<Integer> getCountByProvider(@RequestParam("providerEmail") String email) throws Exception {
+        return ResponseEntity.ok(providerServicesService.getCountByProvider(email));
+    }
+
     @PostMapping("/create")
-    public @ResponseBody ResponseEntity<SuccessResponse> create(@RequestBody ProviderService createRequest) throws Exception {
+    public @ResponseBody ResponseEntity<SuccessResponse> create(@RequestBody ProviderServiceCreateRequest createRequest) throws Exception {
         providerServicesService.create(createRequest);
 
         var response = SuccessResponse.builder()
@@ -52,7 +64,7 @@ public class ProviderServicesController {
     }
 
     @PostMapping("/update")
-    public @ResponseBody ResponseEntity<SuccessResponse> update(@RequestBody ProviderService updateRequest) throws Exception {
+    public @ResponseBody ResponseEntity<SuccessResponse> update(@RequestBody ProviderServiceUpdateRequest updateRequest) throws Exception {
         providerServicesService.update(updateRequest);
 
         var response = SuccessResponse.builder()

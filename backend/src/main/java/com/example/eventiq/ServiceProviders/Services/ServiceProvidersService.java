@@ -1,5 +1,6 @@
 package com.example.eventiq.ServiceProviders.Services;
 
+import com.example.eventiq.Authentication.Repositories.UserDAO;
 import com.example.eventiq.ServiceProviders.DTOs.CreateServiceProviderInfoRequest;
 import com.example.eventiq.ServiceProviders.DTOs.UpdateServiceProviderInfoRequest;
 import com.example.eventiq.ServiceProviders.Models.ServiceProvider;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ServiceProvidersService {
     private final ServiceProvidersDAO serviceProvidersDAO;
+    private final UserDAO userDAO;
 
     public List<ServiceProvider> getAll() {
         return serviceProvidersDAO.getAll();
@@ -32,6 +34,13 @@ public class ServiceProvidersService {
         return serviceProvidersDAO.getByProviderId(providerId);
     }
 
+    public Optional<ServiceProvider> getByProviderEmail(String email) throws Exception {
+        var user = userDAO.getByEmail(email)
+                .orElseThrow(() -> new Exception("Provider not exists"));
+
+        return getByProviderId(user.getId());
+    }
+
     public ServiceProvider create(CreateServiceProviderInfoRequest request) throws Exception {
         return serviceProvidersDAO.create(
                 request.getId(),
@@ -46,7 +55,10 @@ public class ServiceProvidersService {
                 request.getInfoId(),
                 request.getTitle(),
                 request.getWelcomeNote(),
-                request.getTitle()
+                request.getContactNumber(),
+                request.getAddress(),
+                request.getBusinessEmail(),
+                request.getTags()
         );
     }
 

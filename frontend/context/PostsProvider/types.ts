@@ -30,7 +30,7 @@ export interface Post {
 };
 
 export interface PostCreateRequest {
-    providerId: number;
+    providerEmail: string;
     title: string;
     description: string;
     tags: string;
@@ -38,8 +38,8 @@ export interface PostCreateRequest {
 };
 
 export interface PostUpdateRequest {
-    id: number;
-    providerId: number;
+    postId: number;
+    providerEmail: string;
     title: string;
     description: string;
     tags: string;

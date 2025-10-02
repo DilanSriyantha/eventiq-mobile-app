@@ -24,6 +24,9 @@ public class ServiceProvidersDAO implements DAO<ServiceProvider> {
             .name(rs.getString("providerName"))
             .infoId(rs.getInt("id"))
             .title(rs.getString("title"))
+            .businessEmail(rs.getString("business_email"))
+            .contactNumber(rs.getString("contact_number"))
+            .address(rs.getString("address"))
             .welcomeNote(rs.getString("welcome_note"))
             .rating(rs.getFloat("rating"))
             .tags(rs.getString("tags"))
@@ -92,10 +95,10 @@ public class ServiceProvidersDAO implements DAO<ServiceProvider> {
 
     @Override
     public ServiceProvider update(int id, Object... args) throws Exception {
-        if(args.length < 3)
-            throw new Exception("Expected 3 arguments, received only " + args.length + " arguments");
+        if(args.length < 6)
+            throw new Exception("Expected 6 arguments, received only " + args.length + " arguments");
 
-        var sql = "CALL UpdateServiceProvider(?, ?, ?, ?);";
+        var sql = "CALL UpdateServiceProvider(?, ?, ?, ?, ?, ?, ?);";
 
         var params = new Object[args.length + 1];
         params[0] = id;

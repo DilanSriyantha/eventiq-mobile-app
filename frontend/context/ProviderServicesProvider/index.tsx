@@ -29,6 +29,12 @@ function ProviderServicesProvider({ children }: ProviderServicesProps) {
         return api.get<Page<ProviderService>>(endpoint);
     }
 
+    async function getPageByProviderEmail(providerEmail: string, page: number, pageSize: number) {
+        const endpoint = `/provider-services/getPageByProviderEmail?providerEmail=${providerEmail}&pageSize=${pageSize}&page=${page}`;
+
+        return api.get<Page<ProviderService>>(endpoint);
+    }
+
     async function getCountByProvider(providerEmail: string) {
         const endpoint = `/provider-services/getCountByProvider?providerEmail=${providerEmail}`;
 
@@ -48,19 +54,19 @@ function ProviderServicesProvider({ children }: ProviderServicesProps) {
     }
 
     async function update(request: ProviderServiceUpdateRequest) {
-        const endpoint = `/provider-service/update`;
+        const endpoint = `/provider-services/update`;
 
         return api.post<ProviderServiceUpdateRequest, SuccessResponse>(endpoint, request);
     }
 
     async function deleteOne(id: number) {
-        const endpoint = `/provider-service/delete?id=${id}`;
+        const endpoint = `/provider-services/delete?id=${id}`;
 
         return api.deleteOne(endpoint);
     }
 
     return (
-        <ProviderServicesContext.Provider value={{ getAll, getPage, getPageByProviderId, getCountByProvider, getOne, create, update, deleteOne }}>
+        <ProviderServicesContext.Provider value={{ getAll, getPage, getPageByProviderId, getPageByProviderEmail, getCountByProvider, getOne, create, update, deleteOne }}>
             {children}
         </ProviderServicesContext.Provider>
     )
