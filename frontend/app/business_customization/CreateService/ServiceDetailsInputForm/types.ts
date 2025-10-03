@@ -2,7 +2,7 @@ import { onComplete, onError } from "../../ManageBusinessInfo/BusinessDetailsInp
 import { ProviderServiceUpdateRequest } from "@/context/ProviderServicesProvider/types";
 
 export interface ServiceDetailsInputFormProps {
-    initialData?: ServiceDetailsInputFormState;
+    initialData?: ProviderServiceUpdateRequest;
     onInitialize?: (notifyCompletion: onComplete, notifyError: onError) => void | Promise<void>;
     onSubmit?: (result: ServiceDetailsInputFormResult, notifyCompletion: onComplete, notifyError: onError) => void | Promise<void>;
     onDelete?: (error: (err: Error) => void) => void | Promise<void>;

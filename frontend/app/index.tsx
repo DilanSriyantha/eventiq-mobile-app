@@ -28,7 +28,7 @@ export default function Index() {
             <Surface style={styles.container}>
                 <View style={{ ...styles.appIcon, backgroundColor: theme.colors.onSecondary }} >
                     <View style={styles.appnameContainer}>
-                        <Text style={{ ...styles.appname, color: theme.colors.primary }} variant="headlineSmall">EventiQ</Text>
+                        <Text style={{ ...styles.appname, color: theme.colors.primary }} variant="headlineSmall">EVENRO</Text>
                     </View>
                 </View>
             </Surface>

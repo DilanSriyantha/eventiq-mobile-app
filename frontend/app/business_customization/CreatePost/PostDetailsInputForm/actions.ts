@@ -1,3 +1,4 @@
+import { PostUpdateRequest } from "@/context/PostsProvider/types";
 import { Action, ActionType, PostDetailsInputFormState } from "./types";
 
 export const setTitle = (title: string): Action => {
@@ -36,6 +37,6 @@ export const stopSubmitting = (): Action => {
     return { type: ActionType.STOP_SUBMITTING, payload: null };
 };
 
-export const populateForm = (formData: PostDetailsInputFormState): Action => {
+export const populateForm = (formData: PostUpdateRequest): Action => {
     return { type: ActionType.POPULATE_FORM, payload: formData };
 };

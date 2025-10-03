@@ -1,5 +1,5 @@
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
-import { PostDetailsInputFormProps } from "./types";
+import { PostDetailsInputFormProps, PostDetailsInputFormResult } from "./types";
 import { memo, useCallback, useEffect, useReducer } from "react";
 import { initialState, reducer } from "./reducer";
 import InputBlock from "@/app/EventCustomization/CreateEvent/EventDetailsInputForm/InputBlock";
@@ -123,6 +123,7 @@ const PostDetailsInputForm = ({ initialData, onInitialize, onSubmit, onDelete }:
                             /> */}
                             <InputBox.ImagePicker
                                 sourceUri={state.imageUrl}
+                                onChange={handleImageChange}
                             />
                         </InputBlock>
 

@@ -2,7 +2,7 @@ import { Post, PostUpdateRequest } from "@/context/PostsProvider/types";
 import { onComplete, onError } from "../../ManageBusinessInfo/BusinessDetailsInputForm/types";
 
 export interface PostDetailsInputFormProps {
-    initialData?: PostDetailsInputFormState;
+    initialData?: PostUpdateRequest;
     onInitialize?: (notifyCompletion: onComplete, notifyError: onError) => void | Promise<void>;
     onSubmit?: (result: PostDetailsInputFormResult, notifyCompletion: onComplete, notifyError: onError) => void | Promise<void>;
     onDelete?: (error: (err: Error) => void) => void | Promise<void>;

@@ -7,8 +7,12 @@ import { onComplete, onError } from "../ManageBusinessInfo/BusinessDetailsInputF
 import { useSnackbar } from "@/context/SnackbarProvider";
 import { useProviderServices } from "@/context/ProviderServicesProvider";
 import { ProviderServiceCreateRequest } from "@/context/ProviderServicesProvider/types";
+import FirebaseStorageHelper from "@/app/utils/FirebaseStorage";
+import { useRouter } from "expo-router";
 
 export default function CreateService() {
+    const router = useRouter();
+
     const [user] = useCurrentUser();
 
     const providerServices = useProviderServices();
@@ -17,13 +21,16 @@ export default function CreateService() {
     const handleSubmit = useCallback(async (result: ServiceDetailsInputFormResult, notifyCompletion: onComplete, notifyError: onError) => {
         if (!user) return;
 
-        const req: ProviderServiceCreateRequest = {
-            ...result,
-            providerEmail: user.email,
-            imageUrl: "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
-        };
 
         try {
+            const storage = new FirebaseStorageHelper();
+            const downloadUrl = await storage.uploadFile(result.imageUrl);
+
+            const req: ProviderServiceCreateRequest = {
+                ...result,
+                providerEmail: user.email,
+                imageUrl: downloadUrl,
+            };
             const res = await providerServices.create(req);
 
             console.log(res);
@@ -31,6 +38,8 @@ export default function CreateService() {
             snackbar.showSuccess("Service created successfully.");
 
             notifyCompletion();
+
+            router.back();
         } catch (err) {
             console.log(err);
 

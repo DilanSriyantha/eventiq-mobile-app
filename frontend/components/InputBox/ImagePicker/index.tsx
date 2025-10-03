@@ -22,7 +22,7 @@ const ImagePicker = forwardRef<ImagePickerHandle, ImagePickerProps>((props, ref)
         if (!props.sourceUri) return;
 
         dispatch(setImageUri(props.sourceUri));
-    }, []);
+    }, [props.sourceUri]);
 
     const handleSetImageUri = useCallback((imageUri: string) => {
         dispatch(setImageUri(imageUri));
@@ -47,6 +47,7 @@ const ImagePicker = forwardRef<ImagePickerHandle, ImagePickerProps>((props, ref)
                 const imageUri = res.assets[0].uri;
                 console.log(imageUri);
                 dispatch(setImageUri(imageUri));
+                props.onChange?.apply(null, [imageUri]);
             } else {
                 snackbar.showInfo("Document picking cancelled");
             }

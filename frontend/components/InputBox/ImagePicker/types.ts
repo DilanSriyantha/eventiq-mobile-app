@@ -9,6 +9,7 @@ export interface ImagePickerProps {
     resizeMode?: ImageProps["resizeMode"];
     height?: ImageProps["height"];
     sourceUri?: string;
+    onChange?: (imageUri: string) => void | Promise<void>;
 };
 
 export interface ImagePickerState {

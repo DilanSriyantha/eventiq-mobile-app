@@ -47,7 +47,14 @@ export const reducer = (state: PostDetailsInputFormState, action: Action): PostD
             return { ...state, submitting: false };
 
         case ActionType.POPULATE_FORM:
-            return { ...state, ...action.payload, loading: state.loading ? false : state.loading };
+            return {
+                ...state,
+                title: action.payload.title,
+                description: action.payload.description,
+                tags: action.payload.tags,
+                imageUrl: action.payload.imageUrl,
+                loading: state.loading ? false : state.loading
+            };
 
         default:
             return state;

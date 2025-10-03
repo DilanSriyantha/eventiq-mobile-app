@@ -4,8 +4,8 @@ import { memo, useCallback, useEffect, useReducer } from "react";
 import { initialState, reducer } from "./reducer";
 import InputBlock from "@/app/EventCustomization/CreateEvent/EventDetailsInputForm/InputBlock";
 import InputBox from "@/components/InputBox";
-import { addTag, populateForm, removeTag, setDescription, setImageUrl, setTitle, startLoading, startSubmitting, stopLoading, stopSubmitting } from "./actions";
-import { ActivityIndicator, Button, Chip, useTheme } from "react-native-paper";
+import { populateForm, setDescription, setImageUrl, setTitle, startLoading, startSubmitting, stopLoading, stopSubmitting } from "./actions";
+import { ActivityIndicator, Button, useTheme } from "react-native-paper";
 import Validator from "@/app/utils/Validator";
 import { useSnackbar } from "@/context/SnackbarProvider";
 
@@ -114,6 +114,7 @@ const ServiceDetailsInputForm = ({ initialData, onInitialize, onSubmit, onDelete
                             /> */}
                             <InputBox.ImagePicker
                                 sourceUri={state.imageUrl}
+                                onChange={handleImageChange}
                             />
                         </InputBlock>
 
