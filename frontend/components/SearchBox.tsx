@@ -1,4 +1,4 @@
-import { SearchBoxProps } from "@/types/types";
+import { SearchBoxProps } from "@/common/types";
 import { StyleSheet, TextInput, View } from "react-native";
 import { Icon, useTheme } from "react-native-paper";
 

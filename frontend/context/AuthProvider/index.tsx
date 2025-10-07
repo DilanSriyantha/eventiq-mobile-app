@@ -1,8 +1,9 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { Role } from "@/app/enums/Role";
+import { useRouter } from "expo-router";
+import { createContext, ReactNode, useContext } from "react";
 import { useApi } from "../ApiProvider";
 import { AuthResponse } from "../ApiProvider/types";
-import Role from "@/app/enums/Role";
-import useSecureStore from "@/app/hooks/useSecureStore";
+import { useCurrentUser } from "../UserProvider";
 
 interface AuthProviderProps {
     children: ReactNode;
@@ -12,6 +13,7 @@ type AuthProviderType = {
     currentUser: AuthResponse | null;
     register: (name: string, email: string, password: string, role: Role) => Promise<AuthResponse>;
     login: (email: string, passowrd: string) => Promise<AuthResponse>;
+    logout: () => void;
     isSessionValid: () => Promise<boolean>;
     isUserAvailable: () => boolean;
 };
@@ -21,9 +23,12 @@ const AuthContext = createContext(
 );
 
 function AuthProvider({ children }: AuthProviderProps) {
-    const [currentUser, setCurrentUser] = useSecureStore<AuthResponse | null>("currentUser", null);
+    // const [currentUser, setCurrentUser, isLoaded] = useSecureStore<AuthResponse | null>("currentUser", null);
+
+    const [currentUser, setCurrentUser] = useCurrentUser();
 
     const api = useApi();
+    const router = useRouter();
 
     function register(name: string, email: string, password: string, role: Role): Promise<AuthResponse> {
         return new Promise(async (resolve, reject) => {
@@ -39,6 +44,8 @@ function AuthProvider({ children }: AuthProviderProps) {
                 const user = await api.post<typeof body, AuthResponse>(endpoint, body);
 
                 setCurrentUser(user);
+
+                setTimeout(() => router.replace("/main/home"), 1000);
 
                 resolve(user);
             } catch (err) {
@@ -60,11 +67,19 @@ function AuthProvider({ children }: AuthProviderProps) {
 
                 setCurrentUser(user);
 
+                setTimeout(() => router.replace("/main/home"), 1000);
+
                 resolve(user);
             } catch (err) {
                 reject(err);
             }
         });
+    }
+
+    function logout() {
+        setCurrentUser(null);
+
+        router.replace("/auth");
     }
 
     function isSessionValid(): Promise<boolean> {
@@ -92,7 +107,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     return (
-        <AuthContext.Provider value={{ currentUser, register, login, isSessionValid, isUserAvailable }}>
+        <AuthContext.Provider value={{ currentUser, register, login, logout, isSessionValid, isUserAvailable }}>
             {children}
         </AuthContext.Provider>
     );

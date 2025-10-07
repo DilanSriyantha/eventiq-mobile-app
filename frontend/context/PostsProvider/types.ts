@@ -1,0 +1,47 @@
+import { Page, Timestamp } from "@/common/types";
+import { ReactNode } from "react";
+import { SuccessResponse } from "../ApiProvider/types";
+
+export interface PostsProviderProps {
+    children: ReactNode;
+};
+
+export type PostsProviderType = {
+    getPage: (pageSize: number, page: number) => Promise<Page<Post>>;
+    getPageByProviderEmail: (pageSize: number, page: number, providerEmail: string) => Promise<Page<Post>>;
+    get: (postId: number) => Promise<Post | null>;
+    getCountByProvider: (providerEmail: string) => Promise<number>;
+    search: (searchKey: string, pageSize: number, page: number) => Promise<Page<Post>>;
+    create: (createRequest: PostCreateRequest) => Promise<SuccessResponse>;
+    update: (updateRequest: PostUpdateRequest) => Promise<SuccessResponse>;
+    deleteOne: (id: number) => Promise<SuccessResponse>;
+};
+
+export interface Post {
+    id: number;
+    providerId: number;
+    title: string;
+    description: string;
+    tags: string;
+    imageUrl: string;
+    rate: number;
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
+};
+
+export interface PostCreateRequest {
+    providerEmail: string;
+    title: string;
+    description: string;
+    tags: string;
+    imageUrl: string;
+};
+
+export interface PostUpdateRequest {
+    postId: number;
+    providerEmail: string;
+    title: string;
+    description: string;
+    tags: string;
+    imageUrl: string;
+};

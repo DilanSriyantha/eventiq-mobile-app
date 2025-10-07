@@ -1,11 +1,11 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Avatar, Button, Card, Chip, Icon, Text } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { Button, Card, Chip, Icon, Text } from "react-native-paper";
 
 export interface PostType1Props {
     title: string;
     image: string;
     rating: number;
-    tags: string[];
+    tags: string;
     onRatePress: () => void;
     onCheckPress: () => void;
 };
@@ -24,8 +24,8 @@ const PostType1 = ({ title, image, rating, tags, onRatePress, onCheckPress }: Po
             </View>
             <View style={styles.tagsContainer}>
                 {
-                    tags.map((tag, idx) => (
-                        <Chip mode="outlined" key={idx}>{tag}</Chip>
+                    tags.split(",").map((tag, idx) => (
+                        <Chip mode="outlined" key={idx}>{tag.trim()}</Chip>
                     ))
                 }
             </View>

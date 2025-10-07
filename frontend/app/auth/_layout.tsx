@@ -1,11 +1,10 @@
 import { Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
-import { PaperProvider } from 'react-native-paper';
 
 export default function AuthLayout() {
     return (
-        <PaperProvider>
+        <>
             <StatusBar
                 translucent
                 backgroundColor={"transparent"}
@@ -14,7 +13,7 @@ export default function AuthLayout() {
             <View style={styles.container}>
                 <Slot />
             </View>
-        </PaperProvider>
+        </>
     );
 }
 

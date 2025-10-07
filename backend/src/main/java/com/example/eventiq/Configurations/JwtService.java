@@ -22,8 +22,8 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String SECRET;
 
-    private static final long ACCESS_TOKEN_LIFESPAN = (1000 * 60 * 10); // 10 minutes
-    private static final long REFRESH_TOKEN_LIFESPAN = (1000 * 60 * 60 * 24 * 7); // 7 days
+    private static final long ACCESS_TOKEN_LIFESPAN = (1000 * 60 * 60 * 24 * 7); // 7 minutes
+    private static final long REFRESH_TOKEN_LIFESPAN = (1000 * 60 * 60 * 24 * 14); // 14 days
 
     public String extractEmail(String token) {
         try{

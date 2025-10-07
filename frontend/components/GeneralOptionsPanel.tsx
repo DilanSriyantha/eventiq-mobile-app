@@ -1,7 +1,7 @@
 import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 import GeneralOption from "./GeneralOption";
-import { ActivityIndicator, Text } from "react-native-paper";
 
 export interface GeneralOptionsPanelHandle {
     loadMore: () => void;
@@ -78,12 +78,12 @@ const GeneralOptionsPanel = forwardRef<GeneralOptionsPanelHandle, GeneralOptions
     }, []);
 
     const loadMore = useCallback(() => {
-        if(loading) return;
-        
+        if (loading) return;
+
         setLoading(true);
 
         const newItems: GeneralOption[] = [];
-        for(let i = 0; i < 5; i++)
+        for (let i = 0; i < 5; i++)
             newItems.push({
                 image: "https://akm-img-a-in.tosshub.com/indiatoday/images/story/202411/ideally--indians-should-have-how-many-meals-in-a-day-102825391-1x1.jpg?VersionId=3vDEbRDEuYsWLCwGwyffSTDGHY9Yrclw",
                 label: "General Option",

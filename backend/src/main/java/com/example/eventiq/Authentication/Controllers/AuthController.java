@@ -4,14 +4,19 @@ import com.example.eventiq.Authentication.DTOs.AuthResponse;
 import com.example.eventiq.Authentication.DTOs.LoginRequest;
 import com.example.eventiq.Authentication.DTOs.RefreshRequest;
 import com.example.eventiq.Authentication.DTOs.RegisterRequest;
+import com.example.eventiq.Authentication.Models.User;
 import com.example.eventiq.Authentication.Service.AuthService;
 import com.example.eventiq.Types.SuccessResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/api/v1/auth")
@@ -25,26 +30,29 @@ public class AuthController {
         return ResponseEntity.ok("Hello World!");
     }
 
+    @GetMapping("/getAllUsers")
+    public @ResponseBody ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(authService.getAll());
+    }
+
+    @GetMapping("/getUsersPage")
+    public @ResponseBody ResponseEntity<Page<User>> getUsersPage(@RequestParam("pageSize") int pageSize, @RequestParam("page") int page) {
+        return ResponseEntity.ok(authService.getPage(pageSize, page));
+    }
+
+    @GetMapping("/getUserById")
+    public @ResponseBody ResponseEntity<Optional<User>> getUserById(@RequestParam("id") int id) {
+        return ResponseEntity.ok(authService.getById(id));
+    }
+
+    @GetMapping("/getUserByEmail")
+    public @ResponseBody ResponseEntity<Optional<User>> getUserByEmail(@RequestParam("email") String email) {
+        return ResponseEntity.ok(authService.getByEmail(email));
+    }
+
     @PostMapping("/register")
-    public @ResponseBody ResponseEntity<AuthResponse> handleRegisterRequest(@RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
-        var authResponse = authService.register(registerRequest);
-
-        var accessTokenCookie = new Cookie("accessToken", authResponse.getAccessToken());
-        accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setSecure(false); // true on production
-        accessTokenCookie.setPath("/");
-        accessTokenCookie.setMaxAge(60 * 10); // 10 minutes
-
-        var refreshTokenCookie = new Cookie("refreshToken", authResponse.getRefreshToken());
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(false); // true on production
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(60 * 60 * 24 * 7); // 7 days
-
-        response.addCookie(accessTokenCookie);
-        response.addCookie(refreshTokenCookie);
-
-        return ResponseEntity.ok(authResponse);
+    public @ResponseBody ResponseEntity<AuthResponse> handleRegisterRequest(@RequestBody RegisterRequest registerRequest, HttpServletResponse response) throws Exception {
+        return ResponseEntity.ok(authService.register(registerRequest));
     }
 
     @PostMapping("/login")

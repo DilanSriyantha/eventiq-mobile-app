@@ -1,7 +1,7 @@
 import { Slot, useLocalSearchParams, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
-import { Appbar, PaperProvider } from "react-native-paper";
+import { Appbar } from "react-native-paper";
 
 export default function ProviderLayout() {
     const router = useRouter();
@@ -9,14 +9,14 @@ export default function ProviderLayout() {
     const { title } = useLocalSearchParams();
 
     return (
-        <PaperProvider>
+        <>
             <StatusBar
                 translucent
                 backgroundColor={"transparent"}
                 style="auto"
             />
-            
-            {title && !title.includes("provider_overview") && ( 
+
+            {title && !title.includes("provider_overview") && (
                 <Appbar.Header>
                     <Appbar.BackAction onPress={() => router.back()} />
                     <Appbar.Content title={title} />
@@ -25,7 +25,7 @@ export default function ProviderLayout() {
             <View style={styles.container}>
                 <Slot />
             </View>
-        </PaperProvider>
+        </>
     );
 }
 

@@ -1,6 +1,12 @@
-import { useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
+import { useEffect, useState } from "react";
 import { Platform } from "react-native";
+
+type UseSecureStoreType <T> = [
+    T,
+    (value: T) => void,
+    boolean
+];
 
 async function getSavedValue<T>(key: string, initialValue: T) {
     try {
@@ -22,19 +28,26 @@ async function getSavedValue<T>(key: string, initialValue: T) {
     }
 }
 
-export default function useSecureStore<T>(key: string, initialValue: T): [T, (value: T) => void] {
+export default function useSecureStore<T>(key: string, initialValue: T, onLoadEnd?: (value: T) => void | Promise<void>): UseSecureStoreType<T> {
     const [value, setValue] = useState<T>(initialValue);
+    const [loaded, setLoaded] = useState<boolean>(false);
 
     useEffect(() => {
-        getSavedValue<T>(key, initialValue).then(setValue);
+        getSavedValue<T>(key, initialValue).then((v) => {
+            setValue(v);
+            setLoaded(true);
+            onLoadEnd?.apply(null, [v]);
+        });
     }, [key]);
 
     useEffect(() => {
+        if(!loaded) return;
+
         if (Platform.OS === "web")
             localStorage.setItem(key, JSON.stringify(value));
         else
             SecureStore.setItemAsync(key, JSON.stringify(value));
     }, [key, value]);
 
-    return [value, setValue];
+    return [value, setValue, loaded];
 }

@@ -1,20 +1,27 @@
+import { useCurrentUser } from "@/context/UserProvider";
 import { router, usePathname } from "expo-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Appbar, BottomNavigation } from "react-native-paper";
-import About from "./about";
-import Home from "./home";
-import Profile from "./profile";
+import { Role } from "../enums/Role";
 import Events from "./events";
-
-const routes = [
-    { key: 'home', title: 'Home', focusedIcon: 'home', route: '/main/home' },
-    { key: 'events', title: 'My Events', focusedIcon: 'calendar-edit', route: '/main/events' },
-    { key: 'profile', title: 'Profile', focusedIcon: 'account', route: '/main/profile' },
-    { key: 'about', title: 'About', focusedIcon: 'information', route: '/main/about' },
-];
+import Home from "./home";
+import ManageBusiness from "./manage_business";
+import Profile from "./profile";
 
 export default function MainLayout() {
+    const [user] = useCurrentUser();
+    const routes = useMemo(() => user && Role.of(user.role) === Role.PROVIDER ? [
+        { key: 'home', title: 'Home', focusedIcon: 'home', route: '/main/home' },
+        { key: 'events', title: 'My Events', focusedIcon: 'calendar-edit', route: '/main/events' },
+        { key: 'profile', title: 'Profile', focusedIcon: 'account', route: '/main/profile' },
+        { key: 'manage_business', title: 'My Business', focusedIcon: 'store-cog', route: '/main/manage_business' }
+    ] : [
+        { key: 'home', title: 'Home', focusedIcon: 'home', route: '/main/home' },
+        { key: 'events', title: 'My Events', focusedIcon: 'calendar-edit', route: '/main/events' },
+        { key: 'profile', title: 'Profile', focusedIcon: 'account', route: '/main/profile' },
+    ], [user]);
+
     const pathname = usePathname();
     const [index, setIndex] = useState<number>(routes.findIndex(r => pathname.includes(r.key)));
 
@@ -22,7 +29,7 @@ export default function MainLayout() {
         home: Home,
         profile: Profile,
         events: Events,
-        about: About
+        manage_business: ManageBusiness
     });
 
     const handleIndexChange = (newIndex: number) => {
@@ -34,7 +41,7 @@ export default function MainLayout() {
         <View style={styles.container}>
             <Appbar.Header>
                 <Appbar.Content title={routes[index]?.title || "App"} />
-                <Appbar.Action icon={"bell"} onPress={() => {}} />
+                <Appbar.Action icon={"bell"} onPress={() => { }} />
             </Appbar.Header>
 
             {/* <Stack screenOptions={{ headerShown: false }} /> */}

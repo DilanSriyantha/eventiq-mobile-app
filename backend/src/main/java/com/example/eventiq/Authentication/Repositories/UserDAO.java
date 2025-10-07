@@ -3,7 +3,6 @@ package com.example.eventiq.Authentication.Repositories;
 import com.example.eventiq.Authentication.Models.User;
 import com.example.eventiq.Enums.Role;
 import com.example.eventiq.Utils.DAO;
-import com.example.eventiq.Utils.OnCompleted;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,21 +22,19 @@ public class UserDAO implements DAO<User> {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<User> rowMapper = (rs, rowNum) -> {
-        return User.builder()
-                .id(rs.getInt("id"))
-                .name(rs.getString("name"))
-                .email(rs.getString("email"))
-                .password(rs.getString("password"))
-                .role(Role.valueOf(rs.getString("role")))
-                .updatedAt(rs.getTimestamp("updated_at"))
-                .createdAt(rs.getTimestamp("created_at"))
-                .build();
-    };
+    private final RowMapper<User> rowMapper = (rs, rowNum) -> User.builder()
+            .id(rs.getInt("id"))
+            .name(rs.getString("name"))
+            .email(rs.getString("email"))
+            .password(rs.getString("password"))
+            .role(Role.valueOf(rs.getString("role")))
+            .updatedAt(rs.getTimestamp("updated_at"))
+            .createdAt(rs.getTimestamp("created_at"))
+            .build();
 
     @Override
     public List<User> getAll() {
-        var sql = "SELECT * FROM users;";
+        var sql = "CALL GetAllUsers();";
 
         var users = jdbcTemplate.query(sql, rowMapper);
 
@@ -46,74 +43,77 @@ public class UserDAO implements DAO<User> {
 
     @Override
     public Page<User> getPage(int page, int pageSize) {
-        var contentSql = "SELECT * FROM users ORDER BY id ASC LIMIT ? OFFSET ?;";
+        var contentSql = "CALL GetUsersPage(?, ?);";
 
         var offset = page * pageSize;
         var content = jdbcTemplate.query(contentSql, rowMapper, pageSize, offset);
 
-        var countSql = "SELECT COUNT(*) FROM users;";
+        var countSql = "CALL GetUsersCount();";
         var count = jdbcTemplate.queryForObject(countSql, Integer.class);
 
         return new PageImpl<>(content, PageRequest.of(page, pageSize), count);
     }
 
     @Override
+    public Page<User> getPageById(int id, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public Optional<User> get(int id) {
-        var sql = "SELECT * FROM users WHERE id=?;";
+        var sql = "CALL GetUserById(?);";
 
-        var user = jdbcTemplate.queryForObject(sql, rowMapper, id);
+        var user = jdbcTemplate.query(sql, rowMapper, id);
 
-        return Optional.of(user);
+        if(user.isEmpty()) return Optional.empty();
+
+        return Optional.of(user.getFirst());
     }
 
     public Optional<User> getByEmail(String email) {
-        var sql = "SELECT * FROM users WHERE email=?;";
+        var sql = "CALL GetUserByEmail(?);";
 
-        var user = jdbcTemplate.queryForObject(sql, rowMapper, email);
+        var user = jdbcTemplate.query(sql, rowMapper, email);
 
-        return Optional.ofNullable(user);
+        if(user.isEmpty()) return Optional.empty();
+
+        return Optional.of(user.getFirst());
     }
 
     @Override
-    public void create(User user) {
-        var sql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?);";
+    public User create(Object... args) throws Exception {
+        if(args.length < 4)
+            throw new Exception("Expected 4 arguments, received only " + args.length + " arguments");
 
-        var rowsAffected = jdbcTemplate.update(sql,
-                user.getName(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getRole().name()
-        );
+        var sql = "CALL CreateUser(?,?,?,?)";
+        var user = jdbcTemplate.queryForObject(sql, rowMapper, args);
 
-        if(rowsAffected > 0) {
-            log.info("User created successfully.");
+        log.info("User created successfully with id={}", user.getId());
 
-            return;
-        }
-        log.error("Error occurred while creating a new user.");
+        return user;
     }
 
     @Override
-    public void update(int id, User newDetails) {
-        var sql = "UPDATE users SET name=?, email=?, role=? WHERE id=?;";
+    public User update(int id, Object... args) throws Exception {
+        if(args.length < 4)
+            throw new Exception("Expected 4 arguments, received only " + args.length + " arguments");
 
-        var rowsAffected = jdbcTemplate.update(sql,
-                newDetails.getName(),
-                newDetails.getEmail(),
-                newDetails.getRole()
-        , id);
+        var sql = "CALL UpdateUser(?,?,?,?,?)";
 
-        if(rowsAffected > 0){
-            log.info("User updated successfully.");
+        var params = new Object[args.length + 1];
+        params[0] = id;
+        System.arraycopy(args, 0, params, 1, args.length);
 
-            return;
-        }
-        log.error("Error occurred while updating user id={}", id);
+        var user = jdbcTemplate.queryForObject(sql, rowMapper, params);
+
+        log.info("User updated successfully");
+
+        return user;
     }
 
     @Override
     public void delete(int id) {
-        var sql = "DELETE FROM users WHERE id=?;";
+        var sql = "CALL DeleteUser(?);";
 
         var rowsAffected = jdbcTemplate.update(sql, id);
 

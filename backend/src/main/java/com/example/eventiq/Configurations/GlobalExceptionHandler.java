@@ -13,17 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public @ResponseBody ResponseEntity<ErrorResponse> handleException(Exception ex) {
+    public @ResponseBody ResponseEntity<String> handleException(Exception ex) {
         log.error(ex.getMessage(), ex);
 
-        var errorResponse = ErrorResponse
-                .builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .message(ex.getMessage())
-                .build();
-
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(errorResponse);
+        return ResponseEntity.status(500).body(ex.getMessage());
     }
 }

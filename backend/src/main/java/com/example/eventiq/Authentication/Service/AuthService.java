@@ -11,6 +11,7 @@ import com.example.eventiq.Types.SuccessResponse;
 import com.example.eventiq.Utils.OnCompleted;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
@@ -34,7 +37,23 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthResponse register(RegisterRequest request) {
+    public List<User> getAll() {
+        return userDAO.getAll();
+    }
+
+    public Page<User> getPage(int pageSize, int page) {
+        return userDAO.getPage(page, pageSize);
+    }
+
+    public Optional<User> getById(int id) {
+        return userDAO.get(id);
+    }
+
+    public Optional<User> getByEmail(String email) {
+        return userDAO.getByEmail(email);
+    }
+
+    public AuthResponse register(RegisterRequest request) throws Exception {
         var user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -42,7 +61,12 @@ public class AuthService {
                 .role(request.getRole())
                 .build();
 
-        userDAO.create(user);
+        userDAO.create(
+                user.getName(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getRole()
+        );
 
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -56,7 +80,7 @@ public class AuthService {
                 .build();
     }
 
-    public AuthResponse login(LoginRequest request) throws  Exception {
+    public AuthResponse login(LoginRequest request) throws Exception {
         var user = userDAO.getByEmail(request.getEmail())
                 .orElseThrow(() -> new Exception("User not found."));
 
