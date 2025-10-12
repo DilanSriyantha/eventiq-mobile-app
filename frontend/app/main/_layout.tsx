@@ -2,12 +2,13 @@ import { useCurrentUser } from "@/context/UserProvider";
 import { router, usePathname } from "expo-router";
 import { useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Appbar, BottomNavigation } from "react-native-paper";
+import { Appbar, Badge, BottomNavigation } from "react-native-paper";
 import { Role } from "../enums/Role";
 import Events from "./events";
 import Home from "./home";
 import ManageBusiness from "./manage_business";
 import Profile from "./profile";
+import { useNotifications } from "@/context/WebSocketProvider";
 
 export default function MainLayout() {
     const [user] = useCurrentUser();
@@ -25,6 +26,8 @@ export default function MainLayout() {
     const pathname = usePathname();
     const [index, setIndex] = useState<number>(routes.findIndex(r => pathname.includes(r.key)));
 
+    const notifications = useNotifications();
+
     const renderScene = BottomNavigation.SceneMap({
         home: Home,
         profile: Profile,
@@ -41,7 +44,16 @@ export default function MainLayout() {
         <View style={styles.container}>
             <Appbar.Header>
                 <Appbar.Content title={routes[index]?.title || "App"} />
-                <Appbar.Action icon={"bell"} onPress={() => { }} />
+                <Appbar.Action icon={"bell"} onPress={() => router.push("/notifications" as any)} />
+                {notifications.getUnreadCount() > 0 && (
+                    <Badge
+                        visible
+                        size={24}
+                        style={styles.badge}
+                    >
+                        {notifications.getUnreadCount()}
+                    </Badge>
+                )}
             </Appbar.Header>
 
             {/* <Stack screenOptions={{ headerShown: false }} /> */}
@@ -58,5 +70,11 @@ export default function MainLayout() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    badge: {
+        position: "absolute",
+        top: 4,
+        right: 4,
+        backgroundColor: "red"
     },
 });

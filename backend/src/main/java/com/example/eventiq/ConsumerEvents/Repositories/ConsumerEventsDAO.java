@@ -11,8 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -67,6 +66,32 @@ public class ConsumerEventsDAO implements DAO<ConsumerEvent> {
         if(consumerEvent.isEmpty()) return Optional.empty();
 
         return Optional.of(consumerEvent.getFirst());
+    }
+
+    public List<ConsumerEvent> getClosingEvents(int userId) {
+        var sql = "CALL GetClosingEvents(?);";
+
+        return jdbcTemplate.query(sql, rowMapper, userId);
+    }
+
+    public Map<String, List<ConsumerEvent>> getClosingEvents() {
+        var sql = "CALL GetClosingEventsForAllUsers();";
+
+        var events = jdbcTemplate.query(sql, rowMapper);
+
+        var map = new HashMap<String, List<ConsumerEvent>>();
+        for(var e : events) {
+            var email = e.getUserName();
+
+            var list = new ArrayList<ConsumerEvent>();
+            for (var ev : events) {
+                if(!ev.getUserName().equals(email)) continue;
+                list.add(ev);
+            }
+            map.put(email, list);
+        }
+
+        return map;
     }
 
     @Override
