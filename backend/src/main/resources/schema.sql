@@ -265,6 +265,8 @@ BEGIN
         ELSE
             INSERT INTO users (name, email, password, role) VALUES
             (p_name, p_email, p_password, p_role);
+
+            SET last_user_id = LAST_INSERT_ID();
     END CASE;
 
     CALL GetUserById(last_user_id);
@@ -566,6 +568,44 @@ BEGIN
     FROM (SELECT * FROM user_events WHERE event_id = p_event_id) ue
     JOIN users u ON ue.user_id = u.id
     JOIN events e ON ue.event_id = e.id;
+END^;
+
+DROP PROCEDURE IF EXISTS GetClosingEvents^;
+CREATE PROCEDURE GetClosingEvents (
+    IN p_user_id INT
+)
+BEGIN
+    SELECT
+        u.id AS userId,
+        u.name AS userName,
+        e.id,
+        e.title,
+        e.description,
+        e.eventDate AS date,
+        e.created_at,
+        e.updated_at
+    FROM (SELECT * FROM user_events WHERE user_id = p_user_id) ue
+    JOIN users u ON ue.user_id = u.id
+    JOIN events e ON ue.event_id = e.id
+    WHERE e.eventDate >= DATE_SUB(CURDATE(), INTERVAL 7 DAY);
+END^;
+
+DROP PROCEDURE IF EXISTS GetClosingEventsForAllUsers^;
+CREATE PROCEDURE GetClosingEventsForAllUsers ()
+BEGIN
+    SELECT
+        u.id AS userId,
+        u.email AS userName,
+        e.id,
+        e.title,
+        e.description,
+        e.eventDate AS date,
+        e.created_at,
+        e.updated_at
+    FROM user_events ue
+    JOIN users u ON ue.user_id = u.id
+    JOIN events e ON ue.event_id = e.id
+    WHERE e.eventDate >= DATE_SUB(CURDATE(), INTERVAL 7 DAY);
 END^;
 
 DROP PROCEDURE IF EXISTS CreateConsumerEvent^;

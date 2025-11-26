@@ -1,33 +1,33 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Icon, MD3Colors, Text } from "react-native-paper";
+import { Icon, Text } from "react-native-paper";
 
 interface RatingStripProps {
     size: number;
-    value?: number;
     adjustable?: boolean;
+    value?: number;
 };
 
-function RatingStrip({...props}: RatingStripProps){
+function RatingStrip({ ...props }: RatingStripProps) {
     const [value, setValue] = useState<number>(props.value ? props.value : 0);
 
-    useEffect(() => {
-        console.log(value);
-        console.log(Math.floor(value));
-    }, [value]);
+    // useEffect(() => {
+    //     console.log(value);
+    //     console.log(Math.floor(value));
+    // }, [value]);
 
     const handleStarPress = useCallback((value: number) => {
         setValue(value);
-    }, []); 
+    }, []);
 
     const renderStars = () => {
         const stars = [];
 
-        for(let i = 0; i < 5; i++) {
-            if((i + 1) <= Math.floor(value)) {
+        for (let i = 0; i < 5; i++) {
+            if ((i + 1) <= Math.floor(value)) {
                 stars.push(
-                    props.adjustable 
-                    ? 
+                    props.adjustable
+                        ?
                         <TouchableOpacity onPress={() => handleStarPress(i + 1)} key={i}>
                             <Icon
                                 source={"star"}
@@ -35,7 +35,7 @@ function RatingStrip({...props}: RatingStripProps){
                                 size={props.size}
                             />
                         </TouchableOpacity>
-                    :
+                        :
                         <Icon
                             source={"star"}
                             color={"#ffdf00"}
@@ -43,10 +43,10 @@ function RatingStrip({...props}: RatingStripProps){
                             key={i}
                         />
                 );
-            }else if((value - Math.floor(value)) * 10 >= 5){
+            } else if ((value - Math.floor(value)) * 10 >= 5) {
                 stars.push(
-                    props.adjustable 
-                    ? 
+                    props.adjustable
+                        ?
                         <TouchableOpacity onPress={() => handleStarPress(i + 1)} key={i}>
                             <Icon
                                 source={"star-half-full"}
@@ -54,7 +54,7 @@ function RatingStrip({...props}: RatingStripProps){
                                 size={props.size}
                             />
                         </TouchableOpacity>
-                    :
+                        :
                         <Icon
                             source={"star-half-full"}
                             color={"#ffdf00"}
@@ -62,10 +62,10 @@ function RatingStrip({...props}: RatingStripProps){
                             key={i}
                         />
                 );
-            }else{
+            } else {
                 stars.push(
-                    props.adjustable 
-                    ? 
+                    props.adjustable
+                        ?
                         <TouchableOpacity onPress={() => handleStarPress(i + 1)} key={i}>
                             <Icon
                                 source={"star-outline"}
@@ -73,7 +73,7 @@ function RatingStrip({...props}: RatingStripProps){
                                 size={props.size}
                             />
                         </TouchableOpacity>
-                    :
+                        :
                         <Icon
                             source={"star-outline"}
                             color={"#ffdf00"}

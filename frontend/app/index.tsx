@@ -3,12 +3,22 @@ import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { Surface, Text, useTheme } from "react-native-paper";
+import * as Notifications from "expo-notifications";
 
 export default function Index() {
     const [currentUser, _setCurrentUser, isLoaded] = useCurrentUser();
 
     const theme = useTheme();
     const router = useRouter();
+
+    Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+            shouldPlaySound: true,
+            shouldSetBadge: true,
+            shouldShowBanner: true,
+            shouldShowList: true,
+        }),
+    });
 
     useEffect(() => {
         if (!isLoaded) return;

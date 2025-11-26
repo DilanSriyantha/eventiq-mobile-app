@@ -1,16 +1,18 @@
-import { StyleSheet, View } from "react-native";
-import ContentBlock from "../../CreateEvent/ContentBlock";
-import { ServicesCompProps } from "./types";
-import { Button, Divider, Text } from "react-native-paper";
-import { memo, useCallback, useEffect, useState } from "react";
-import { EventService } from "@/context/EventServicesProvider/types";
-import { useEventServices } from "@/context/EventServicesProvider";
-import ServiceOption from "@/app/providers/ProviderOverview/ServicesSection/ServicesListPanel/ServiceOption";
-import ServiceComp from "./ServiceComp";
 import Utils from "@/app/utils/Utils";
+import { useEventServices } from "@/context/EventServicesProvider";
+import { EventService } from "@/context/EventServicesProvider/types";
 import { useSnackbar } from "@/context/SnackbarProvider";
+import { useRouter } from "expo-router";
+import { memo, useCallback, useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { Button, Divider, Text } from "react-native-paper";
+import ContentBlock from "../../CreateEvent/ContentBlock";
+import ServiceComp from "./ServiceComp";
+import { ServicesCompProps } from "./types";
 
 function ServicesComp({ eventId }: ServicesCompProps) {
+    const router = useRouter();
+
     const [services, setServices] = useState<EventService[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -40,7 +42,7 @@ function ServicesComp({ eventId }: ServicesCompProps) {
     }, []);
 
     const handleAddPress = useCallback(() => {
-
+        router.replace("/main/home");
     }, []);
 
     const handleRemoveServiceFromEvent = useCallback((eventId: number, serviceId: number) => {

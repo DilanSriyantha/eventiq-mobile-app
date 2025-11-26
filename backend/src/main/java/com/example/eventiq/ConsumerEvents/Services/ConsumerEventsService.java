@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -34,6 +35,17 @@ public class ConsumerEventsService {
 
     public Optional<ConsumerEvent> get(int eventId) {
         return consumerEventsDAO.get(eventId);
+    }
+
+    public List<ConsumerEvent> getClosingEvents(String userEmail) throws Exception {
+        var user = userDAO.getByEmail(userEmail)
+                .orElseThrow(() -> new Exception("User not found"));
+
+        return consumerEventsDAO.getClosingEvents(user.getId());
+    }
+
+    public Map<String, List<ConsumerEvent>> getClosingEvents() throws Exception {
+        return consumerEventsDAO.getClosingEvents();
     }
 
     public ConsumerEvent create(CreateEventRequest request) throws Exception {

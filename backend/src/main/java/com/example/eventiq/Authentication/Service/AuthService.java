@@ -8,28 +8,25 @@ import com.example.eventiq.Authentication.Models.User;
 import com.example.eventiq.Authentication.Repositories.UserDAO;
 import com.example.eventiq.Configurations.JwtService;
 import com.example.eventiq.Types.SuccessResponse;
-import com.example.eventiq.Utils.OnCompleted;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final UserDAO userDAO;
@@ -65,8 +62,7 @@ public class AuthService {
                 user.getName(),
                 user.getEmail(),
                 user.getPassword(),
-                user.getRole()
-        );
+                user.getRole().toString());
 
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -85,8 +81,7 @@ public class AuthService {
                 .orElseThrow(() -> new Exception("User not found."));
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -107,13 +102,13 @@ public class AuthService {
 
         var email = jwtService.extractEmail(token);
 
-        if(email == null)
+        if (email == null)
             throw new BadRequestException("Invalid refresh token.");
 
         var user = userDAO.getByEmail(email)
                 .orElseThrow(() -> new Exception("User not found."));
 
-        if(!jwtService.isTokenValid(token, user))
+        if (!jwtService.isTokenValid(token, user))
             throw new Exception("Refresh token is invalid.");
 
         var accessToken = jwtService.generateAccessToken(user);

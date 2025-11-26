@@ -11,6 +11,7 @@ import { Slot } from "expo-router";
 import { ThemeProvider } from "./themes/ThemeProvider";
 import ThemeWrapper from "./themes/ThemeWrapper";
 import EventServicesProvider from "@/context/EventServicesProvider";
+import WebSocketProvider from "@/context/WebSocketProvider";
 
 export default function RootLayout() {
     return (
@@ -26,7 +27,9 @@ export default function RootLayout() {
                                             <EventsProvider>
                                                 <EventServicesProvider>
                                                     <SnackbarProvider>
-                                                        <Slot />
+                                                        <WebSocketProvider>
+                                                            <Slot />
+                                                        </WebSocketProvider>
                                                     </SnackbarProvider>
                                                 </EventServicesProvider>
                                             </EventsProvider>
