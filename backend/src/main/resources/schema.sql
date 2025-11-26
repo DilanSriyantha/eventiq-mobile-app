@@ -265,6 +265,8 @@ BEGIN
         ELSE
             INSERT INTO users (name, email, password, role) VALUES
             (p_name, p_email, p_password, p_role);
+
+            SET last_user_id = LAST_INSERT_ID();
     END CASE;
 
     CALL GetUserById(last_user_id);

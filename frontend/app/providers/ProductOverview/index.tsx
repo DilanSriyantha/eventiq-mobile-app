@@ -77,11 +77,11 @@ export default function ProductOverview() {
                             <FABGroup
                                 icon={"plus"}
                                 actions={[
-                                    {
-                                        icon: "star",
-                                        label: "Rate",
-                                        onPress: () => { }
-                                    },
+                                    // {
+                                    //     icon: "star",
+                                    //     label: "Rate",
+                                    //     onPress: () => { }
+                                    // },
                                     {
                                         icon: "plus",
                                         label: "Add to an event",

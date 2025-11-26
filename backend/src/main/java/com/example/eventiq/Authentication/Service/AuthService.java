@@ -9,6 +9,8 @@ import com.example.eventiq.Authentication.Repositories.UserDAO;
 import com.example.eventiq.Configurations.JwtService;
 import com.example.eventiq.Types.SuccessResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final UserDAO userDAO;
@@ -59,8 +62,7 @@ public class AuthService {
                 user.getName(),
                 user.getEmail(),
                 user.getPassword(),
-                user.getRole()
-        );
+                user.getRole().toString());
 
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -79,8 +81,7 @@ public class AuthService {
                 .orElseThrow(() -> new Exception("User not found."));
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -101,13 +102,13 @@ public class AuthService {
 
         var email = jwtService.extractEmail(token);
 
-        if(email == null)
+        if (email == null)
             throw new BadRequestException("Invalid refresh token.");
 
         var user = userDAO.getByEmail(email)
                 .orElseThrow(() -> new Exception("User not found."));
 
-        if(!jwtService.isTokenValid(token, user))
+        if (!jwtService.isTokenValid(token, user))
             throw new Exception("Refresh token is invalid.");
 
         var accessToken = jwtService.generateAccessToken(user);

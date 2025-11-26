@@ -1,7 +1,7 @@
 import { AnimatedCustomizedFABHandle } from "@/components/AnimatedCustomizedFAB";
-import FABGroup from "@/components/FABGroup";
 import { GeneralOptionsPanelHandle } from "@/components/GeneralOptionsPanel";
 import ParallaxViewWrapper from "@/components/ParallaxViewWrapper/index";
+import RatingModal from "@/components/RatingModal";
 import { useServiceProviders } from "@/context/ServiceProvidersProvider";
 import { ServiceProvider } from "@/context/ServiceProvidersProvider/types";
 import { useSnackbar } from "@/context/SnackbarProvider";
@@ -13,87 +13,13 @@ import RatingSection from "./RatingSection";
 import ServicesSection from "./ServicesSection";
 import WelcomeSection from "./WelcomeSection";
 
-const item = {
-    title: "River Green Restaurant",
-    image: "https://wallpapers.com/images/hd/birthday-celebration-pictures-x42xac7kijps2q3j.jpg",
-    rating: 4.6,
-    tags: ["Birthday", "Restaurent", "Cheap", "Family"],
-    email: "res.rgr@gmail.com",
-    telephone: "+94 70 123 1234",
-    address: "1st Avenue, Grove St., LA",
-    featuredOptions: [
-        {
-            label: "Family Option",
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlUZ-eb0TZMHSEwE4K_AZHrpkV-0vK6g2uWQ&s"
-        },
-        {
-            label: "Family Option",
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlUZ-eb0TZMHSEwE4K_AZHrpkV-0vK6g2uWQ&s"
-        },
-        {
-            label: "Family Option",
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlUZ-eb0TZMHSEwE4K_AZHrpkV-0vK6g2uWQ&s"
-        },
-        {
-            label: "Family Option",
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlUZ-eb0TZMHSEwE4K_AZHrpkV-0vK6g2uWQ&s"
-        },
-    ],
-    generalOptions: [
-        {
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl16rkZ77uZBbI-AXXA1ZRFQ8GF9UMkB5GlQ&s",
-            label: "General Option",
-            description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis reprehenderit necessitatibus quibusdam at expedita omnis nemo dolor, eos eveniet rerum."
-        },
-        {
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl16rkZ77uZBbI-AXXA1ZRFQ8GF9UMkB5GlQ&s",
-            label: "General Option",
-            description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis reprehenderit necessitatibus quibusdam at expedita omnis nemo dolor, eos eveniet rerum."
-        },
-        {
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl16rkZ77uZBbI-AXXA1ZRFQ8GF9UMkB5GlQ&s",
-            label: "General Option",
-            description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis reprehenderit necessitatibus quibusdam at expedita omnis nemo dolor, eos eveniet rerum."
-        },
-        {
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl16rkZ77uZBbI-AXXA1ZRFQ8GF9UMkB5GlQ&s",
-            label: "General Option",
-            description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis reprehenderit necessitatibus quibusdam at expedita omnis nemo dolor, eos eveniet rerum."
-        },
-        {
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl16rkZ77uZBbI-AXXA1ZRFQ8GF9UMkB5GlQ&s",
-            label: "General Option",
-            description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis reprehenderit necessitatibus quibusdam at expedita omnis nemo dolor, eos eveniet rerum."
-        },
-        {
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl16rkZ77uZBbI-AXXA1ZRFQ8GF9UMkB5GlQ&s",
-            label: "General Option",
-            description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis reprehenderit necessitatibus quibusdam at expedita omnis nemo dolor, eos eveniet rerum."
-        },
-        {
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl16rkZ77uZBbI-AXXA1ZRFQ8GF9UMkB5GlQ&s",
-            label: "General Option",
-            description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis reprehenderit necessitatibus quibusdam at expedita omnis nemo dolor, eos eveniet rerum."
-        },
-        {
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl16rkZ77uZBbI-AXXA1ZRFQ8GF9UMkB5GlQ&s",
-            label: "General Option",
-            description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis reprehenderit necessitatibus quibusdam at expedita omnis nemo dolor, eos eveniet rerum."
-        },
-        {
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl16rkZ77uZBbI-AXXA1ZRFQ8GF9UMkB5GlQ&s",
-            label: "General Option",
-            description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis reprehenderit necessitatibus quibusdam at expedita omnis nemo dolor, eos eveniet rerum."
-        },
-    ]
-};
-
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 function ProviderOverview() {
     const { providerId } = useLocalSearchParams();
 
     const [serviceProvider, setServiceProvider] = useState<ServiceProvider | null>(null);
+    const [ratingModalVisible, setRatingModalVisible] = useState<boolean>(false);
 
     const FABRef = useRef<AnimatedCustomizedFABHandle>(null);
     const GeneralOptionsPanelRef = useRef<GeneralOptionsPanelHandle>(null);
@@ -134,6 +60,10 @@ function ProviderOverview() {
         router.push("/providers/ProductOverview");
     }, []);
 
+    const handleRatingModalDismiss = useCallback(() => {
+        setRatingModalVisible(false);
+    }, []);
+
     return (
         <>
             {
@@ -171,13 +101,13 @@ function ProviderOverview() {
 
                                 </View>
                             </ParallaxViewWrapper >
-                            <FABGroup
+                            {/* <FABGroup
                                 icon={"plus"}
                                 actions={[
                                     {
                                         icon: "star",
                                         label: "Rate",
-                                        onPress: () => console.log("rate pressed")
+                                        onPress: () => setRatingModalVisible(true)
                                     },
                                     {
                                         icon: "email",
@@ -185,6 +115,10 @@ function ProviderOverview() {
                                         onPress: () => console.log("message pressed")
                                     }
                                 ]}
+                            /> */}
+                            <RatingModal
+                                visible={ratingModalVisible}
+                                onDismiss={handleRatingModalDismiss}
                             />
                         </>
                     )

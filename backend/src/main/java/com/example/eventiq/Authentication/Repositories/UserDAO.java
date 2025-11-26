@@ -65,7 +65,8 @@ public class UserDAO implements DAO<User> {
 
         var user = jdbcTemplate.query(sql, rowMapper, id);
 
-        if(user.isEmpty()) return Optional.empty();
+        if (user.isEmpty())
+            return Optional.empty();
 
         return Optional.of(user.getFirst());
     }
@@ -75,14 +76,15 @@ public class UserDAO implements DAO<User> {
 
         var user = jdbcTemplate.query(sql, rowMapper, email);
 
-        if(user.isEmpty()) return Optional.empty();
+        if (user.isEmpty())
+            return Optional.empty();
 
         return Optional.of(user.getFirst());
     }
 
     @Override
     public User create(Object... args) throws Exception {
-        if(args.length < 4)
+        if (args.length < 4)
             throw new Exception("Expected 4 arguments, received only " + args.length + " arguments");
 
         var sql = "CALL CreateUser(?,?,?,?)";
@@ -95,7 +97,7 @@ public class UserDAO implements DAO<User> {
 
     @Override
     public User update(int id, Object... args) throws Exception {
-        if(args.length < 4)
+        if (args.length < 4)
             throw new Exception("Expected 4 arguments, received only " + args.length + " arguments");
 
         var sql = "CALL UpdateUser(?,?,?,?,?)";
@@ -117,7 +119,7 @@ public class UserDAO implements DAO<User> {
 
         var rowsAffected = jdbcTemplate.update(sql, id);
 
-        if(rowsAffected > 0) {
+        if (rowsAffected > 0) {
             log.info("User deleted successfully.");
 
             return;
